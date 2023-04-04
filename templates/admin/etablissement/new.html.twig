@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} | Etablissements{% endblock %}
+
+{% block pageTitle %}Enseignants{% endblock %}
+
+{% block cardTitle %}Nouveau{% endblock %}
+
+{% block cardFooter %}
+    <a class="btn btn-app" href="{{ path('app_etablissement_index') }}">
+        <i class="fas fa-plus"></i> Nouveau
+    </a>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-6">
+            {{ include('etablissement/_form.html.twig') }}
+        </div>
+    </div>
+
+{% endblock %}

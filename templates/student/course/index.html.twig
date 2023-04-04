@@ -1,0 +1,124 @@
+{% extends "student/base.html.twig" %}
+
+{% block subTitle %} - COurses{% endblock %}
+
+{% block pageContent %}
+
+    <div class="card bg-transparent border rounded-3">
+		<!-- Card header START -->
+		<div class="card-header bg-transparent border-bottom">
+			<h3 class="mb-0">My Courses List</h3>
+		</div>
+		<!-- Card header END -->
+
+		<!-- Card body START -->
+		<div class="card-body">
+
+			<!-- Search and select START -->
+			<div class="row g-3 align-items-center justify-content-between mb-4">
+				<!-- Content -->
+				<div class="col-md-8">
+					<form name="search"   action="{{ url("app_student_courses") }}" class="rounded position-relative">
+						<input name="search" required class="form-control pe-5 bg-transparent" type="search" placeholder="Search" aria-label="Search">
+						<button class="bg-transparent p-2 position-absolute top-50 end-0 translate-middle-y border-0 text-primary-hover text-reset" type="submit">
+					<i class="fas fa-search fs-6 "></i>
+				</button>
+					</form>
+				</div>
+
+				<!-- Select option -->
+				<div class="col-md-3">
+					
+				</div>
+			</div>
+			<!-- Search and select END -->
+
+			<!-- Course list table START -->
+			<div class="table-responsive border-0">
+				<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+					<!-- Table head -->
+					<thead>
+						<tr>
+							<th scope="col" class="border-0 rounded-start">Course Title</th>
+							<th scope="col" class="border-0">Total Lectures</th>
+							<th scope="col" class="border-0">Completed Lecture</th>
+							<th scope="col" class="border-0 rounded-end">Action</th>
+						</tr>
+					</thead>
+
+					<!-- Table body START -->
+					<tbody>
+						{% for course in student.cours %}
+							{% set leconTerminees = 0 %}
+							{% for l in student.lectures %}
+								{% if l.isFinished and l.lesson.chapitre.cours is same as course %}
+									{% set leconTerminees = leconTerminees + 1 %}
+								{% endif %}
+							{% endfor %}
+							{% set numberOfLessons = course.numberOfLessons > 0 ? course.numberOfLessons : 1 %}
+							{% set percent = (leconTerminees * 100 ) / numberOfLessons %}
+							<tr>
+								<!-- Table data -->
+								<td>
+									<div class="d-flex align-items-center">
+										<!-- Image -->
+										<div class="w-100px">
+											<img src="{{asset('uploads/media/courses/' ~ course.media.imageFile)}}" class="rounded" alt="">
+										</div>
+										<div class="mb-0 ms-2">
+											<!-- Title -->
+											<h6><a href="{{ url("app_front_course_start", {slug: course.slug}, "http", false) }}">{{ course.intitule }}</a></h6>
+											<!-- Info -->
+											<div class="overflow-hidden">
+												<h6 class="mb-0 text-end">{{ percent|number_format(0) }}%</h6>
+												<div class="progress progress-sm bg-primary bg-opacity-10">
+													<div class="progress-bar bg-primary aos" role="progressbar" data-aos="slide-right" data-aos-delay="200" data-aos-duration="1000" data-aos-easing="ease-in-out" style="width: {{ percent|number_format(0) }}%" aria-valuenow="{{ percent|number_format(0) }}" aria-valuemin="0" aria-valuemax="100">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+
+								<!-- Table data -->
+								<td>{{ course.numberOfLessons }}</td>
+
+								<!-- Table data -->
+								<td>{{ leconTerminees }}</td>
+
+								<!-- Table data -->
+								<td>
+									{% if leconTerminees is same as course.numberOfLessons %}
+										<button class="btn btn-sm btn-success me-1 mb-1 mb-x;-0 disabled"><i class="bi bi-check me-1"></i>Complete</button>
+										<a href="#" class="btn btn-sm btn-light me-1"><i class="bi bi-arrow-repeat me-1"></i>Restart</a>
+									{% else %}
+										<a title="Continue" href="{{ url("app_front_course_start", {slug: course.slug}, "http", false) }}" class="btn btn-sm btn-primary-soft me-1 mb-1 mb-md-0"><i class="bi bi-play-circle me-1"></i></a>
+									{% endif %}
+									
+									{% if course.isFree %}
+										<a onclick="return confirm('Etes-vous sure de vouloir supprimer ce cours de votre liste de lecture')" href="{{ url("app_front_course_start", {id: student.reference, slug: course.slug}, "http", false) }}" class="btn btn-sm btn-danger-soft me-1 mb-1 mb-md-0"><i class="bi bi-trash me-1"></i></a>
+									{% endif %}
+								</td>
+							</tr>
+							
+						{% else %}
+							<tr>
+								<td colspan="4">No Courses found</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+					<!-- Table body END -->
+				</table>
+			</div>
+			<!-- Course list table END -->
+
+			<!-- Pagination START -->
+			<div class="d-sm-flex justify-content-sm-between pagination-container align-items-sm-center mt-4 mt-sm-3">
+				{{ knp_pagination_render(courses) }}
+			</div>
+			<!-- Pagination END -->
+		</div>
+		<!-- Card body START -->
+	</div>
+
+{% endblock %}

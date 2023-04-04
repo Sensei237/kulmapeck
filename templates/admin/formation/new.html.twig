@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} | Formations{% endblock %}
+
+{% block pageTitle %}Formation{% endblock %}
+
+{% block cardTitle %}Ajouter{% endblock %}
+
+{% block cardFooter %}
+    <a class="btn btn-app" href="{{ path('app_formation_index') }}">
+        <i class="fas fa-arrow-left"></i> Liste
+    </a>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-9">
+            {{ include('formation/_form.html.twig') }}
+        </div>
+    </div>
+
+{% endblock %}

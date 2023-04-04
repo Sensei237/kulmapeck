@@ -1,0 +1,110 @@
+{% extends "student/base.html.twig" %}
+
+{% block title %}
+    - Payments
+{% endblock %}
+
+{% block pageContent %}
+
+    <div class="card bg-transparent border rounded-3">
+		<!-- Card header START -->
+		<div class="card-header bg-transparent border-bottom">
+			<h3 class="mb-0">My Network</h3>
+		</div>
+		<!-- Card header END -->
+
+		<!-- Card body START -->
+		<div class="card-body">
+
+			<!-- Search and select START -->
+			<div class="row g-3 align-items-center justify-content-between mb-4">
+				<!-- Content -->
+				<div class="col-md-8">
+					<form name="search"   action="{{ url("app_student_courses") }}" class="rounded position-relative">
+						<input name="search" required class="form-control pe-5 bg-transparent" type="search" placeholder="Search" aria-label="Search">
+						<button class="bg-transparent p-2 position-absolute top-50 end-0 translate-middle-y border-0 text-primary-hover text-reset" type="submit">
+					<i class="fas fa-search fs-6 "></i>
+				</button>
+					</form>
+				</div>
+
+				<!-- Select option -->
+				<div class="col-md-3">
+					
+				</div>
+			</div>
+			<!-- Search and select END -->
+
+			<!-- Course list table START -->
+			<div class="table-responsive border-0">
+				<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+                    <!-- Table head -->
+                    <thead>
+                        <tr>
+                            <th scope="col" class="border-0 rounded-start">Course name</th>
+                            <th scope="col" class="border-0">Order ID</th>
+                            <th scope="col" class="border-0">Date</th>
+                            <th scope="col" class="border-0">Amount</th>
+                            <th scope="col" class="border-0 rounded-end">Payment</th>
+                        </tr>
+                    </thead>
+
+                    <!-- Table body START -->
+                    <tbody>
+                        {% for payment in payments %}
+                            <!-- Table item -->
+                            <tr>
+                                <!-- Table data -->
+                                <td>
+                                    <h6 class="table-responsive-title mt-2 mt-lg-0 mb-0">
+                                        {% if payment.abonnement is not same as null %}
+                                            <a href="#">{{ payment.abonnement.label }}</a>
+                                        {% elseif payment.cours is not same as null %}
+                                            <a href="{{ url("app_front_course_details", {slug: payment.cours.slug}, "http", false) }}">{{ payment.cours.intitule }}</a>
+                                        {% else %}
+                                            undefined
+                                        {% endif %}
+                                    </h6>
+                                </td>
+
+                                <!-- Table data -->
+                                <td class="text-center text-sm-start text-primary-hover">
+                                    <a href="#" class="text-body"><u>#{{ payment.reference }}</u></a>
+                                </td>
+
+                                <!-- Table data -->
+                                <td>{{ payment.paidAt|date('d/m/Y - H:i:s') }}</td>
+
+                                <!-- Table data -->
+                                <td>
+                                    {% if payment.abonnement is not same as null %}
+                                        {{ payment.abonnement.montant ~ 'XAF' }}
+                                    {% elseif payment.cours is not same as null %}
+                                        {{ payment.cours.montantAbonnement ~ 'XAF' }}
+                                    {% else %}
+                                        undefined
+                                    {% endif %}
+                                </td>
+
+                                <!-- Table data -->
+                                <td>{{ payment.paymentMethod.code }}</td>
+                            </tr>
+                        {% else %}  
+                            <tr><td colspan="5"><h5 class="text-center">No payments found</h5></td></tr>
+                        {% endfor %}
+                    </tbody>
+                    <!-- Table body END -->
+                </table>
+			</div>
+			<!-- Course list table END -->
+
+			<!-- Pagination START -->
+			<div class="d-sm-flex justify-content-sm-between pagination-container align-items-sm-center mt-4 mt-sm-3">
+				{{ knp_pagination_render(payments) }}
+			</div>
+			<!-- Pagination END -->
+		</div>
+		<!-- Card body START -->
+	</div>
+
+{% endblock %}

@@ -1,0 +1,96 @@
+
+    {% if registrationForm.parentCode is defined %}
+        <div class="mb-4">
+            <label for="exampleInputEmail1" class="form-label">{{ form_label(registrationForm.parentCode) }}</label>
+            <div class="input-group input-group-lg">
+                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="fas fa-user"></i></span>
+                {{ form_widget(registrationForm.parentCode) }}
+            </div>
+        </div>
+    {% endif %}
+    
+    {% for item in registrationForm.personne %}
+        <div class="mb-4">
+            <label for="exampleInputEmail1" class="form-label">{{ form_label(item) }}</label>
+            <div class="input-group input-group-lg">
+                {% if item is not same as registrationForm.personne.imageFile %}
+                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="fas fa-arrow-alt-circle-right"></i></span>
+                {% endif %}
+                
+                {{ form_widget(item) }}
+            </div>
+        </div>
+    {% endfor %}
+    
+    {% if registrationForm.email is defined %}   
+        <div class="mb-4">
+            <label for="exampleInputEmail1" class="form-label">{{ form_label(registrationForm.email) }}*</label>
+            <div class="input-group input-group-lg">
+                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="bi bi-envelope-fill"></i></span>
+                {{ form_widget(registrationForm.email) }}
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if registrationForm.plainPassword is defined %}
+        <div class="mb-4">
+            <label for="exampleInputEmail1" class="form-label">{{ form_label(registrationForm.plainPassword) }}*</label>
+            <div class="input-group input-group-lg">
+                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="fas fa-lock"></i></span>
+                {{ form_widget(registrationForm.plainPassword) }}
+            </div>
+        </div>
+    {% endif %}
+    
+
+    {% if registrationForm.enseignant is defined %}
+        {% for item in registrationForm.enseignant %}
+            <div class="mb-4">
+                <label for="exampleInputEmail1" class="form-label">{{ form_label(item) }}</label>
+                <div class="input-group input-group-lg">
+                    {% if item is same as registrationForm.enseignant.etablissement %}
+                        <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="fas fa-building"></i></span>
+                    {% endif %}
+                    {{ form_widget(item) }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if registrationForm.eleve is defined %}
+        {% for item in registrationForm.eleve %}
+            <div class="mb-4">
+                <label for="exampleInputEmail1" class="form-label">{{ form_label(item) }}</label>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="fas fa-arrow-alt-circle-right"></i></span>
+                    {{ form_widget(item) }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if registrationForm.agreeTerms is defined %}
+        <!-- Check box -->
+        <div class="mb-4">
+            <div class="form-check">
+                {{ form_widget(registrationForm.agreeTerms) }}
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if registrationForm.plainPassword is defined %}
+        <div class="mb-4">
+            <label for="exampleInputEmail1" class="form-label">{{ form_label(registrationForm.roles) }}*</label>
+            <div class="input-group input-group-lg">
+                <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="fas fa-lock"></i></span>
+                {{ form_widget(registrationForm.roles) }}
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Button -->
+    <div class="align-items-center mt-0">
+        <div class="d-grid">
+            <button class="btn btn-primary mb-0" type="submit">Sign Up</button>
+        </div>
+    </div>

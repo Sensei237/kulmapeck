@@ -1,0 +1,16 @@
+<div class="col-12" id="faq-{{ index }}">
+    <div class="bg-body p-3 p-sm-4 border rounded">
+        <!-- Item 1 -->
+        <div class="d-sm-flex justify-content-sm-between align-items-center mb-2">
+            <!-- Question -->
+            <h6 class="mb-0 question">{{ question }}</h6>
+            <!-- Button -->
+            <div class="align-middle">
+                <a href="#" data-index="{{ index }}" data-bs-toggle="modal" data-bs-target="#addQuestion" class="btn btn-sm btn-success-soft btn-round me-1 mb-1 mb-md-0 edit-faq"><i class="far fa-fw fa-edit"></i></a>
+                <button type="button" data-delete-url="{{ faq.id is defined ? path('app_instructor_delete_faq', {id: faq.id}) : '' }}" data-index="{{ index }}" data-id="{{ faq.id|default('') }}" class="btn btn-sm btn-danger-soft btn-round mb-0 delete-faq"><i class="fas fa-fw fa-times"></i></button>
+            </div>
+        </div>
+        <!-- Content -->
+        <p class="answer">{{ answer }}</p>
+    </div>
+</div>

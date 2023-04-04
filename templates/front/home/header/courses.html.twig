@@ -1,0 +1,75 @@
+<div class="row p-4 g-4">
+    <!-- Dropdown column item -->
+    <div class="col-xl-6 col-xxl-3">
+        <h6 class="mb-0">Courses categories</h6>
+        <hr>
+        <ul class="list-unstyled">
+            {% for category in categories %}
+                <li> <a class="dropdown-item" href="{{ url("app_front_category_courses", {slug: category.slug}) }}">{{ category.name }}</a> </li>
+            {% endfor %}
+            <li> 
+                <a class="dropdown-item bg-primary text-primary bg-opacity-10 rounded-2 mb-0" href="{{ path('app_front_courses_category') }}">View all categories</a>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Dropdown column item -->
+    <div class="col-xl-6 col-xxl-3">
+        <h6 class="mb-0">Last courses</h6>
+        <hr>
+        <!-- Dropdown item -->
+        {% set icons = ['fa-book text-google-icon', 'fa-book text-linkedin', 'fa-book text-facebook', 'fa-book text-twitter', 'fa-book text-dribbble', 'fa-book-open text-linkedin', 'fa-book text-facebook', 'fa-book text-google-icon'] %}
+        {% for course in lastCourses %}
+            {% if loop.index <= 4 %}
+            <div class="d-flex mb-4 position-relative">
+                <h2 class="mb-0"><i class="fas fa-fw {{ icons[loop.index - 1] }}"></i></h2>
+                <div class="ms-2">
+                    <a class="stretched-link h6 mb-0" href="{{ url("app_front_course_details", {slug: course.slug}) }}">{{ course.intitule|u.truncate(30, '...') }}</a>
+                    <p class="mb-0 small">{{ course.description|u.truncate(80, '...') }}</p>
+                </div>
+            </div>
+            {% endif %}
+            
+        {% endfor %}
+        <a class="dropdown-item bg-primary text-primary bg-opacity-10 rounded-2 mb-0" href="{{ path('app_front_courses') }}">View more courses</a>
+    </div>
+
+    <!-- Dropdown column item -->
+    <div class="col-xl-6 col-xxl-3">
+        <h6 class="mb-0">Last courses</h6>
+        <hr>
+        <!-- Dropdown item -->
+        {% for course in lastCourses %}
+            {% if loop.index > 4 %}
+            <div class="d-flex mb-4 position-relative">
+                <h2 class="mb-0"><i class="fas fa-fw {{ icons[loop.index - 1] }}"></i></h2>
+                <div class="ms-2">
+                    <a class="stretched-link h6 mb-0" href="{{ url("app_front_course_details", {slug: course.slug}) }}">{{ course.intitule }}</a>
+                    <p class="mb-0 small">{{ 'No prerequisite' }}</p>
+                </div>
+            </div>
+            {% endif %}
+            
+        {% endfor %}
+    </div>
+
+    <!-- Dropdown column item -->
+    <div class="col-xl-6 col-xxl-3">
+        <h6 class="mb-0">Download Kulmapeck</h6>
+        <hr>
+        <!-- Image -->
+        <img src="{{ asset('assets/images/element/14.svg') }}" alt="">
+
+        <!-- Download button -->
+        <div class="row g-2 justify-content-center mt-3">
+        <!-- Google play store button -->
+        <div class="col-6 col-sm-4 col-xxl-6">
+            <a href="#"> <img src="{{ asset('assets/images/client/google-play.svg') }}" class="btn-transition" alt="google-store"> </a>
+        </div>
+        <!-- App store button -->
+        <div class="col-6 col-sm-4 col-xxl-6">
+            <a href="#"> <img src="{{ asset('assets/images/client/app-store.svg') }}" class="btn-transition" alt="app-store"> </a>
+        </div>
+        </div>
+    </div>
+</div>

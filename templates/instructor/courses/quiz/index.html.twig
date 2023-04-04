@@ -1,0 +1,121 @@
+{% extends "instructor/base.html.twig" %}
+
+{% block subTitle %} - Courses {% endblock %}
+
+{% block btnAction %}
+    <a href="#" class="btn btn-sm btn-primary mb-0" data-bs-toggle="modal" data-bs-target="#addQuiz">Add New Quiz</a>
+{% endblock %}
+
+{% block pageContent %}
+
+    <!-- Card START -->
+    <div class="card border bg-transparent rounded-3">
+        <!-- Card header START -->
+        <div class="card-header bg-transparent border-bottom px-3">
+            <div class="row g-4 align-items-center">
+                <div class="col-md-2">
+                    <img src="{{ asset('uploads/media/courses/' ~ imageFile) }}" class="rounded-2" alt="Card image">
+                </div>
+                <div class="col-md-10">
+                    <!-- Title -->
+                    <h3 class="card-title mb-0"><a href="#">{{ title }}</a></h3>
+                </div>
+            </div>
+        </div>
+        <!-- Card header END -->
+
+        <!-- Card body START -->
+        <div class="card-body p-4">
+            <!-- Accordion START -->
+            <div class="accordion accordion-icon accordion-bg-light" id="accordionExample">
+                {% set cmp = 1 %}
+                {% for quiz in quizzes %}
+                    <!-- Item -->
+                    <div class="accordion-item mb-3">
+                        <h6 class="accordion-header" id="headingOne{{ quiz.id }}">
+                            <button class="accordion-button rounded" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne{{ quiz.id }}" aria-expanded="true" aria-controls="collapseOne{{ quiz.id }}">
+                                <span class="text-secondary fw-bold me-3">{{ cmp < 10 ? '0' ~ cmp : cmp }}</span>  
+                                <span class="fw-bold">{{ quiz.question }}</span> 
+                            </button>
+                        </h6>
+                        <div id="collapseOne{{ quiz.id }}" class="accordion-collapse collapse" aria-labelledby="headingOne{{ quiz.id }}" data-bs-parent="#accordionExample">
+                            <div class="accordion-body mt-3">
+                                <!-- Answer options -->
+                                <p class="mb-3"><b class="text-dark">A</b> {{ quiz.proposition1 }}</p>
+                                <p class="mb-3"><b class="text-dark">B</b> {{ quiz.proposition2 }}</p>
+                                <p class="mb-3"><b class="text-dark">C</b> {{ quiz.proposition3 }}</p>
+                                <p class="mb-3"><b class="text-dark">D</b> {{ quiz.proposition4 }}</p>
+                                <!-- Button -->
+                                <a href="#" class="btn btn-sm btn-success-soft mb-0" data-bs-toggle="modal" data-bs-target="#editQuestion{{ quiz.id }}">Edit</a>
+                                <a href="{{ url("app_instructor_courses_quiz_remove", {reference: quiz.reference, _token: csrf_token('deletequiz' ~ quiz.id), redirect_uri: deleteRedirectUri}) }}" class="btn btn-danger-soft btn-sm mb-0">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% set cmp = cmp + 1 %}
+                {% endfor %}
+
+            </div>
+            <!-- Accordion END -->
+            
+        </div>
+        <!-- Card body START -->
+    </div>
+    <!-- Card END -->
+
+
+    <!-- Add course modal START -->
+    <div class="modal fade" id="addQuiz" tabindex="-1" aria-labelledby="addQuizLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            {{ form_start(form) }}
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title text-white" id="addQuizLabel">Add New Quiz</h5>
+                        <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row text-start g-3">
+
+                            <!-- Question -->
+                            <div class="col-12">
+                                {{ form_row(form.question) }}
+                            </div>
+
+                            <!-- Answer options START -->
+                            <div class="col-6">
+                                {{ form_row(form.proposition1) }}
+                            </div>
+
+                            <div class="col-6">
+                                {{ form_row(form.proposition2) }}
+                            </div>
+
+                            <div class="col-6">
+                                {{ form_row(form.proposition3) }}
+                            </div>
+
+                            <div class="col-6">
+                                {{ form_row(form.proposition4) }}
+                            </div>
+
+                            <div class="col-md-12">
+                                {{ form_row(form.propositionJuste) }}
+                            </div>
+                            <!-- Answer options END -->
+                        </div>
+                    </div>
+                    {{ form_rest(form) }}
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success my-0">Add Quiz</button>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <!-- Add course modal START -->
+
+    {% for quiz in quizzes %}
+        {{ include('instructor/courses/quiz/_edit_quiz_modal.html.twig') }}
+    {% endfor %}
+
+{% endblock %}

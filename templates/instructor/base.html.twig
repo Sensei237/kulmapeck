@@ -1,0 +1,182 @@
+{% extends "front/base.html.twig" %}
+
+{% block title %} - Instructor {% block subTitle %}{% endblock %}  {% endblock %}
+
+{% block footer %}
+    
+    <footer class="bg-dark p-3">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Widget -->
+                <div class="col-md-4 text-center text-md-start mb-3 mb-md-0">
+                    <!-- Logo START -->
+                    <a href="{{ path('app_front') }}"> <img class="h-20px" src="{{ asset('assets/images/logo-light.svg') }}" alt="logo"> </a>
+                </div>
+                
+                <!-- Widget -->
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <div class="text-center text-white">
+                        Copyrights ©2023 <a href="https://www.webestica.com/" target="_blank" class="text-reset btn-link">Webestica</a>. All rights reserved.
+                    </div>
+                </div>
+                <!-- Widget -->
+                <div class="col-md-4">
+                    <!-- Rating -->
+                    <ul class="list-inline mb-0 text-center text-md-end">
+                        <li class="list-inline-item ms-2"><a href="#"><i class="text-white fab fa-facebook"></i></a></li>
+                        <li class="list-inline-item ms-2"><a href="#"><i class="text-white fab fa-instagram"></i></a></li>
+                        <li class="list-inline-item ms-2"><a href="#"><i class="text-white fab fa-linkedin-in"></i></a></li>
+                        <li class="list-inline-item ms-2"><a href="#"><i class="text-white fab fa-twitter"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+{% endblock %}
+
+{% block script %}
+    
+{% endblock %}
+
+{% block mainContent %}
+
+    {% block instructorBanner %}
+        <!-- =======================
+        Page Banner START -->
+        <section class="pt-0">
+            <!-- Main banner background image -->
+            <div class="container-fluid px-0">
+                <div class="bg-blue h-100px h-md-200px rounded-0" style="background:url({{ asset('assets/images/pattern/04.png') }}) no-repeat center center; background-size:cover;">
+                </div>
+            </div>
+            {% block profileBlock %}
+                <div class="container mt-n4">
+                    <div class="row">
+                        <!-- Profile banner START -->
+                        <div class="col-12">
+                            <div class="card bg-transparent card-body p-0">
+                                <div class="row d-flex justify-content-between">
+                                    <!-- Avatar -->
+                                    <div class="col-auto mt-4 mt-md-0">
+                                        <div class="avatar avatar-xxl mt-n3">
+                                            <img class="avatar-img rounded-circle border border-white border-3 shadow" src="{{ asset(app.user.personne.avatarPath) }}" alt="">
+                                        </div>
+                                    </div>
+                                    <!-- Profile info -->
+                                    <div class="col d-md-flex justify-content-between align-items-center mt-4">
+                                        <div>
+                                            <h1 class="my-1 fs-4">{{ app.user.personne.pseudo }} <i class="bi bi-patch-check-fill text-info small"></i></h1>
+                                            <ul class="list-inline mb-0">
+                                                <li class="list-inline-item h6 fw-light me-3 mb-1 mb-sm-0"><i class="fas fa-star text-warning me-2"></i>{{ app.user.enseignant.review }}/5.0</li>
+                                                {% set nbStudents = 0 %}
+                                                {% for course in app.user.enseignant.cours %}
+                                                    {% set nbStudents = nbStudents + course.eleves|length %}
+                                                {% endfor %}
+                                                <li class="list-inline-item h6 fw-light me-3 mb-1 mb-sm-0"><i class="fas fa-user-graduate text-orange me-2"></i>{{ nbStudents }} Enrolled Students</li>
+                                                <li class="list-inline-item h6 fw-light me-3 mb-1 mb-sm-0"><i class="fas fa-book text-purple me-2"></i>{{ app.user.enseignant.cours|length }} Courses</li>
+                                            </ul>
+                                        </div>
+                                        <!-- Button -->
+                                        <div class="d-flex align-items-center mt-2 mt-md-0">
+                                            {% block btnAction %}
+                                                <a href="{{ path('app_instructor_courses_new') }}" target="_blank" class="btn btn-success mb-0">Create a course</a>
+                                            {% endblock %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Profile banner END -->
+
+                            <!-- Advanced filter responsive toggler START -->
+                            <!-- Divider -->
+                            <hr class="d-xl-none">
+                            <div class="col-12 col-xl-3 d-flex justify-content-between align-items-center">
+                                <a class="h6 mb-0 fw-bold d-xl-none" href="#">Menu</a>
+                                <button class="btn btn-primary d-xl-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+                                    <i class="fas fa-sliders-h"></i>
+                                </button>
+                            </div>
+                            <!-- Advanced filter responsive toggler END -->
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+        </section>
+        <!-- =======================
+        Page Banner END -->
+    {% endblock %}
+    <!-- =======================
+    Page content START -->
+    <section class="pt-0">
+        <div class="container">
+            <div class="row">
+                {% block instructorSidebar %}
+                    <!-- Left sidebar START -->
+                    <div class="col-xl-3">
+                        <!-- Responsive offcanvas body START -->
+                        <div class="offcanvas-xl offcanvas-end" tabindex="-1" id="offcanvasSidebar">
+                            <!-- Offcanvas header -->
+                            <div class="offcanvas-header bg-light">
+                                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">My profile</h5>
+                                <button  type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasSidebar" aria-label="Close"></button>
+                            </div>
+                            <!-- Offcanvas body -->
+                            <div class="offcanvas-body p-3 p-xl-0">
+                                <div class="bg-dark border rounded-3 pb-0 p-3 w-100">
+                                    <!-- Dashboard menu -->
+                                    <div class="list-group list-group-dark list-group-borderless">
+                                        <a class="list-group-item {{ instructorHome is defined ? 'active' : '' }}" href="{{ path('app_instructor_home') }}"><i class="bi bi-ui-checks-grid fa-fw me-2"></i>Dashboard</a>
+                                        <a class="list-group-item {{ instructorCourses is defined ? 'active' : '' }}" href="{{ path('app_instructor_courses') }}"><i class="bi bi-basket fa-fw me-2"></i>My Courses</a>
+                                        <a class="list-group-item {{ isNetwork is defined ? 'active' : '' }}" href="{{ url("app_instructor_network") }}"><i class="bi bi-people fa-fw me-2"></i>My Network</a>
+                                        <a class="list-group-item {{ isOrders is defined ? 'active' : '' }}" href="{{ url("app_instructor_orders_index") }}"><i class="bi bi-folder-check fa-fw me-2"></i>Orders</a>
+                                        <a class="list-group-item {{ isExam is defined ? 'active' : '' }}" href="{{ url("app_instructor_exam_index") }}"><i class="bi bi-pencil-square fa-fw me-2"></i>Exam</a>
+                                        <a class="list-group-item {{ isReview is defined ? 'active' : '' }}" href="{{ url("app_instructor_reviews") }}"><i class="bi bi-star fa-fw me-2"></i>Reviews</a>
+                                        <a class="list-group-item {{ isProfile is defined ? 'active' : '' }}" href="{{ url("app_instructor_profile") }}"><i class="far fa-user fa-fw me-2"></i>Profile</a>
+                                        <a class="list-group-item text-danger bg-danger-soft-hover" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Sign Out</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Responsive offcanvas body END -->
+                    </div>
+                    <!-- Left sidebar END -->
+                {% endblock %}
+                <!-- Main content START -->
+                <div class="{{ mainContentClass|default('col-xl-9') }}">
+                    {% for message in app.flashes('errors') %}
+                        <div class="alert alert-danger alert-dismissible">
+                            <p>{{ message|raw }}</p>
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('danger') %}
+                        <div class="alert alert-danger alert-dismissible">
+                            <p>{{ message|raw }}</p>
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissible">
+                            <p>{{ message|raw }}</p>
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('warning') %}
+                        <div class="alert alert-warning alert-dismissible">
+                            <p>{{ message|raw }}</p>
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('infos') %}
+                        <div class="alert alert-info alert-dismissible">
+                            <p>{{ message|raw }}</p>
+                        </div>
+                    {% endfor %}
+                    {% block pageContent %}{% endblock %}
+                    
+                </div>
+                <!-- Main content END -->
+            </div><!-- Row END -->
+        </div>
+    </section>
+    <!-- =======================
+    Page content END -->
+
+{% endblock %}

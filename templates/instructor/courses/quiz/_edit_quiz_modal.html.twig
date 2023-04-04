@@ -1,0 +1,58 @@
+<!-- Edit course modal START -->
+<div class="modal fade" id="editQuestion{{ quiz.id }}" tabindex="-1" aria-labelledby="editQuestionLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<form class="modal-content" method="post" action="{{ path('app_instructor_courses_quiz_edit', {reference: quiz.reference}) }}">
+			<div class="modal-header bg-dark">
+				<h5 class="modal-title text-white" id="editQuestionLabel">Edit Question</h5>
+				<button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+			</div>
+			<div class="modal-body">
+				<div class="row text-start g-3">
+                    
+					<!-- Question -->
+					<div class="col-12">
+						<label class="form-label">Question</label>
+						<input name="question" class="form-control" type="text" value="{{ quiz.question }}" placeholder="Write a question">
+					</div>
+
+					<!-- Answer options START -->
+					<div class="col-6">
+						<label class="form-label">Proposition 1</label>
+						<input name="proposition1" class="form-control" type="text" value="{{ quiz.proposition1 }}" placeholder="Write a option">
+					</div>
+
+					<div class="col-6">
+						<label class="form-label">Option 2</label>
+						<input name="proposition2" class="form-control" type="text" value="{{ quiz.proposition2 }}" placeholder="Write a option">
+					</div>
+
+					<div class="col-6">
+						<label class="form-label">Option 3</label>
+						<input name="proposition3" class="form-control" type="text" value="{{ quiz.proposition3 }}" placeholder="Write a option">
+					</div>
+
+					<div class="col-6">
+						<label class="form-label">Option 4</label>
+						<input name="proposition4" class="form-control" type="text" value="{{ quiz.proposition4 }}" placeholder="Write a option">
+					</div>
+
+                    <div class="col-12">
+						<label class="form-label">Proposition justes </label>
+						<select name="propositionJuste" multiple class="form-control js-choice">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+					</div>
+					<!-- Answer options END -->
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-success my-0">Save change</button>
+			</div>
+		</form>
+	</div>
+</div>
+<!-- Edit course modal START -->

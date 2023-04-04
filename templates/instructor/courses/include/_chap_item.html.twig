@@ -1,0 +1,29 @@
+<div class="accordion-item mb-3">
+    <h6 class="accordion-header font-base" id="heading-{{ index }}">
+        <button  class="accordion-button fw-bold rounded d-inline-block d-block pe-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ index }}" aria-expanded="false" aria-controls="collapse-{{ index }}">
+            Chapter {{ numero }} : {{ title }}
+        </button>
+    </h6>
+
+    <div id="collapse-{{ index }}" class="accordion-collapse collapse show" aria-labelledby="heading-1" data-bs-parent="#accordionExample2">
+        <!-- Topic START -->
+        <div class="accordion-body mt-3">
+            <p class="description">{{ description }}</p>
+            <div id="lessons-container-{{ index }}">
+                {% set cmp = 0 %}
+                {% if chapitre is defined %}
+                    {% for lesson in chapitre.lessons %}
+                        {{ include('instructor/courses/include/_lesson_item.html.twig', {index: cmp, title: lesson.title, chapIndex: index, videoLink: lesson.videoLink, numero: lesson.numero}) }}
+                        {% set cmp = cmp + 1 %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Add topic -->
+            <a href="#" data-index="{{ cmp }}" data-chapiter="{{ index }}" data-prototype-container="cours_chapitres_{{ index }}_lessons" class="btn btn-sm btn-dark mb-0 add-lesson-btn" data-bs-toggle="modal" data-bs-target="#addTopic"><i class="bi bi-plus-circle me-2"></i>Add lesson</a>
+            <a href="#" data-index="{{ cmp }}" data-chapiter="{{ index }}" data-prototype-container="cours_chapitres_{{ index }}_lessons" class="btn btn-sm btn-success mb-0 edit-chapitre-btn" data-bs-toggle="modal" data-bs-target="#addLecture"><i class="far fa-fw fa-edit me-2"></i>Edit chap</a>
+            <buton data-delete-url="{{ chapitre.id is defined ? path('app_instructor_delete_chapitre', {id: chapitre.id}) : '' }}" type="button" data-index="{{ cmp }}" data-id="{{ chapitre.id|default('') }}" data-chapiter="{{ index }}" data-container="cours_chapitres_{{ index }}" class="btn btn-sm btn-danger mb-0 delete-chapitre-btn"><i class="fas fa-fw fa-trash"></i></buton>
+        </div>
+        <!-- Topic END -->
+    </div>
+</div>

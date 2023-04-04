@@ -1,0 +1,191 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Cours{% endblock %}
+
+{% block script %}
+    <script>
+		$('#admin_filter_select_courses').on('change', (e) => {
+			window.location.href = $(e.currentTarget).val()
+		})
+	</script>
+{% endblock %}
+
+{% block mainContent %}
+
+    <!-- Course boxes START -->
+		<div class="row g-4 mb-4">
+			<!-- Course item -->
+			<div class="col-sm-6 col-lg-4">
+				<div class="text-center p-4 bg-primary bg-opacity-10 border border-primary rounded-3">
+					<h6>Total Courses</h6>
+					<h2 class="mb-0 fs-1 text-primary">{{ cours|length }}</h2>
+				</div>
+			</div>
+
+			<!-- Course item -->
+			<div class="col-sm-6 col-lg-4">
+				<div class="text-center p-4 bg-success bg-opacity-10 border border-success rounded-3">
+					<h6>Activated Courses</h6>
+					<h2 class="mb-0 fs-1 text-success">{{ activatedCourses|length }}</h2>
+				</div>
+			</div>
+
+			<!-- Course item -->
+			<div class="col-sm-6 col-lg-4">
+				<div class="text-center p-4  bg-warning bg-opacity-15 border border-warning rounded-3">
+					<h6>Pending Courses</h6>
+					<h2 class="mb-0 fs-1 text-warning">{{ pendingCourses|length }}</h2>
+				</div>
+			</div>
+		</div>
+		<!-- Course boxes END -->
+
+		<!-- Card START -->
+		<div class="card bg-transparent border">
+
+			<!-- Card header START -->
+			<div class="card-header bg-light border-bottom">
+				<!-- Search and select START -->
+				<div class="row g-3 align-items-center justify-content-between">
+					<!-- Search bar -->
+					<div class="col-md-8">
+						<form class="rounded position-relative" method="get">
+							<input value="{{ search }}" class="form-control bg-body" type="search" name="search" placeholder="Search" aria-label="Search">
+							<button class="bg-transparent p-2 position-absolute top-50 end-0 translate-middle-y border-0 text-primary-hover text-reset" type="submit">
+								<i class="fas fa-search fs-6 "></i>
+							</button>
+						</form>
+					</div>
+
+					<!-- Select option -->
+					<div class="col-md-3">
+						<!-- Short by filter -->
+						<form>
+							<select id="admin_filter_select_courses" class="form-select js-choice border-0 z-index-9" aria-label=".form-select-sm">
+								<option  value="{{ path('app_admin_cours_index') }}">Sort by</option>
+								<option {{ filter is same as 'newest' ? 'selected' : '' }} value="{{ path('app_admin_cours_index', {filter: 'newest'}) }}">Newest</option>
+								<option {{ filter is same as 'oldest' ? 'selected' : '' }} value="{{ path('app_admin_cours_index', {filter: 'oldest'}) }}">Oldest</option>
+								<option {{ filter is same as 'accepted' ? 'selected' : '' }} value="{{ path('app_admin_cours_index', {filter: 'accepted'}) }}">Accepted</option>
+								<option {{ filter is same as 'rejected' ? 'selected' : '' }} value="{{ path('app_admin_cours_index', {filter: 'rejected'}) }}">Rejected</option>
+                                <option {{ filter is same as 'free' ? 'selected' : '' }} value="{{ path('app_admin_cours_index', {filter: 'free'}) }}">Free</option>
+								<option {{ filter is same as 'premium' ? 'selected' : '' }} value="{{ path('app_admin_cours_index', {filter: 'premium'}) }}">Premium</option>
+							</select>
+						</form>
+					</div>
+				</div>
+				<!-- Search and select END -->
+			</div>
+			<!-- Card header END -->
+
+			<!-- Card body START -->
+			<div class="card-body">
+				<!-- Course table START -->
+				<div class="table-responsive border-0 rounded-3">
+					<!-- Table START -->
+					<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+						<!-- Table head -->
+						<thead>
+							<tr>
+								<th scope="col" class="border-0 rounded-start">Course Name</th>
+								<th scope="col" class="border-0">Instructor</th>
+								<th scope="col" class="border-0">Added Date</th>
+								<th scope="col" class="border-0">Type</th>
+								<th scope="col" class="border-0">Price</th>
+								<th scope="col" class="border-0">Status</th>
+								<th scope="col" class="border-0 rounded-end">Action</th>
+							</tr>
+						</thead>
+						
+						<!-- Table body START -->
+						<tbody>
+							{% for course in courses %}
+                                <tr>
+                                    <!-- Table data -->
+                                    <td>
+                                        <div class="d-flex align-items-center position-relative">
+                                            <!-- Image -->
+                                            <div class="w-60px">
+                                                <img src="{{ asset('uploads/media/courses/' ~ course.media.imageFile) }}" class="rounded" alt="">
+                                            </div>
+                                            <!-- Title -->
+                                            <h6 class="table-responsive-title mb-0 ms-2">	
+                                                <a href="{{ path('app_admin_cours_show', {slug: course.slug}) }}" class="stretched-link">{{ course.intitule }}</a>
+                                            </h6>
+                                        </div>
+                                    </td>
+
+                                    <!-- Table data -->
+                                    <td>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <!-- Avatar -->
+                                            <div class="avatar avatar-xs flex-shrink-0">
+                                                <img class="avatar-img rounded-circle" src="{{ asset('assets/images/avatar/09.jpg') }}" alt="avatar">
+                                            </div>
+                                            <!-- Info -->
+                                            <div class="ms-2">
+                                                <h6 class="mb-0 fw-light">{{ course.enseignant.utilisateur.personne.nomComplet }}</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Table data -->
+                                    <td>{{ course.createdAt|date('d/m/Y') }}</td>
+
+                                    <!-- Table data -->
+                                    <td> <span class="badge text-bg-primary">{{ course.niveauDifficulte }}</span> </td>
+
+                                    <!-- Table data -->
+                                    <td>{{ course.isFree ? 'Free' : course.montantAbonnement }}</td>
+
+                                    <!-- Table data -->
+                                    <td>
+                                        {% if course.isValidated %}
+                                            <span class="badge bg-success bg-opacity-15 text-success">Live</span>
+                                        {% elseif course.isRejected %}
+                                            <span class="badge bg-danger bg-opacity-15 text-danger">Rejected</span>
+                                        {% elseif course.isPublished %}
+                                            <span class="badge bg-warning bg-opacity-15 text-warning">Pending</span>
+                                        {% else %}
+                                            <span class="badge bg-primary bg-opacity-15 text-primary">Creating</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Table data -->
+                                    <td>
+                                        {% if not course.isValidated %}
+                                            {% if course.isPublished %}
+                                                <a href="#" class="btn btn-sm btn-success-soft me-1 mb-1 mb-md-0">Approve</a>
+                                                <button class="btn btn-sm btn-secondary-soft mb-0">Reject</button>
+                                            {% else %}
+                                                <span class="badge bg-warning bg-opacity-15 text-warning">Pending</span>
+                                            {% endif %}
+                                        {% else %}
+                                            <a href="#" class="btn btn-sm btn-dark me-1 mb-1 mb-md-0">Edit</a>    
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr><td colspan="7">No data found</td></tr>
+                            {% endfor %}
+						</tbody>
+						<!-- Table body END -->
+					</table>
+					<!-- Table END -->
+				</div>
+				<!-- Course table END -->
+			</div>
+			<!-- Card body END -->
+
+			<!-- Card footer START -->
+			<div class="card-footer bg-transparent pt-0">
+				<!-- Pagination START -->
+				<div class="d-sm-flex justify-content-sm-between align-items-sm-center">
+					{{ knp_pagination_render(courses) }}
+				</div>
+				<!-- Pagination END -->
+			</div>
+			<!-- Card footer END -->
+		</div>
+		<!-- Card END -->    
+
+{% endblock %}

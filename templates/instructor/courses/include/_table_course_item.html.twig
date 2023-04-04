@@ -1,0 +1,81 @@
+<tr>
+    <!-- Course item -->
+    <td>
+        <div class="d-flex align-items-center">
+            <!-- Image -->
+            <div class="w-60px">
+                <img src="{{ asset('uploads/media/courses/' ~ course.media.imageFile) }}" class="rounded" alt="">
+            </div>
+            <div class="mb-0 ms-2">
+                <!-- Title -->
+                <h6><a target="_blank" href="{{ path('app_front_course_details', {slug: course.slug}) }}">{{ course.intitule }}</a></h6>
+                <!-- Info -->
+                <div class="d-sm-flex">
+                    <p class="h6 fw-light mb-0 small me-3"><i class="fas fa-table text-orange me-2"></i>{{ course.numberOfLessons ~ 'lessons' }}</p>
+                    <p class="h6 fw-light mb-0 small"><i class="fas fa-check-circle text-success me-2"></i>{{ course.chapitres|length ~ 'chapitre' }}</p>
+                </div>
+            </div>
+        </div>
+    </td>
+    <!-- Enrolled item -->
+    <td class="text-center text-sm-start">{{ course.eleves|length }}</td>
+    <!-- Status item -->
+    <td>
+        {% if course.isValidated %}
+            <div class="badge bg-success bg-opacity-10 text-success">published and validated</div>
+        {% elseif course.isPublished %}
+            <div class="badge bg-danger bg-opacity-10 text-danger">Waiting for validation</div>
+        {% else %}
+            <div class="badge bg-primary bg-opacity-10 text-primary">On going redaction</div>	
+        {% endif %}
+    </td>
+    <!-- Price item -->
+    <td>
+        {% if course.montantAbonnement > 0 %}
+            ${{ course.montantAbonnement }}
+        {% else %}
+            <div class="badge badge-info bg-opacity-10 text-primary">Free</div>
+        {% endif %}
+    </td>
+    <!-- Action item -->
+    <td>
+        {% if course.chapitres|length > 0 %}
+            <div class="dropdown text-end" style="float: right;">
+                <a title="Quizzes" href="#" class="btn btn-sm btn-light btn-round small mb-0" role="button" id="dropdownShare2" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-three-dots fa-fw"></i>
+                </a>
+                <!-- dropdown button -->
+                <ul class="dropdown-menu dropdown-w-sm dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownShare2">
+                    <li class="title">Quizzes</li>
+                    {% for chapitre in course.chapitres|sort((a, b) => a.numero <=> b.numero) %}
+                        <li>
+                            <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="{{chapitre.title}}: Click to add quizzes" title="{{chapitre.title}}: Click to add quizzes" class="dropdown-item" href="{{ path('app_instructor_courses_quizzes', {slug: chapitre.slug}) }}">
+                                <i class="fas fa-arrow-right fa-fw me-2"></i>
+                                Chapter {{ chapitre.numero}}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    <hr>
+                    <li>
+                        <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="{{course.intitule}}: Click to add quizzes" title="{{course.intitule}}: Click to add quizzes" class="dropdown-item" href="{{ path('app_instructor_courses_quizzes_final', {slug: course.slug}) }}">
+                            <i class="fas fa-arrow-right fa-fw me-2"></i>
+                            Add course quizzes
+                        </a>
+                    </li>
+                    {% if not course.isValidated %}
+                        <hr>
+                        <li>
+                            <a href="{{ path('app_instructor_courses_delete', {slug: course.slug}) }}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Delete" title="Delete" class="d-block bg-danger-soft-hover p-2 delete-item"><i class="fas fa-fw fa-trash-alt"></i> Remove</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+        {% if not course.isPublished %}
+            <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="published" href="{{ path('app_instructor_courses_published', {slug: course.slug, _token: csrf_token('published' ~ course.id)}) }}" class="btn btn-sm btn-success-soft btn-round me-1 mb-0"><i class="far fa-fw fa-paper-plane"></i></a>
+        {% endif %}
+        {% if not course.isPublished %}
+            <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit" target="_blank" href="{{ path('app_instructor_courses_edit', {slug: course.slug}) }}" class="btn btn-sm btn-warning-soft btn-round me-1 mb-0"><i class="far fa-fw fa-edit"></i></a>
+        {% endif %}
+    </td>
+</tr>

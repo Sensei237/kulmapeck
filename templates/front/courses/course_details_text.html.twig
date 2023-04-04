@@ -1,0 +1,294 @@
+{% extends "front/base.html.twig" %}
+
+{% block title %} - Course détails{% endblock %}
+
+{% block mainContent %}
+
+    <section class="bg-blue py-7">
+        <div class="container">
+            <div class="row justify-content-lg-between">
+
+                <div class="col-lg-8">
+                    <!-- Title -->
+                    <h1 class="text-white">{{ course.intitule }}</h1>
+                    <p class="text-white">{{ course.description }}</p>
+                    <!-- Content -->
+                    <ul class="list-inline mb-5">
+                        <li class="list-inline-item h6 me-4 mb-1 mb-sm-0 text-white"><span class="fw-light">By</span> {{ course.enseignant.utilisateur.personne.nomComplet }}</li>
+                        <li class="list-inline-item me-4 mb-1 mb-sm-0">
+                            <ul class="list-inline mb-0">
+                                <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                                <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                                <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                                <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                                <li class="list-inline-item me-0 small"><i class="fas fa-star-half-alt text-warning"></i></li>
+                                <li class="list-inline-item ms-2 h6 text-white">4.5/5.0</li>
+                                <li class="list-inline-item text-white">(1,586 reviews)</li>
+                            </ul>
+                        </li>
+                        <li class="list-inline-item h6 mb-0 text-white"><i class="fas fa-globe text-info me-2"></i>{{ course.language }}</li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3">
+                    <h6 class="text-white lead fw-light mb-3"><i class="fas fa-user-graduate text-orange me-2"></i>{{ course.eleves|length }} already enrolled</h6>
+                    
+                    <!-- Button -->
+                    <a href="{{ url("app_front_course_start", {slug: course.slug}, "http", false) }}" class="btn btn-warning mb-3 w-100">{{ not exist ? 'Enroll Course and start' : 'Continue Reading' }}</a>
+                    
+                    <!-- Progress item -->
+                    <div class="overflow-hidden mb-4">
+                        <h6 class="text-white">Your Progress</h6>
+                        {% set percent = lessons|length > 0 ? 100 * lectures|length / lessons|length : 0 %}
+                        <div class="progress progress-sm bg-white bg-opacity-10 mb-1">
+                            <div class="progress-bar bg-white aos" role="progressbar" data-aos="slide-right" data-aos-delay="200" data-aos-duration="1000" data-aos-easing="ease-in-out" style="width: {{ percent }}%;" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <small class="text-white">{{ lectures|length }} of {{ lessons|length }} Completed</small>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- =======================
+    Page content START -->
+    <section class="pt-0">
+        <div class="container">
+            <div class="row">
+                <!-- Main content START -->
+                <div class="col-12">
+                    <div class="card shadow rounded-2 p-0 mt-n5">
+                        <!-- Tabs START -->
+                        <div class="card-header border-bottom px-4 pt-3 pb-0">
+                            <ul class="nav nav-bottom-line py-0" id="course-pills-tab" role="tablist">
+                                <!-- Tab item -->
+                                <li class="nav-item me-2 me-sm-4" role="presentation">
+                                    <button class="nav-link mb-2 mb-md-0 active" id="course-pills-tab-1" data-bs-toggle="pill" data-bs-target="#course-pills-1" type="button" role="tab" aria-controls="course-pills-1" aria-selected="true">Course Materials</button>
+                                </li>
+                                <!-- Tab item -->
+                                <li class="nav-item me-2 me-sm-4" role="presentation">
+                                    <button class="nav-link mb-2 mb-md-0" id="course-pills-tab-2" data-bs-toggle="pill" data-bs-target="#course-pills-2" type="button" role="tab" aria-controls="course-pills-2" aria-selected="false">Chapters</button>
+                                </li>
+                                <!-- Tab item -->
+                                <li class="nav-item me-2 me-sm-4" role="presentation">
+                                    <button class="nav-link mb-2 mb-md-0" id="course-pills-tab-4" data-bs-toggle="pill" data-bs-target="#course-pills-4" type="button" role="tab" aria-controls="course-pills-4" aria-selected="false">Reviews</button>
+                                </li>
+                                <!-- Tab item -->
+                                <li class="nav-item me-2 me-sm-4" role="presentation">
+                                    <button class="nav-link mb-2 mb-md-0" id="course-pills-tab-3" data-bs-toggle="pill" data-bs-target="#course-pills-3" type="button" role="tab" aria-controls="course-pills-3" aria-selected="false">Discussions</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Tabs END -->
+
+                        <!-- Tab contents START -->
+                        <div class="card-body p-sm-4">
+                            <div class="tab-content" id="course-pills-tabContent">
+                                <!-- Content START -->
+                                <div class="tab-pane fade show active" id="course-pills-1" role="tabpanel" aria-labelledby="course-pills-tab-1">
+                                    <!-- Accordion START -->
+                                    <div class="accordion accordion-icon accordion-border" id="accordionExample2">
+                                        {% for chap in course.chapitres|sort((a, b) => a.numero <=> b.numero) %}
+                                            <!-- Item -->
+                                            <div class="accordion-item mb-3">
+                                                <h6 class="accordion-header font-base" id="heading-{{ loop.index }}">
+                                                    <button class="accordion-button fw-bold rounded d-flex collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ loop.index }}" aria-expanded="{{ loop.first ? 'true' : 'false' }}" aria-controls="collapse-{{ loop.index }}">
+                                                        Chapter {{ chap.numero }} : {{ chap.title }}
+                                                        <span class="small ms-0 ms-sm-2 d-none d-sm-block">({{ chap.lessons|length }} {{ chap.lessons|length == 1 ? 'lesson' : 'lessons' }})</span> 
+
+                                                        <!-- Mark button -->
+                                                        <span class="{{ lectures|length is same as lessons|length ? 'text-success' : 'text-secondary' }} ms-auto pe-4" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark as completed">
+                                                            <i class="bi bi-check-circle-fill"></i>
+                                                        </span>
+                                                    </button>
+                                                </h6>
+                                                
+                                                <div id="collapse-{{ loop.index }}" class="accordion-collapse collapse {{ loop.first ? 'show' : '' }}" aria-labelledby="heading-{{ loop.index }}" data-bs-parent="#accordionExample2">
+                                                    <div class="accordion-body mt-3">
+                                                        {% for lesson in chap.lessons|sort((c, d) => c.numero <=> d.numero) %}
+                                                            
+                                                            <!-- Course lecture -->
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <div class="d-flex align-items-center">
+                                                                    {% if lesson.videoLink is not same as null %}
+                                                                        <!-- Video button -->
+                                                                        <a href="#" class="btn btn-danger-soft btn-round btn-sm mb-0 position-static">
+                                                                                <i class="fas fa-play me-0"></i>
+                                                                        </a>
+                                                                    {% else %}
+                                                                        <a href="#" class="icon-md mb-0 position-static flex-shrink-0 text-body">
+                                                                            <i class="fas fa-file-pdf fa-fw fs-5"></i>
+                                                                        </a>
+                                                                    {% endif %}
+                                                                    
+                                                                    <!-- Content -->
+                                                                    <div class="ms-3">
+                                                                        <a href="#" class="d-inline-block text-truncate mb-0 h6 fw-normal w-100px w-sm-200px w-md-400px"> Lesson {{ lesson.numero }} : {{ lesson.title }}</a>
+                                                                    </div>
+                                                                </div>
+                                                                {% set isReaded = false %}
+                                                                {% if eleve is not same as null %}
+                                                                    {% for l in eleve.lectures %}
+                                                                        {% if l.lesson is same as lesson and l.isFinished %}
+                                                                            {% set isReaded = true %}
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                {% endif %}
+                                                                <!-- Actions Mark button -->
+                                                                <a href="#" class="p-2 mb-0 {{ isReaded ? 'text-success' : 'text-secondary' }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ isReaded ? 'Completed' : 'Not Completed' }}">
+                                                                    <i class="bi bi-check-circle-fill"></i>
+                                                                </a>
+                                                            </div>
+
+                                                            <hr> <!-- Divider -->
+
+                                                        {% endfor %}
+                                                        {% if chap.quizzes|length > 0 %}
+                                                        <!-- Course slide -->
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div class="position-relative d-flex align-items-center">
+                                                                <div class="d-flex align-items-center">
+                                                                    <!-- Video button -->
+                                                                    <a href="#" class="icon-md mb-0 position-static flex-shrink-0 text-body">
+                                                                        <i class="fas fa-question-circle fa-fw fs-5"></i>
+                                                                    </a>
+                                                                    <!-- Content -->
+                                                                    <div class="ms-3">
+                                                                        <a href="#" class="d-inline-block text-truncate mb-0 h6 fw-normal w-100px w-sm-200px w-md-400px">Quiz (QCM)</a>
+                                                                        <ul class="nav nav-divider small mb-0">
+                                                                            <li class="nav-item">{{ chap.quizzes|length }} questions</li>
+                                                                            <li class="nav-item">20 pts</li>
+                                                                        </ul>
+                                                                    </div>
+                                                                
+                                                                </div>
+                                                            </div>
+                                                            <!-- Actions Mark button -->
+                                                            <a href="#" class="p-2 mb-0 text-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark as Complete">
+                                                                <i class="bi bi-check-circle-fill"></i>
+                                                            </a>
+                                                        </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+
+                                    </div>
+                                    <!-- Accordion END -->
+                                </div>
+                                <!-- Content END -->
+
+                                <!-- Content START -->
+                                <div class="tab-pane fade" id="course-pills-2" role="tabpanel" aria-labelledby="course-pills-tab-2">
+                                    <div class="card">
+                                        <!-- Card header -->
+                                        <div class="card-header border-bottom p-0 pb-3">
+                                            <!-- Title and select -->
+                                            <div class="d-sm-flex justify-content-between align-items-center">
+                                                <h4 class="mb-0">All Chapters Description</h4>
+                                            </div>
+                                        </div>
+
+                                        <!-- Card body -->
+                                        <div class="card-body p-0 pt-3">
+                                            {% for chap in course.chapitres|sort((a, b) => a.numero <=> b.numero) %}
+                                                <!-- Note item -->
+                                                <div class="row g-4">
+                                                    <!-- Content -->
+                                                    <div class="col-sm-12 col-xl-12">
+                                                        <h5>{{ chap.title }}</h5>
+                                                        <p>{{ chap.description|raw }}</p>
+                                                        <!-- Buttons -->
+                                                        <div class="hstack gap-3 flex-wrap">
+                                                            <a href="{{ url("app_front_course_start", {slug: course.slug}, "http", false) }}" class="btn btn-sm btn-primary mb-0"><i class="bi bi-play-fill me-2"></i> {{ not exist ? 'Start Reading' : 'Continue' }}</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {% if not loop.last %}
+                                                    <hr> <!-- Divider -->
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Content END -->
+
+                                <!-- Content START -->
+                                <div class="tab-pane fade" id="course-pills-3" role="tabpanel" aria-labelledby="course-pills-tab-3">    
+                                    <div class="card">
+                                        <!-- Card header -->
+                                        <div class="card-header border-bottom p-0 pb-3">
+                                            <!-- Title -->
+                                            <h4 class="mb-3">Discussions</h4>
+                                        </div>
+
+                                        <!-- Card body -->
+                                        <div class="card-body p-0 pt-3">
+                                            <div class="vstack gap-3">
+                                                {{ include('front/includes/courses/forum.html.twig') }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- Content END -->
+
+                                <!-- Content START -->
+                                <div class="tab-pane fade" id="course-pills-4" role="tabpanel" aria-labelledby="course-pills-tab-4">    
+                                    <div class="card">
+                                        <!-- Card body -->
+                                        <div class="card-body p-0 pt-3">
+                                            <div class="vstack gap-3">
+                                                {{ include('front/includes/courses/_course_reviews.html.twig') }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- Content END -->
+
+                            </div>
+                        </div>
+                        <!-- Tab contents END -->
+                    </div>
+                </div>
+                <!-- Main content END -->
+            </div><!-- Row END -->
+        </div>
+    </section>
+    <!-- =======================
+    Page content END -->
+
+
+    <!-- =======================
+    Listed courses START -->
+    <section class="pt-0 mt-5 mb-3">
+        <div class="container">
+            <!-- Title -->
+            <div class="row mb-4">
+                <h2 class="mb-0">Top Listed Courses</h2>
+            </div>
+
+            <div class="row">
+                <!-- Slider START -->
+                <div class="tiny-slider arrow-round arrow-blur arrow-hover">
+                    <div class="tiny-slider-inner" data-autoplay="false" data-arrow="true" data-edge="2" data-dots="false" data-items="3" data-items-lg="2" data-items-sm="1">
+                        {% for cours in topCourses %}
+                            {% if cours is not same as course %}
+                                {{ include('front/includes/courses/_trending_course.html.twig', {course: cours}) }}
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <!-- Slider END -->		
+            </div>
+        </div>
+    </section>
+    <!-- =======================
+    Listed courses END -->
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ForumMessage index{% endblock %}
+
+{% block body %}
+    <h1>ForumMessage index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CratedAt</th>
+                <th>Content</th>
+                <th>Likes</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for forum_message in forum_messages %}
+            <tr>
+                <td>{{ forum_message.id }}</td>
+                <td>{{ forum_message.cratedAt ? forum_message.cratedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ forum_message.content }}</td>
+                <td>{{ forum_message.likes }}</td>
+                <td>
+                    <a href="{{ path('app_forum_message_show', {'id': forum_message.id}) }}">show</a>
+                    <a href="{{ path('app_forum_message_edit', {'id': forum_message.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_forum_message_new') }}">Create new</a>
+{% endblock %}

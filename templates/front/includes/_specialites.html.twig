@@ -1,0 +1,4 @@
+<option value="">Specialites</option>
+{% for s in filiere.specialites %}
+    <option value="{{ s.slug }}">{{ s.name }}</option>
+{% endfor %}

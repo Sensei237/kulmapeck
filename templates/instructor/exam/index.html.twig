@@ -1,0 +1,83 @@
+{% extends "instructor/base.html.twig" %}
+
+{% block btnAction %}
+    <a href="{{ path('app_instructor_exam_new') }}" class="btn btn-success mb-0">add new exam</a>
+{% endblock %}
+
+{% block pageContent %}
+
+    <!-- Card START -->
+	<div class="card border bg-transparent rounded-3">
+		<!-- Card header START -->
+		<div class="card-header bg-transparent border-bottom">
+			<h3 class="mb-0">Exam List</h3>
+		</div>
+		<!-- Card header END -->
+
+		<!-- Card body START -->
+		<div class="card-body">
+
+			<!-- Order list table START -->
+			<div class="table-responsive border-0">
+				<!-- Table START -->
+				<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+					<!-- Table head -->
+					<thead>
+						<tr>
+							<th scope="col" class="border-0 rounded-start">Exam Title</th>
+							<th scope="col" class="border-0">Description</th>
+							<th scope="col" class="border-0">Subject</th>
+							<th scope="col" class="border-0">Correction</th>
+							<th scope="col" class="border-0 rounded-end">Action</th>
+						</tr>
+					</thead>
+
+					<!-- Table body START -->
+					<tbody>
+						{% for exam in exams %}
+							<tr>
+                                <td>{{ exam.title }}</td>
+                                <td>{{ exam.description }}</td>
+                                <td>
+                                    <a href="{{ asset('uploads/media/exams/files/' ~ exam.sujet) }}" class="btn btn-sm btn-primary-soft"><i class="fas fa-file-download"></i> Download</a>
+                                </td>
+                                <td>
+                                    <a href="{{ asset('uploads/media/exams/files/' ~ exam.correction) }}" class="btn btn-sm btn-success-soft"><i class="fas fa-file-download"></i> Download</a>
+                                </td>
+                                <td class="text-center">
+                                    {% if not exam.isPublished %}
+                                        <a href="{{ url("app_instructor_exam_published", {reference: exam.reference, _token: csrf_token('published' ~ exam.id)}) }}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title='Published' class="btn btn-sm btn-success-soft btn-round"><i class="fas fa-paper-plane"></i></a>
+                                        <a href="{{ url("app_instructor_exam_edit", {reference: exam.reference}) }}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title='Edit' class="btn btn-sm btn-warning-soft btn-round"><i class="fas fa-edit"></i></a>
+                                        <a onclick="return confirm('Are you sure that you want to delete this exam?')" href="{{ url("app_instructor_exam_delete", {reference: exam.reference, _token: csrf_token('remove' ~ exam.id)}) }}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title='Remove' class="btn btn-sm btn-danger-soft btn-round"><i class="fas fa-trash-alt"></i></a>
+                                    {% elseif not exam.isValidated %}
+                                        <i class="badge badge-warning">Waiting vatidation</i>
+                                    {% else %}
+                                        <i class="badge badge-success">Published</i>
+                                    {% endif %}
+                                </td>
+                            </tr>
+						{% else %}
+							<tr><td colspan="5">No Exam's found</td></tr>
+						{% endfor %}
+
+					</tbody>
+					<!-- Table body END -->
+				</table>
+				<!-- Table END -->
+			</div>
+			<!-- Order list table END -->
+
+			<!-- Pagination START -->
+			<div class="d-sm-flex justify-content-sm-between align-items-sm-center mt-4 mt-sm-3">
+				<!-- Content -->
+				<p class="mb-0 text-center text-sm-start">Showing {{ ((exams.getCurrentPageNumber - 1) * exams.getItemNumberPerPage) + 1 }} to {{ exams.getItemNumberPerPage * exams.getCurrentPageNumber }} of {{exams.getTotalItemCount}} entries</p>
+				<!-- Pagination -->
+				{{ knp_pagination_render(exams) }}
+			</div>
+			<!-- Pagination END -->
+		</div>
+		<!-- Card body START -->
+	</div>
+	<!--Card END  -->
+
+{% endblock %}

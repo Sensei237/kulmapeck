@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} | Chapitres{% endblock %}
+
+{% block pageTitle %}Chapitres{% endblock %}
+
+{% block cardTitle %}Ajouter{% endblock %}
+
+{% block cardFooter %}
+    <a class="btn btn-app" href="{{ path('app_chapitre_index', {coursId: cours.id}) }}">
+        <i class="fas fa-plus"></i> Liste
+    </a>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-9">
+            {{ include('chapitre/_form.html.twig') }}
+        </div>
+        <div class="col-md-3">
+
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "instructor/base.html.twig" %}
+
+{% block subTitle %} - Courses {% endblock %}
+
+{% block script %}
+	<script>
+		$('#instructor_filter_select_courses').on('change', (e) => {
+			window.location.href = $(e.currentTarget).val()
+		})
+	</script>
+{% endblock %}
+
+{% block pageContent %}
+    
+    <!-- Card START -->
+	<div class="card border bg-transparent rounded-3">
+		<!-- Card header START -->
+		<div class="card-header bg-transparent border-bottom">
+			<h3 class="mb-0">My Courses List</h3>
+		</div>
+		<!-- Card header END -->
+
+		<!-- Card body START -->
+		<div class="card-body">
+
+			<!-- Search and select START -->
+			<div class="row g-3 align-items-center justify-content-between mb-4">
+				<!-- Search -->
+				<div class="col-md-8">
+					<form class="rounded position-relative" method="get">
+						<input class="form-control pe-5 bg-transparent" name="search" value="{{ search }}" type="search" placeholder="Search" aria-label="Search">
+						<button class="bg-transparent p-2 position-absolute top-50 end-0 translate-middle-y border-0 text-primary-hover text-reset" type="submit">
+					<i class="fas fa-search fs-6 "></i>
+				</button>
+					</form>
+				</div>
+
+				<!-- Select option -->
+				<div class="col-md-3">
+					<!-- Short by filter -->
+					<form>
+						<select name="filter" id="instructor_filter_select_courses" class="form-select js-choice border-0 z-index-9 bg-transparent" aria-label=".form-select-sm">
+							<option value="{{ path('app_instructor_courses') }}">Sort by</option>
+							<option {{ filter is defined and filter is same as 'free' ? 'selected' : '' }} value="{{ path('app_instructor_courses', {filter: 'free'}) }}">Free</option>
+							<option {{ filter is defined and filter is same as 'newest' ? 'selected' : '' }} value="{{ path('app_instructor_courses', {filter: 'newest'}) }}">Newest</option>
+							<option {{ filter is defined and filter is same as 'premium' ? 'selected' : '' }} value="{{ path('app_instructor_courses', {filter: 'premium'}) }}">Premium</option>
+							<option {{ filter is defined and filter is same as 'viewed' ? 'selected' : '' }} value="{{ path('app_instructor_courses', {filter: 'viewed'}) }}">Most Viewed</option>
+						</select>
+					</form>
+				</div>
+			</div>
+			<!-- Search and select END -->
+
+			<!-- Course list table START -->
+			<div class="table-responsive border-0">
+				<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+					<!-- Table head -->
+					<thead>
+						<tr>
+							<th scope="col" class="border-0 rounded-start {{ courses.isSorted('intitule') ? 'sorting' : '' }}">{{ knp_pagination_sortable(courses, 'Course Title', 'intitule') }}</th>
+							<th scope="col" class="border-0">Students</th>
+							<th scope="col" class="border-0">Status</th>
+							<th scope="col" class="border-0">Price</th>
+							<th scope="col" class="border-0 rounded-end">Action</th>
+						</tr>
+					</thead>
+
+					<!-- Table body START -->
+					<tbody>
+						<!-- Table item -->
+						{% for course in courses %}
+							{{ include('instructor/courses/include/_table_course_item.html.twig') }}
+							{% else %}
+								<tr>
+									<td colspan="5">No data found</td>
+								</tr>
+						{% endfor %}
+					</tbody>
+					<!-- Table body END -->
+				</table>
+			</div>
+			<!-- Course list table END -->
+
+			<!-- Pagination START -->
+			<div class="d-sm-flex justify-content-sm-between align-items-sm-center mt-4 mt-sm-3 pagination-container">
+				{{ knp_pagination_render(courses) }}
+			</div>
+			<!-- Pagination END -->
+		</div>
+		<!-- Card body START -->
+	</div>
+	<!-- Card END -->
+
+{% endblock %}

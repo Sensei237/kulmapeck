@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<title>Media</title>
+
+{% block body %}
+    <h1>Media</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ medium.id }}</td>
+            </tr>
+            <tr>
+                <th>VideoUrl</th>
+                <td>{{ medium.videoUrl }}</td>
+            </tr>
+            <tr>
+                <th>Mp4File</th>
+                <td>{{ medium.mp4File }}</td>
+            </tr>
+            <tr>
+                <th>WebMFile</th>
+                <td>{{ medium.webMFile }}</td>
+            </tr>
+            <tr>
+                <th>OggFile</th>
+                <td>{{ medium.oggFile }}</td>
+            </tr>
+            <tr>
+                <th>ImageFile</th>
+                <td>{{ medium.imageFile }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_media_index') }}">back to list</a>
+
+    <a href="{{ path('app_media_edit', {'id': medium.id}) }}">edit</a>
+
+    {{ include('media/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une sous-système scolaire{% endblock %}
+
+{% block pageTitle %}Sous-systèmes scolaire{% endblock %}
+
+{% block cardTitle %}Ajout{% endblock %}
+
+{% block cardFooter %}
+    <a class="btn btn-app" href="{{ path('app_sous_systeme_index') }}">
+        <i class="fas fa-arrow-left"></i> Liste
+    </a>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-6">
+            {{ include('sous_systeme/_form.html.twig') }}
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<title>Media index</title>
+
+{% block body %}
+    <h1>Media index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>VideoUrl</th>
+                <th>Mp4File</th>
+                <th>WebMFile</th>
+                <th>OggFile</th>
+                <th>ImageFile</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for medium in media %}
+            <tr>
+                <td>{{ medium.id }}</td>
+                <td>{{ medium.videoUrl }}</td>
+                <td>{{ medium.mp4File }}</td>
+                <td>{{ medium.webMFile }}</td>
+                <td>{{ medium.oggFile }}</td>
+                <td>{{ medium.imageFile }}</td>
+                <td>
+                    <a href="{{ path('app_media_show', {'id': medium.id}) }}">show</a>
+                    <a href="{{ path('app_media_edit', {'id': medium.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_media_new') }}">Create new</a>
+{% endblock %}

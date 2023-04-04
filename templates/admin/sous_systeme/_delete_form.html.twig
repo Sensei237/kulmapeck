@@ -1,0 +1,4 @@
+<form method="post" style="display: inline;" action="{{ path('app_admin_sous_systeme_delete', {'id': sous_systeme.id}) }}" onsubmit="return confirm('Vous êtes sur de vouloir effectuer cette action ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sous_systeme.id) }}">
+    <button class="btn btn-danger-soft btn-sm">Delete</button>
+</form>

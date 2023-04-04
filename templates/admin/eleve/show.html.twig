@@ -1,0 +1,287 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Instructor details{% endblock %}
+
+{% block script %}
+    <script>
+		$('#admin_filter_select_courses').on('change', (e) => {
+			window.location.href = $(e.currentTarget).val()
+		})
+	</script>
+{% endblock %}
+
+{% block actionBtn %}
+	<p>
+    </p>
+{% endblock %}
+
+{% block mainContent %}
+
+    <div class="row g-4">
+
+			<!-- Personal information START -->
+			<div class="col-xxl-7">
+				<div class="card bg-transparent border rounded-3 h-100">
+
+					<!-- Card header -->
+					<div class="card-header bg-light border-bottom">
+						<h5 class="card-header-title mb-0">Personal Information</h5>
+					</div>
+
+					<!-- Card body START -->
+					<div class="card-body">
+						<!-- Profile picture -->
+						<div class="avatar avatar-xl mb-3">
+							<img class="avatar-img rounded-circle border border-white border-3 shadow" src="{{ asset('uploads/images/enseignants/kyc/' ~ eleve.utilisateur.personne.avatar) }}" alt="">
+						</div>
+
+						<!-- Information START -->
+						<div class="row">
+
+							<!-- Information item -->
+							<div class="col-md-6">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Title:</span>
+										<span class="h6 mb-0">{{ eleve.utilisateur.personne.sexe|upper is same as 'MASCULIN' ? 'Mr' : 'Miss' }}</span>
+									</li>
+
+									<li class="list-group-item">
+										<span>Full Name:</span>
+										<span class="h6 mb-0">{{ eleve.utilisateur.personne.nomComplet }}</span>
+									</li>
+
+									<li class="list-group-item">
+										<span>User Name:</span>
+										<span class="h6 mb-0">{{ eleve.utilisateur.personne.pseudo }}</span>
+									</li>
+
+									<li class="list-group-item">
+										<span>Mobile Number:</span>
+										<span class="h6 mb-0">{{ eleve.utilisateur.personne.telephone }}</span>
+									</li>
+								</ul>
+							</div>
+
+							<!-- Information item -->
+							<div class="col-md-6">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Email ID:</span>
+										<span class="h6 mb-0">{{ eleve.utilisateur.email }}</span>
+									</li>
+
+									<li class="list-group-item">
+										<span>Location:</span>
+										<span class="h6 mb-0">{{ eleve.utilisateur.personne.adresse }}</span>
+									</li>
+
+									<li class="list-group-item">
+										<span>Joining Date:</span>
+										<span class="h6 mb-0">{{ eleve.joinAt|date('d/m/Y')|default('') }}</span>
+									</li>
+								</ul>
+							</div>
+
+                            <div class="col-md-4">
+                                <ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Birthday:</span>
+										<span class="h6 mb-0">{{ eleve.utilisateur.personne.bornAt|date('d/m/Y') }}</span>
+									</li>
+								</ul>
+                            </div>
+
+                            <div class="col-md-4">
+                                <ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Born at:</span>
+										<span class="h6 mb-0">{{ eleve.utilisateur.personne.lieuNaissance }}</span>
+									</li>
+								</ul>
+                            </div>
+
+                            <div class="col-md-4">
+                                <ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Country:</span>
+										<span class="h6 mb-0">{{ eleve.utilisateur.personne.pays.name }}</span>
+									</li>
+								</ul>
+                            </div>
+
+							<!-- Information item -->
+							<div class="col-12">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Code & link:</span>
+										<span class="h6 mb-0">{{ eleve.utilisateur.personne.invitationCode }}</span>
+									</li>
+								</ul>
+							</div>
+                            <div class="col-12">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Link for instructors:</span> 
+										<span class="h6 mb-0">{{ eleve.utilisateur.personne.invitationLink.trainer }}</span>
+									</li>
+								</ul>
+							</div>
+
+                            <div class="col-12">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Link for students:</span> 
+										<span class="h6 mb-0">{{ eleve.utilisateur.personne.invitationLink.student }}</span>
+									</li>
+								</ul>
+							</div>
+
+							<!-- Information item -->
+							<div class="col-12">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item d-flex">
+										<span>Description:</span>
+										<p class="h6 mb-0">{{ eleve.details|default('') }}</p>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<!-- Information END -->
+					</div>
+					<!-- Card body END -->
+				</div>
+			</div>
+			<!-- Personal information END -->
+
+			<!-- Student status chart START -->
+			<div class="col-xxl-5">
+				<div class="row g-4">
+					<!-- Active student START -->
+					<div class="col-md-6 col-xxl-12">
+						<div class="card bg-transparent border overflow-hidden">
+							<!-- Card header -->
+							<div class="card-header bg-light border-bottom">
+								<h5 class="card-header-title mb-0">Active Network</h5>
+							</div>
+							<!-- Card body -->
+							<div class="card-body p-0">
+								<div class="d-sm-flex justify-content-between p-4">
+									<h4 class="text-blue mb-0">984</h4>
+									<p class="mb-0"><span class="text-success me-1">0.20%<i class="bi bi-arrow-up"></i></span>vs last Week</p>
+								</div>
+								<!-- Apex chart -->
+								<div id="activeChartstudent"></div>
+							</div>
+						</div>
+					</div>
+					<!-- Active student END -->
+
+					<!-- Enrolled START -->
+					<div class="col-md-6 col-xxl-12">
+						<div class="card bg-transparent border overflow-hidden">
+							<!-- Card header -->
+							<div class="card-header bg-light border-bottom">
+								<h5 class="card-header-title mb-0">New Enrollment</h5>
+							</div>
+							<!-- Card body -->
+							<div class="card-body p-0">
+								<div class="d-sm-flex justify-content-between p-4">
+									<h4 class="text-blue mb-0">140</h4>
+									<p class="mb-0"><span class="text-success me-1">0.35%<i class="bi bi-arrow-up"></i></span>vs last Week</p>
+								</div>
+								<!-- Apex chart -->
+								<div id="activeChartstudent2"></div>
+							</div>
+						</div>
+					</div>
+					<!-- Enrolled END -->
+
+				</div>
+			</div>
+			<!-- Student status chart END -->
+		
+			<!-- Instructor course list START -->
+			<div class="col-12">
+				<div class="card bg-transparent border h-100">
+
+					<!-- Card header -->
+					<div class="card-header bg-light border-bottom">
+						<h5 class="mb-0">Courses List</h5>
+					</div>
+
+					<!-- Card body START -->
+					<div class="card-body pb-0">
+						<!-- Table START -->
+						<div class="table-responsive border-0" style="max-height: 600px;overflow: auto;">
+							<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+
+								<!-- Table head -->
+								<thead>
+									<tr>
+										<th scope="col" class="border-0 rounded-start">Course Name</th>
+										<th scope="col" class="border-0">Chapter</th>
+										<th scope="col" class="border-0">Lessons</th>
+									</tr>
+								</thead>
+
+								<!-- Table body START -->
+								<tbody>
+									{% for course in eleve.cours %}
+                                        <tr>
+                                            <!-- Table data -->
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <!-- Image -->
+                                                    <div class="w-100px">
+                                                        <img src="{{ asset('uploads/media/courses/' ~ course.media.imageFile) }}" class="rounded" alt="">
+                                                    </div>
+                                                    <div class="mb-0 ms-2">
+                                                        <!-- Title -->
+                                                        <h6><a href="#">{{ course.intitule }}</a></h6>
+                                                        <!-- Info -->
+                                                        <div class="overflow-hidden">
+                                                            <h6 class="mb-0 text-end">85%</h6>
+                                                            <div class="progress progress-sm bg-primary bg-opacity-10">
+                                                                <div class="progress-bar bg-primary aos aos-init aos-animate" role="progressbar" data-aos="slide-right" data-aos-delay="200" data-aos-duration="1000" data-aos-easing="ease-in-out" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <!-- Table data -->
+                                            <td>{{ course.chapitres|length }}</td>
+
+                                            <!-- Table data -->
+                                            <td>{{ course.numberOfLessons }}</td>
+									</tr>
+                                    {% else %}
+                                        <td colspan="3">No data found</td>
+                                    {% endfor %}
+								</tbody>
+								<!-- Table body END -->
+							</table>
+						</div>
+						<!-- Table END -->
+					</div>
+					<!-- Card body END -->
+
+					<!-- Card footer START -->
+					<div class="card-footer bg-transparent">
+						<!-- Pagination START -->
+						<div class="d-sm-flex justify-content-sm-between align-items-sm-center">
+                            
+						</div>
+						<!-- Pagination END -->
+					</div>
+					<!-- Card footer END -->
+				</div>
+			</div>
+			<!-- Instructor course list END -->
+
+
+		</div> 
+
+{% endblock %}

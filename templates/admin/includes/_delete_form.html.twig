@@ -1,0 +1,4 @@
+<form method="post" action="{{ path }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this item?');">
+    <input type="hidden" name="_token" value="{{ token }}">
+    <button class="btn {{ classes|default('') }}">Delete</button>
+</form>

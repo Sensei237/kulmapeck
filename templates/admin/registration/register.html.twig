@@ -1,0 +1,58 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Users{% endblock %}
+
+{% block actionBtn %}
+	
+{% endblock %}
+
+{% block script %}
+    
+{% endblock %}
+
+{% block mainContent %}
+
+    <!-- Card START -->
+	<div class="card bg-transparent border">
+
+		<!-- Card header START -->
+		<div class="card-header bg-light border-bottom">
+			<!-- Search and select START -->
+			<div class="row g-3 align-items-center justify-content-between">
+				<!-- Search bar -->
+				<div class="col-md-8">
+					<form class="rounded position-relative" method="get">
+						<input value="{{ search|default('') }}" class="form-control bg-body" type="search" name="search" placeholder="Search" aria-label="Search">
+						<button class="bg-transparent p-2 position-absolute top-50 end-0 translate-middle-y border-0 text-primary-hover text-reset" type="submit">
+							<i class="fas fa-search fs-6 "></i>
+						</button>
+					</form>
+				</div>
+			</div>
+			<!-- Search and select END -->
+		</div>
+		<!-- Card header END -->
+
+		<!-- Card body START -->
+		<div class="card-body">
+			<!-- Form START -->
+            <div class="p-4">
+                {{ include('registration/_form.html.twig') }}
+            </div>
+		</div>
+		<!-- Card body END -->
+
+		<!-- Card footer START -->
+		<div class="card-footer bg-transparent pt-0">
+			<!-- Pagination START -->
+			<div class="d-sm-flex justify-content-sm-between align-items-sm-center">
+
+			</div>
+			<!-- Pagination END -->
+		</div>
+		<!-- Card footer END -->
+	</div>
+    <!-- Card END -->
+ 
+
+{% endblock %}

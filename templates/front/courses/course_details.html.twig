@@ -1,0 +1,294 @@
+{% extends "front/base.html.twig" %}
+
+{% block title %} - Course détails{% endblock %}
+
+{% block mainContent %}
+
+    <section class="py-0 pb-lg-5">
+        <div class="container">
+            <div class="row g-3">
+                <!-- Course video START -->
+                <div class="col-12">
+                    <div class="video-player rounded-3">
+                        {% if course.media.videoUrl is not same as null or course.media.mp4File is not same as null or course.media.webMFile is not same  as null or course.media.oggFile is not same as null %}
+                            <video style="max-height: 600px;overflow: hidden;" controls crossorigin="anonymous" playsinline poster="{{ asset('uploads/media/courses/' ~ course.media.imageFile) }}">
+                                {% if course.media.videoUrl is not same as null %}
+                                    <source src="{{ course.media.videoUrl }}" type="video/mp4" size="720">
+                                {% endif %}
+                                {% if course.media.mp4File is not same as null %}
+                                    <source src="{{ asset('uploads/media/courses/' ~ course.media.mp4File) }}" type="video/mp4" size="720">
+                                {% endif %}
+                                {% if course.media.webMFile is not same as null %}
+                                    <source src="{{ asset('uploads/media/courses/' ~ course.media.webMFile) }}" type="video/webm" size="720">
+                                {% endif %}
+                                {% if course.media.oggFile is not same as null %}
+                                    <source src="{{ asset('uploads/media/courses/' ~ course.media.oggFile) }}" type="video/ogg" size="720">
+                                {% endif %}
+                            </video>
+                        {% else %}
+                            <img style="width: 100%;max-height: 400px;" src="{{ asset('uploads/media/courses/' ~ course.media.imageFile) }}" alt="">
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- Course video END -->
+
+                <!-- Playlist responsive toggler START -->
+                <div class="col-12 d-lg-none">
+                    <button class="btn btn-primary mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+                        <i class="bi bi-camera-video me-1"></i> Playlist
+                    </button>
+                </div>
+                <!-- Playlist responsive toggler END -->
+            </div>
+        </div>
+    </section>
+
+    <section class="pt-0">
+        <div class="container">
+            <div class="row g-lg-5">
+
+                <!-- Main content START -->
+                <div class="col-lg-8">
+                    <div class="row g-4">
+                                
+                        <!-- Course title START -->
+                        <div class="col-12">
+                            <!-- Title -->
+                            <h1>{{ course.intitule }}</h1>
+                            <!-- Content -->
+                            <ul class="list-inline mb-0">
+                                <li class="list-inline-item h6 me-3 mb-1 mb-sm-0"><i class="fas fa-star text-warning me-2"></i>{{ course.review }}/5.0</li>
+                                <li class="list-inline-item h6 me-3 mb-1 mb-sm-0"><i class="fas fa-user-graduate text-orange me-2"></i>{{ course.eleves|length }} Enrolled</li>
+                                <li class="list-inline-item h6 me-3 mb-1 mb-sm-0"><i class="fas fa-signal text-success me-2"></i>{{ course.niveauDifficulte }}</li>
+                            </ul>
+                        </div>
+                        <!-- Course title END -->
+
+                        <!-- Instructor detail START -->
+                        <div class="col-12">
+                            <div class="d-sm-flex justify-content-sm-between align-items-center">
+                                <!-- Avatar detail -->
+                                <div class="d-flex align-items-center">
+                                    <!-- Avatar image -->
+                                    <div class="avatar avatar-lg">
+                                        <img class="avatar-img rounded-circle" src="{{ asset(course.enseignant.avatar) }}" alt="avatar">
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-0"><a href="#">By {{ course.enseignant.utilisateur.personne.nomComplet }}</a></h6>
+                                        <p class="mb-0 small">Founder Eduport company</p>
+                                    </div>
+                                </div>
+
+                                <!-- Button -->
+                                <div class="d-flex mt-2 mt-sm-0">
+                                    <a class="btn btn-danger-soft btn-sm mb-0" href="#">Follow</a>
+                                    <!-- Share button with dropdown -->
+                                    <div class="dropdown ms-2">
+                                        <a href="#" class="btn btn-sm mb-0 btn-info-soft small" role="button" id="dropdownShare" data-bs-toggle="dropdown" aria-expanded="false">
+                                            share
+                                        </a>
+                                        <!-- dropdown button -->
+                                        <ul class="dropdown-menu dropdown-w-sm dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownShare">
+                                            <li><a  class="dropdown-item" href="#"><i class="fab fa-twitter-square me-2"></i>Twitter</a></li>
+                                            <li><a class="dropdown-item" href="#"><i class="fab fa-facebook-square me-2"></i>Facebook</a></li>
+                                            <li><a class="dropdown-item" href="#"><i class="fab fa-linkedin me-2"></i>LinkedIn</a></li>
+                                            <li><a class="dropdown-item" href="#"><i class="fas fa-copy me-2"></i>Copy link</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Instructor detail END -->
+
+                        <!-- Course detail START -->
+                        <div class="col-12">
+                            <!-- Tabs START -->
+                            <ul class="nav nav-pills nav-pills-bg-soft px-3" id="course-pills-tab" role="tablist">
+                                <!-- Tab item -->
+                                <li class="nav-item me-2 me-sm-4" role="presentation">
+                                    <button class="nav-link mb-0 active" id="course-pills-tab-1" data-bs-toggle="pill" data-bs-target="#course-pills-1" type="button" role="tab" aria-controls="course-pills-1" aria-selected="true">Overview</button>
+                                </li>
+                                <!-- Tab item -->
+                                <li class="nav-item me-2 me-sm-4" role="presentation">
+                                    <button class="nav-link mb-0" id="course-pills-tab-2" data-bs-toggle="pill" data-bs-target="#course-pills-2" type="button" role="tab" aria-controls="course-pills-2" aria-selected="false">Reviews</button>
+                                </li>
+                                <!-- Tab item -->
+                                <li class="nav-item me-2 me-sm-4" role="presentation">
+                                    <button class="nav-link mb-0" id="course-pills-tab-3" data-bs-toggle="pill" data-bs-target="#course-pills-3" type="button" role="tab" aria-controls="course-pills-3" aria-selected="false">FAQs </button>
+                                </li>
+                                <!-- Tab item -->
+                                <li class="nav-item me-2 me-sm-4" role="presentation">
+                                    <button class="nav-link mb-0" id="course-pills-tab-4" data-bs-toggle="pill" data-bs-target="#course-pills-4" type="button" role="tab" aria-controls="course-pills-4" aria-selected="false">Forum</button>
+                                </li>
+                            </ul>
+                            <!-- Tabs END -->
+
+                            <!-- Tab contents START -->
+                            <div class="tab-content pt-4 px-3" id="course-pills-tabContent">
+                                <!-- Content START -->
+                                <div class="tab-pane fade show active" id="course-pills-1" role="tabpanel" aria-labelledby="course-pills-tab-1">
+                                    <!-- Course detail START -->
+                                    <h5 class="mb-3">Course Description</h5>
+                                    {{ course.content|raw }}
+                                </div>
+                                <!-- Content END -->
+
+                                <!-- Content START -->
+                                <div class="tab-pane fade" id="course-pills-2" role="tabpanel" aria-labelledby="course-pills-tab-2">
+                                    {{ include('front/includes/courses/_course_reviews.html.twig') }}
+                                </div>
+                                <!-- Content END -->
+
+                                <!-- Content START -->
+                                <div class="tab-pane fade" id="course-pills-3" role="tabpanel" aria-labelledby="course-pills-tab-3">
+                                    <!-- Title -->
+                                    <h5 class="mb-3">Frequently Asked Questions</h5>
+                                    {% for faq in course.faqs %}
+                                        <!-- FAQ item -->
+                                        <div class="mt-4">
+                                            <h6>{{ faq.question }}</h6>
+                                            <p class="mb-0">{{ faq.answer }}</p>
+                                        </div>
+                                    {% endfor %}
+                        
+                                </div>
+                                <!-- Content END -->
+
+                                <!-- Content START -->
+                                <div class="tab-pane fade" id="course-pills-4" role="tabpanel" aria-labelledby="course-pills-tab-4">
+                                    {{ include('front/includes/courses/forum.html.twig') }}
+                                </div>
+
+                                <div class="mt-5 text-right">
+                                    {% if lastReadLesson is not same as null %}
+                                        <a class="btn btn-success-soft" href="{{ url("app_front_read_lesson", {slug: lastReadLesson.slug}) }}">Poursuivre la lecture</a>
+                                    {% else %}
+                                        <a href="{{ path('app_front_course_start', {slug: course.slug}) }}" class="btn btn-primary-soft">Commencer la lecture</a>
+                                    {% endif %}
+                                    
+                                    
+                                </div>
+                                <!-- Content END -->
+                            </div>
+                            <!-- Tab contents END -->
+                        </div>
+                        <!-- Course detail END -->
+                    </div>
+                </div>
+                <!-- Main content END -->
+
+                <!-- Right sidebar START -->
+                <div class="col-lg-4">
+                    <!-- Responsive offcanvas body START -->
+                    <div class="offcanvas-lg offcanvas-end" tabindex="-1" id="offcanvasSidebar" aria-labelledby="offcanvasSidebarLabel">
+                        <div class="offcanvas-header bg-dark">
+                            <h5 class="offcanvas-title text-white" id="offcanvasSidebarLabel">Course playlist</h5>
+                            <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasSidebar" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                        </div>
+                        <div class="offcanvas-body p-3 p-lg-0">
+                            <div class="col-12">
+                                <!-- Accordion START -->
+                                <div class="accordion accordion-icon accordion-bg-light" id="accordionExample2">
+                                    {% for chapter in course.chapitres %}
+                                        <!-- Item -->
+                                        <div class="accordion-item mb-3">
+                                            <h6 class="accordion-header font-base" id="heading-{{ chapter.id }}">
+                                                <a class="accordion-button fw-bold rounded {{ loop.index > 1 ? 'collapsed' : '' }} d-block" href="#collapse-{{ chapter.id }}" data-bs-toggle="collapse" data-bs-target="#collapse-{{ chapter.id }}" aria-expanded="{{ loop.index > 1 ? 'false' : 'true' }}" aria-controls="collapse-{{ chapter.id }}">
+                                                    <span class="mb-0">{{ chapter.title }}</span> 
+                                                    <span class="small d-block mt-1">({{ chapter.lessons|length }} Lectures)</span> 
+                                                </a>
+                                            </h6>
+                                            <div id="collapse-{{ chapter.id }}" class="accordion-collapse collapse {{ loop.index is same as 1 ? 'show' : '' }}" aria-labelledby="heading-{{ chapter.id }}" data-bs-parent="#accordionExample2">
+                                                <div class="accordion-body mt-3">
+                                                    <div class="vstack gap-3">
+
+                                                        <!-- Progress bar -->
+                                                        <div class="overflow-hidden">
+                                                            <div class="d-flex justify-content-between">
+                                                                <p class="mb-1 h6">0/{{ chapter.lessons|length  }} Completed</p>
+                                                                <h6 class="mb-1 text-end">0%</h6>
+                                                            </div>
+                                                            <div class="progress progress-sm bg-primary bg-opacity-10">
+                                                                <div class="progress-bar bg-primary aos" role="progressbar" data-aos="slide-right" data-aos-delay="200" data-aos-duration="1000" data-aos-easing="ease-in-out" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {% for lesson in chapter.lessons %}
+                                                            <!-- Course lecture -->
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <div class="position-relative d-flex align-items-center">
+                                                                    {% if is_granted('ROLE_INSTRUCTOR') or is_granted('ROLE_ADMIN') %}
+                                                                        <a href="{{  not app.user and not is_granted('ROLE_INSTRUCTOR') }}" class="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
+                                                                            <i class="fas fa-play me-0"></i>
+                                                                        </a>
+                                                                    {% else %}
+                                                                        <a href="#" class="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
+                                                                            <i class="fas fa-play me-0"></i>
+                                                                        </a>    
+                                                                    {% endif %}
+                                                                    
+                                                                    <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">{{ lesson.title }}</span>
+                                                                </div>
+                                                                <p class="mb-0 text-truncate">2m 10s</p>
+                                                            </div>
+                                                        {% endfor %}
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <!-- Accordion END -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Responsive offcanvas body END -->
+
+                    <!-- Tags START -->
+                    <div class="mt-4">
+                        <h4 class="mb-3">Tags</h4>
+                        <ul class="list-inline mb-0">
+                            {% for tag in course.tags|split(',') %}
+                                <li class="list-inline-item"> <a class="btn btn-outline-light btn-sm" href="#">{{ tag }}</a> </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <!-- Tags END -->
+                </div>
+                <!-- Right sidebar END -->
+
+            </div><!-- Row END -->
+        </div>
+    </section>
+
+
+    <!-- =======================
+    Listed courses START -->
+    <section class="pt-0">
+        <div class="container">
+            <!-- Title -->
+            <div class="row mb-4">
+                <h2 class="mb-0">Top Listed Courses</h2>
+            </div>
+
+            <div class="row">
+                <!-- Slider START -->
+                <div class="tiny-slider arrow-round arrow-blur arrow-hover">
+                    <div class="tiny-slider-inner" data-autoplay="false" data-arrow="true" data-edge="2" data-dots="false" data-items="3" data-items-lg="2" data-items-sm="1">
+                        {% for cours in topCourses %}
+                            {% if cours is not same as course %}
+                                {{ include('front/includes/courses/_trending_course.html.twig', {course: cours}) }}
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <!-- Slider END -->		
+            </div>
+        </div>
+    </section>
+    <!-- =======================
+    Listed courses END -->
+
+{% endblock %}

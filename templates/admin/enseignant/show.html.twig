@@ -1,0 +1,478 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Instructor details{% endblock %}
+
+{% block script %}
+    <script>
+		$('#admin_filter_select_courses').on('change', (e) => {
+			window.location.href = $(e.currentTarget).val()
+		})
+	</script>
+{% endblock %}
+
+{% block actionBtn %}
+	<p>
+        {% if not enseignant.isValidated %}
+            <a href="{{ path('app_admin_enseignant_accept_request', {reference: enseignant.reference}) }}" class="btn btn-success-soft mb-0 delete-item">Accept</a>
+        {% endif %}
+        {% if not enseignant.isRejected %}
+            <a href="{{ path('app_admin_enseignant_reject_request', {reference: enseignant.reference}) }}" class="btn btn-secondary-soft mb-0 delete-item">Reject</a>
+        {% endif %}
+    </p>
+{% endblock %}
+
+{% block mainContent %}
+
+    <div class="row g-4">
+
+			<!-- Personal information START -->
+			<div class="col-xxl-7">
+				<div class="card bg-transparent border rounded-3 h-100">
+
+					<!-- Card header -->
+					<div class="card-header bg-light border-bottom">
+						<h5 class="card-header-title mb-0">Personal Information</h5>
+					</div>
+
+					<!-- Card body START -->
+					<div class="card-body">
+						<!-- Profile picture -->
+						<div class="avatar avatar-xl mb-3">
+							<img class="avatar-img rounded-circle border border-white border-3 shadow" src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.utilisateur.personne.avatar) }}" alt="">
+						</div>
+
+						<!-- Information START -->
+						<div class="row">
+
+							<!-- Information item -->
+							<div class="col-md-6">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Title:</span>
+										<span class="h6 mb-0">{{ enseignant.utilisateur.personne.sexe|upper is same as 'MASCULIN' ? 'Mr' : 'Miss' }}</span>
+									</li>
+
+									<li class="list-group-item">
+										<span>Full Name:</span>
+										<span class="h6 mb-0">{{ enseignant.utilisateur.personne.nomComplet }}</span>
+									</li>
+
+									<li class="list-group-item">
+										<span>User Name:</span>
+										<span class="h6 mb-0">{{ enseignant.utilisateur.personne.pseudo }}</span>
+									</li>
+
+									<li class="list-group-item">
+										<span>Mobile Number:</span>
+										<span class="h6 mb-0">{{ enseignant.utilisateur.personne.telephone }}</span>
+									</li>
+								</ul>
+							</div>
+
+							<!-- Information item -->
+							<div class="col-md-6">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Email ID:</span>
+										<span class="h6 mb-0">{{ enseignant.utilisateur.email }}</span>
+									</li>
+
+									<li class="list-group-item">
+										<span>Location:</span>
+										<span class="h6 mb-0">{{ enseignant.utilisateur.personne.adresse }}</span>
+									</li>
+
+									<li class="list-group-item">
+										<span>Joining Date:</span>
+										<span class="h6 mb-0">{{ enseignant.joinAt|date('d/m/Y')|default('') }}</span>
+									</li>
+								</ul>
+							</div>
+
+                            <div class="col-md-4">
+                                <ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Birthday:</span>
+										<span class="h6 mb-0">{{ enseignant.utilisateur.personne.bornAt|date('d/m/Y') }}</span>
+									</li>
+								</ul>
+                            </div>
+
+                            <div class="col-md-4">
+                                <ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Born at:</span>
+										<span class="h6 mb-0">{{ enseignant.utilisateur.personne.lieuNaissance }}</span>
+									</li>
+								</ul>
+                            </div>
+
+                            <div class="col-md-4">
+                                <ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Country:</span>
+										<span class="h6 mb-0">{{ enseignant.utilisateur.personne.pays.name }}</span>
+									</li>
+								</ul>
+                            </div>
+
+							<!-- Information item -->
+							<div class="col-12">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Code & link:</span>
+										<span class="h6 mb-0">{{ enseignant.utilisateur.personne.invitationCode }}</span>
+									</li>
+								</ul>
+							</div>
+                            <div class="col-12">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Link for instructors:</span> 
+										<span class="h6 mb-0">{{ enseignant.utilisateur.personne.invitationLink.trainer }}</span>
+									</li>
+								</ul>
+							</div>
+
+                            <div class="col-12">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Link for students:</span> 
+										<span class="h6 mb-0">{{ enseignant.utilisateur.personne.invitationLink.student }}</span>
+									</li>
+								</ul>
+							</div>
+
+							<!-- Information item -->
+							<div class="col-12">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item d-flex">
+										<span>Description:</span>
+										<p class="h6 mb-0">{{ enseignant.details }}</p>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<!-- Information END -->
+					</div>
+					<!-- Card body END -->
+				</div>
+			</div>
+			<!-- Personal information END -->
+
+			<!-- Student status chart START -->
+			<div class="col-xxl-5">
+				<div class="row g-4">
+					<!-- Active student START -->
+					<div class="col-md-6 col-xxl-12">
+						<div class="card bg-transparent border overflow-hidden">
+							<!-- Card header -->
+							<div class="card-header bg-light border-bottom">
+								<h5 class="card-header-title mb-0">Active Students</h5>
+							</div>
+							<!-- Card body -->
+							<div class="card-body p-0">
+								<div class="d-sm-flex justify-content-between p-4">
+									<h4 class="text-blue mb-0">984</h4>
+									<p class="mb-0"><span class="text-success me-1">0.20%<i class="bi bi-arrow-up"></i></span>vs last Week</p>
+								</div>
+								<!-- Apex chart -->
+								<div id="activeChartstudent"></div>
+							</div>
+						</div>
+					</div>
+					<!-- Active student END -->
+
+					<!-- Enrolled START -->
+					<div class="col-md-6 col-xxl-12">
+						<div class="card bg-transparent border overflow-hidden">
+							<!-- Card header -->
+							<div class="card-header bg-light border-bottom">
+								<h5 class="card-header-title mb-0">New Enrollment</h5>
+							</div>
+							<!-- Card body -->
+							<div class="card-body p-0">
+								<div class="d-sm-flex justify-content-between p-4">
+									<h4 class="text-blue mb-0">140</h4>
+									<p class="mb-0"><span class="text-success me-1">0.35%<i class="bi bi-arrow-up"></i></span>vs last Week</p>
+								</div>
+								<!-- Apex chart -->
+								<div id="activeChartstudent2"></div>
+							</div>
+						</div>
+					</div>
+					<!-- Enrolled END -->
+
+				</div>
+			</div>
+			<!-- Student status chart END -->
+
+            <!-- Instructor Files list START -->
+			<div class="col-12">
+				<div class="card bg-transparent border h-100">
+
+					<!-- Card header -->
+					<div class="card-header bg-light border-bottom">
+						<h5 class="mb-0">KYC</h5>
+					</div>
+
+					<!-- Card body START -->
+					<div class="card-body pb-0">
+                        <div class="row g-4">
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <img  style="height: 550px;width: 100%;" src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.diplome) }}" alt="">
+                                    <caption>Diplome</caption>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <img  style="height: 350px;width: 100%;" style="width: 100%;" class="avatar-img shadow" src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.selfieCNI) }}" alt="">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <img style="width: 100%;height: 200px;" class="avatar-img shadow" src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.rectoCNI) }}" alt="">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <img style="width: 100%;height: 200px;" class="avatar-img shadow" src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.versoCNI) }}" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <img style="height: 550px;width: 100%;" src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.emploiDuTemps) }}" alt="">
+                                    <caption>Emploi de temps</caption>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+		
+			<!-- Instructor course list START -->
+			<div class="col-12">
+				<div class="card bg-transparent border h-100">
+
+					<!-- Card header -->
+					<div class="card-header bg-light border-bottom">
+						<h5 class="mb-0">Courses List</h5>
+					</div>
+
+					<!-- Card body START -->
+					<div class="card-body pb-0">
+						<!-- Table START -->
+						<div class="table-responsive border-0" style="max-height: 600px;overflow: auto;">
+							<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+
+								<!-- Table head -->
+								<thead>
+									<tr>
+										<th scope="col" class="border-0 rounded-start">Course Name</th>
+										<th scope="col" class="border-0">Enrolled</th>
+										<th scope="col" class="border-0">Status</th>
+										<th scope="col" class="border-0 rounded-end">Action</th>
+									</tr>
+								</thead>
+
+								<!-- Table body START -->
+								<tbody>
+									{% for course in courses %}
+                                        
+                                        <tr>
+                                            <!-- Table data -->
+                                            <td class="d-flex align-items-center position-relative">
+                                                <div class="w-60px"><img src="{{ asset('uploads/media/courses/' ~ course.media.imageFile) }}" class="rounded" alt=""></div>
+                                                <h6 class="table-responsive-title mb-0 ms-2"><a target="_blank" href="{{ path('app_front_course_details', {slug: course.slug}) }}" class="stretched-link">{{ course.intitule }}</a></h6>
+                                            </td>
+
+                                            <!-- Table data -->
+                                            <td>{{ course.eleves|length < 10 ? '0' ~ course.eleves|length : course.eleves|length }}</td>
+
+                                            <!-- Table data -->
+                                            <td>
+                                                {% if course.isValidated %}
+                                                    <span class="badge bg-success bg-opacity-15 text-success">Live</span>
+                                                {% elseif course.isRejected %}
+                                                    <span class="badge bg-danger bg-opacity-15 text-danger">Rejected</span>
+                                                {% elseif course.isPublished %}
+                                                    <span class="badge bg-warning bg-opacity-15 text-warning">Pending</span>
+                                                {% else %}
+                                                    <span class="badge bg-primary bg-opacity-15 text-primary">Creating</span>
+                                                {% endif %}
+                                            </td>
+
+                                            <!-- Table data -->
+                                            <td>
+                                                <a href="{{ path('app_front_course_details', {slug: course.slug}) }}" target="_blank" class="btn btn-sm btn-info-soft mb-0">View</a>
+                                            </td>
+                                        </tr>
+
+                                    {% endfor %}
+								</tbody>
+								<!-- Table body END -->
+							</table>
+						</div>
+						<!-- Table END -->
+					</div>
+					<!-- Card body END -->
+
+					<!-- Card footer START -->
+					<div class="card-footer bg-transparent">
+						<!-- Pagination START -->
+						<div class="d-sm-flex justify-content-sm-between align-items-sm-center">
+                            
+						</div>
+						<!-- Pagination END -->
+					</div>
+					<!-- Card footer END -->
+				</div>
+			</div>
+
+
+			<!-- Instructor course list END -->
+
+			<!-- Student review START -->
+			<div class="col-12">
+				<div class="card bg-transparent border">
+
+					<!-- Card header START -->
+					<div class="card-header border-bottom bg-light">
+						<h5 class="mb-0">All Reviews</h5>
+					</div>
+					<!-- Card header END -->
+		
+					<!-- Card body START -->
+					<div class="card-body pb-0">
+						<!-- Table START -->
+						<div class="table-responsive border-0">
+							<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+								<!-- Table head -->
+								<thead>
+									<tr>
+										<th scope="col" class="border-0 rounded-start">Student Name</th>
+										<th scope="col" class="border-0">Course Name</th>
+										<th scope="col" class="border-0">Rating</th>
+										<th scope="col" class="border-0 rounded-end">Action</th>
+									</tr>
+								</thead>
+		
+								<!-- Table body START -->
+								<tbody>
+									{% for review in reviews %}
+                                        <!-- Table row -->
+                                        <tr>
+                                            <!-- Table data -->
+                                            <td>
+                                                <div class="d-flex align-items-center position-relative">
+                                                    <!-- Image -->
+                                                    <div class="avatar avatar-xs mb-2 mb-md-0">
+                                                        <img src="{{ asset('uploads/images/eleves/' ~ review.eleve.utilisateur.personne.avatar) }}" class="rounded-circle" alt="">
+                                                    </div>
+                                                    <div class="mb-0 ms-2">
+                                                        <!-- Title -->
+                                                        <h6 class="mb-0"><a href="#" class="stretched-link">{{ review.eleve.utilisateur.personne.nomComplet }}</a></h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+            
+                                            <!-- Table data -->
+                                            <td>
+                                                <h6 class="table-responsive-title mb-0"><a href="#">{{ review.cours.intitule }}</a></h6>
+                                            </td>
+            
+                                            <!-- Table data -->
+                                            <td>
+                                                <ul class="list-inline mb-0">
+                                                    {% for i in 1..review.rating %}
+                                                        <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                                                    {% endfor %}
+                                                    {% if review.rating < 5 %}
+                                                        {% for i in review..5 %}
+                                                            <li class="list-inline-item me-0 small"><i class="far fa-star text-warning"></i></li>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </ul>
+                                            </td>
+            
+                                            <!-- Table data -->
+                                            <td>
+                                                <a href="#" class="btn btn-sm btn-info-soft mb-0" data-bs-toggle="modal" data-bs-target="#viewReview{{ review.id }}">View</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+								</tbody>
+								<!-- Table body END -->
+							</table>
+						</div>
+						<!-- Table END -->
+					</div>
+					<!-- Card body END -->
+		
+					<!-- Card footer START -->
+					<div class="card-footer bg-transparent">
+						<!-- Pagination START -->
+						<div class="d-sm-flex justify-content-sm-between align-items-sm-center">
+							
+						</div>
+						<!-- Pagination END -->
+					</div>
+					<!-- Card footer END -->
+				</div>
+			</div>
+			<!-- Student review END -->
+
+		</div> 
+
+
+    {% for review in reviews %}
+        <!-- Popup modal for reviwe START -->
+        <div class="modal fade" id="viewReview{{ review.id }}" tabindex="-1" aria-labelledby="viewReviewLabel{{ review.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <!-- Modal header -->
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title text-white" id="viewReviewLabel">Review</h5>
+                        <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="d-md-flex">
+                            <!-- Avatar -->
+                            <div class="avatar avatar-md me-4 flex-shrink-0">
+                                <img class="avatar-img rounded-circle" src="{{ asset('uploads/images/eleves/' ~ review.eleve.utilisateur.personne.avatar) }}" alt="avatar">
+                            </div>
+                            <!-- Text -->
+                            <div>
+                                <div class="d-sm-flex mt-1 mt-md-0 align-items-center">
+                                    <h5 class="me-3 mb-0">{{ review.eleve.utilisateur.personne.nomComplet }}</h5>
+                                    <!-- Review star -->
+                                    <ul class="list-inline mb-0">
+                                        {% for i in 1..review.rating %}
+                                            <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                                        {% endfor %}
+                                        {% if review.rating < 5 %}
+                                            {% for i in review..5 %}
+                                                <li class="list-inline-item me-0 small"><i class="far fa-star text-warning"></i></li>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                                <!-- Info -->
+                                <p class="small mb-2">{{ review.createdAt|date('d/m/Y') }}</p>
+                                <p class="mb-2">{{ review.message }}</p>
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Popup modal for reviwe END -->
+    {% endfor %}
+    
+
+{% endblock %}

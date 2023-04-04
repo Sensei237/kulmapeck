@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} | Classes{% endblock %}
+
+{% block pageTitle %}Classes{% endblock %}
+
+{% block cardTitle %}Ajouter{% endblock %}
+
+{% block cardFooter %}
+    <a class="btn btn-app" href="{{ path('app_classe_index') }}">
+        <i class="fas fa-plus"></i> Liste
+    </a>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-6">
+            {{ include('classe/_form.html.twig') }}
+        </div>
+    </div>
+    
+{% endblock %}

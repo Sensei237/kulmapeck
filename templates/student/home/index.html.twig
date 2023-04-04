@@ -1,0 +1,153 @@
+{% extends "student/base.html.twig" %}
+
+{% block subTitle %} - Dashboard{% endblock %}
+
+{% block pageContent %}
+
+    <!-- Counter boxes START -->
+				<div class="row mb-4">
+					<!-- Counter item -->
+					<div class="col-sm-6 col-lg-4 mb-3 mb-lg-0">
+						<div class="d-flex justify-content-center align-items-center p-4 bg-orange bg-opacity-15 rounded-3">
+							<span class="display-6 lh-1 text-orange mb-0"><i class="fas fa-tv fa-fw"></i></span>
+							<div class="ms-4">
+								<div class="d-flex">
+									<h5 class="purecounter mb-0 fw-bold" data-purecounter-start="0" data-purecounter-end="{{ student.cours|length }}" data-purecounter-delay="200">0</h5>
+								</div>
+								<p class="mb-0 h6 fw-light">Total Courses</p>
+							</div>
+						</div>
+					</div>
+					<!-- Counter item -->
+					<div class="col-sm-6 col-lg-4 mb-3 mb-lg-0">
+						<div class="d-flex justify-content-center align-items-center p-4 bg-purple bg-opacity-15 rounded-3">
+							<span class="display-6 lh-1 text-purple mb-0"><i class="fas fa-clipboard-check fa-fw"></i></span>
+							<div class="ms-4">
+								<div class="d-flex">
+									<h5 class="purecounter mb-0 fw-bold" data-purecounter-start="0" data-purecounter-end="{{ student.lectures|length }}"	data-purecounter-delay="200">0</h5>
+								</div>
+								<p class="mb-0 h6 fw-light">Complete lessons</p>
+							</div>
+						</div>
+					</div>
+					<!-- Counter item -->
+					<div class="col-sm-6 col-lg-4 mb-3 mb-lg-0">
+						<div class="d-flex justify-content-center align-items-center p-4 bg-success bg-opacity-10 rounded-3">
+							<span class="display-6 lh-1 text-success mb-0"><i class="fas fa-medal fa-fw"></i></span>
+							<div class="ms-4">
+								<div class="d-flex">
+									<h5 class="purecounter mb-0 fw-bold" data-purecounter-start="0" data-purecounter-end="8" data-purecounter-delay="300">0</h5>
+								</div>
+								<p class="mb-0 h6 fw-light">Achieved Certificates</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Counter boxes END -->
+
+				<div class="card bg-transparent border rounded-3">
+					<!-- Card header START -->
+					<div class="card-header bg-transparent border-bottom">
+						<h3 class="mb-0">My Courses List</h3>
+					</div>
+					<!-- Card header END -->
+
+					<!-- Card body START -->
+					<div class="card-body">
+						<!-- Search and select START -->
+						<div class="row g-3 align-items-center justify-content-between mb-4">
+							<!-- Content -->
+							<div class="col-md-8">
+								<form class="rounded position-relative" action="{{ url("app_student_courses") }}">
+									<input name="search" required class="form-control pe-5 bg-transparent" type="search" placeholder="Search" aria-label="Search">
+									<button class="bg-transparent p-2 position-absolute top-50 end-0 translate-middle-y border-0 text-primary-hover text-reset" type="submit">
+								<i class="fas fa-search fs-6 "></i>
+							</button>
+								</form>
+							</div>
+
+							<!-- Select option -->
+							<div class="col-md-3">
+								
+							</div>
+						</div>
+						<!-- Search and select END -->
+
+						<!-- Course list table START -->
+						<div class="table-responsive border-0">
+							<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+								<!-- Table head -->
+								<thead>
+									<tr>
+										<th scope="col" class="border-0 rounded-start">Course Title</th>
+										<th scope="col" class="border-0">Total Lessons</th>
+										<th scope="col" class="border-0">Completed Lessons</th>
+										<th scope="col" class="border-0 rounded-end">Action</th>
+									</tr>
+								</thead>
+
+								<!-- Table body START -->
+                                {% set break = false %}
+								<tbody>
+                                    {% for course in student.cours %}
+										{% set leconTerminees = 0 %}
+										{% for l in student.lectures %}
+											{% if l.isFinished and l.lesson.chapitre.cours is same as course %}
+												{% set leconTerminees = leconTerminees + 1 %}
+											{% endif %}
+										{% endfor %}
+										{% set numberOfLessons = course.numberOfLessons > 0 ? course.numberOfLessons : 1 %}
+										{% set percent = (leconTerminees * 100 ) / numberOfLessons %}
+                                        <tr>
+                                            <!-- Table data -->
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <!-- Image -->
+                                                    <div class="w-100px">
+                                                        <img src="{{asset('uploads/media/courses/' ~ course.media.imageFile)}}" class="rounded" alt="">
+                                                    </div>
+                                                    <div class="mb-0 ms-2">
+                                                        <!-- Title -->
+                                                        <h6><a href="{{ url("app_front_course_start", {slug: course.slug}, "http", false) }}">{{ course.intitule }}</a></h6>
+                                                        <!-- Info -->
+                                                        <div class="overflow-hidden">
+                                                            <h6 class="mb-0 text-end">{{ percent|number_format(0) }}%</h6>
+                                                            <div class="progress progress-sm bg-primary bg-opacity-10">
+                                                                <div class="progress-bar bg-primary aos" role="progressbar" data-aos="slide-right" data-aos-delay="200" data-aos-duration="1000" data-aos-easing="ease-in-out" style="width: {{ percent|number_format(0) }}%" aria-valuenow="{{ percent|number_format(0) }}" aria-valuemin="0" aria-valuemax="100">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <!-- Table data -->
+                                            <td>{{ course.numberOfLessons }}</td>
+
+                                            <!-- Table data -->
+                                            <td>{{ leconTerminees }}</td>
+
+                                            <!-- Table data -->
+                                            <td>
+                                                <a title="Continue" href="{{ url("app_front_course_start", {slug: course.slug}, "http", false) }}" class="btn btn-sm btn-primary-soft me-1 mb-1 mb-md-0"><i class="bi bi-play-circle me-1"></i></a>
+												{% if course.isFree %}
+													<a onclick="return confirm('Etes-vous sure de vouloir supprimer ce cours de votre liste de lecture')" href="{{ url("app_front_course_start", {id: student.reference, slug: course.slug}, "http", false) }}" class="btn btn-sm btn-danger-soft me-1 mb-1 mb-md-0"><i class="bi bi-trash me-1"></i></a>
+												{% endif %}
+                                            </td>
+                                        </tr>
+                                        
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="4">No Courses found</td>
+                                        </tr>
+                                    {% endfor %}
+								</tbody>
+								<!-- Table body END -->
+							</table>
+						</div>
+						<!-- Course list table END -->
+					</div>
+					<!-- Card body START -->
+				</div>
+
+{% endblock %}

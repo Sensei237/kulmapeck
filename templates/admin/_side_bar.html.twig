@@ -1,0 +1,123 @@
+<!-- Sidebar START -->
+    <nav class="navbar sidebar navbar-expand-xl navbar-dark bg-dark">
+
+        <!-- Navbar brand for xl START -->
+        <div class="d-flex align-items-center">
+            <a class="navbar-brand" href="{{ path('app_front') }}">
+                <img class="navbar-brand-item" src="{{ asset('assets/images/logo-light.svg') }}" alt="">
+            </a>
+        </div>
+        <!-- Navbar brand for xl END -->
+        
+        <div class="offcanvas offcanvas-start flex-row custom-scrollbar h-100" data-bs-backdrop="true" tabindex="-1" id="offcanvasSidebar">
+            <div class="offcanvas-body sidebar-content d-flex flex-column bg-dark">
+
+                <!-- Sidebar menu START -->
+                <ul class="navbar-nav flex-column" id="navbar-sidebar">
+                    
+                    <!-- Menu item 1 -->
+                    <li class="nav-item">
+                        <a href="{{ path('app_admin_dashboard') }}" class="nav-link {{ isHome is defined ? 'active' : '' }}"><i class="bi bi-house fa-fw me-2"></i>Dashboard</a>
+                    </li>
+                    
+                    <!-- menu item 2 -->
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#collapsepage" role="button" aria-expanded="{{ isCourses is defined ? 'true' : 'false' }}" aria-controls="collapsepage">
+                            <i class="bi bi-basket fa-fw me-2"></i>Courses
+                        </a>
+                        <!-- Submenu -->
+                        <ul class="nav collapse flex-column {{ isCourses is defined ? 'show' : '' }}" id="collapsepage" data-bs-parent="#navbar-sidebar">
+                            <li class="nav-item"> <a class="nav-link {{ coc is defined ? 'active' : '' }}" href="{{ path('app_admin_cours_index') }}">All Courses</a></li>
+                            <li class="nav-item"> <a class="nav-link {{ cac is defined ? 'active' : '' }}" href="{{ path('app_admin_categorie_index') }}">Course Category</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="admin-course-category.html">Anciens sujets</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Menu item 3 -->
+                    <li class="nav-item"> 
+                        <a class="nav-link {{ elc is defined ? 'active' : '' }}" href="{{ path('app_admin_eleve_index') }}">
+                            <i class="fas fa-user-graduate fa-fw me-2"></i>Students
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#collapsepageIN" role="button" aria-expanded="{{ isEnseignants is defined ? 'true' : 'false' }}" aria-controls="collapsepageIN">
+                            <i class="bi bi-basket fa-fw me-2"></i>Instructors
+                        </a>
+                        <!-- Submenu -->
+                        <ul class="nav collapse flex-column {{ isEnseignants is defined ? 'show' : '' }}" id="collapsepageIN" data-bs-parent="#navbar-sidebar">
+                            <li class="nav-item"> <a class="nav-link {{ eni is defined ? 'active' : '' }}" href="{{ path('app_admin_enseignant_index') }}">Instructors list</a></li>
+                            <li class="nav-item"> <a class="nav-link {{ enr is defined ? 'active' : '' }}" href="{{ path('app_admin_enseignant_request') }}">Instructors request</a></li>
+                        </ul>
+                    </li>
+
+
+                    <!-- Title -->
+                    <li class="nav-item ms-2 my-2">Settings</li>
+
+                    <!-- menu item 2 -->
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#collapsepageI" role="button" aria-expanded="{{ isInstitution is defined ? 'true' : 'false' }}" aria-controls="collapsepageI">
+                            <i class="bi bi-basket fa-fw me-2"></i>Institution
+                        </a>
+                        <!-- Submenu -->
+                        <ul class="nav collapse flex-column {{ isInstitution is defined ? 'show' : '' }}" id="collapsepageI" data-bs-parent="#navbar-sidebar">
+                            <li class="nav-item"> 
+                                <a class="nav-link {{ sss is defined ? 'active' : '' }}" href="{{ path('app_admin_sous_systeme_index') }}">Sous-système</a>
+                            </li>
+                            <li class="nav-item"> <a class="nav-link {{ tec is defined ? 'active' : '' }}" href="{{ path('app_admin_type_enseignement_index') }}">Type Enseignement</a></li>
+                            <li class="nav-item"> <a class="nav-link {{ etc is defined ? 'active' : '' }}" href="{{ path('app_admin_etablissement_index') }}">Etablissements</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#collapsepageCI" role="button" aria-expanded="{{ isClasses is defined ? 'true' : 'false' }}" aria-controls="collapsepageCI">
+                            <i class="bi bi-basket fa-fw me-2"></i>Manage Classes
+                        </a>
+                        <!-- Submenu -->
+                        <ul class="nav collapse flex-column {{ isClasses is defined ? 'show' : '' }}" id="collapsepageCI" data-bs-parent="#navbar-sidebar">
+                            <li class="nav-item"> <a class="nav-link {{ fic is defined ? 'active' : '' }}" href="{{ path('app_admin_filiere_index') }}">Filières</a></li>
+                            <li class="nav-item"> <a class="nav-link {{ spc is defined ? 'active' : '' }}" href="{{ path('app_admin_specialite_index') }}">Spécialités</a></li>
+                            <li class="nav-item"> <a class="nav-link {{ clc is defined ? 'active' : '' }}" href="{{ path('app_admin_classe_index') }}">Classes</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Title -->
+                    <li class="nav-item ms-2 my-2">Autres</li>
+
+                    <!-- Menu item 4 -->
+                    <li class="nav-item">
+                        <a class="nav-link {{ rec is defined ? 'active' : '' }}" href="{{ path('app_admin_registration') }}" role="button" aria-expanded="false">
+                            <i class="fas fa-user-tie fa-fw me-2"></i>Users
+                        </a>
+                    </li>                    
+
+                    <!-- Menu item 4 -->
+                    <li class="nav-item">
+                        <a class="nav-link {{ pac is defined ? 'active' : '' }}" href="{{ path('app_admin_pays_index') }}" role="button" aria-expanded="false">
+                            <i class="fas fa-user-tie fa-fw me-2"></i>Countries
+                        </a>
+                    </li>
+                </ul>
+                <!-- Sidebar menu end -->
+
+                <!-- Sidebar footer START -->
+                <div class="px-3 mt-auto pt-3">
+                    <div class="d-flex align-items-center justify-content-between text-primary-hover">
+                            <a class="h5 mb-0 text-body" href="admin-setting.html" data-bs-toggle="tooltip" data-bs-placement="top" title="Settings">
+                                <i class="bi bi-gear-fill"></i>
+                            </a>
+                            <a class="h5 mb-0 text-body" href="{{ path('app_front') }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Home">
+                                <i class="bi bi-globe"></i>
+                            </a>
+                            <a class="h5 mb-0 text-body" href="{{ path('app_logout') }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Sign out">
+                                <i class="bi bi-power"></i>
+                            </a>
+                    </div>
+                </div>
+                <!-- Sidebar footer END -->
+                
+            </div>
+        </div>
+    </nav>
+    <!-- Sidebar END -->

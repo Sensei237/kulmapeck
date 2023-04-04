@@ -1,0 +1,129 @@
+{% extends "instructor/base.html.twig" %}
+
+{% block subTitle %} - Dashboard {% endblock %}
+
+{% block pageContent %}
+    
+    <!-- Counter boxes START -->
+				<div class="row g-4">
+					<!-- Counter item -->
+					<div class="col-sm-6 col-lg-4">
+						<div class="d-flex justify-content-center align-items-center p-4 bg-warning bg-opacity-15 rounded-3">
+							<span class="display-6 text-warning mb-0"><i class="fas fa-tv fa-fw"></i></span>
+							<div class="ms-4">
+								<div class="d-flex">
+									<h5 class="purecounter mb-0 fw-bold" data-purecounter-start="0" data-purecounter-end="{{ enseignant.cours|length }}"	data-purecounter-delay="200">0</h5>
+								</div>
+								<span class="mb-0 h6 fw-light">Total Courses</span>
+							</div>
+						</div>
+					</div>
+					<!-- Counter item -->
+					<div class="col-sm-6 col-lg-4">
+						<div class="d-flex justify-content-center align-items-center p-4 bg-purple bg-opacity-10 rounded-3">
+							<span class="display-6 text-purple mb-0"><i class="fas fa-user-graduate fa-fw"></i></span>
+							<div class="ms-4">
+								<div class="d-flex">
+									<h5 class="purecounter mb-0 fw-bold" data-purecounter-start="0" data-purecounter-end="{{ premiumCourses|length }}"	data-purecounter-delay="200">0</h5>
+									{# <span class="mb-0 h5">K+</span> #}
+								</div>
+								<span class="mb-0 h6 fw-light">Premium courses</span>
+							</div>
+						</div>
+					</div>
+					<!-- Counter item -->
+					<div class="col-sm-6 col-lg-4">
+						<div class="d-flex justify-content-center align-items-center p-4 bg-info bg-opacity-10 rounded-3">
+							<span class="display-6 text-info mb-0"><i class="fas fa-gem fa-fw"></i></span>
+							<div class="ms-4">
+								<div class="d-flex">
+									<h5 class="purecounter mb-0 fw-bold" data-purecounter-start="0" data-purecounter-end="{{ freeCourses|length }}" data-purecounter-delay="300">0</h5>
+									{# <span class="mb-0 h5">K</span> #}
+								</div>
+								<span class="mb-0 h6 fw-light">Free courses</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Counter boxes END -->
+
+				<!-- Chart START -->
+				<div class="row mt-5">
+					<div class="col-12">
+						<div class="card card-body bg-transparent border p-4 h-100">
+							<div class="row g-4">
+								<!-- Content -->
+								<div class="col-sm-6 col-md-4">
+									<span class="badge text-bg-dark">Current Month</span>
+									<h4 class="text-primary my-2">$35000</h4>
+									<p class="mb-0"><span class="text-success me-1">0.20%<i class="bi bi-arrow-up"></i></span>vs last month</p>
+								</div>
+								<!-- Content -->
+								<div class="col-sm-6 col-md-4">
+									<span class="badge text-bg-dark">Last Month</span>
+									<h4 class="my-2">$28000</h4>
+									<p class="mb-0"><span class="text-danger me-1">0.10%<i class="bi bi-arrow-down"></i></span>Then last month</p>
+								</div>
+							</div>
+
+							<!-- Apex chart -->
+							<div id="ChartPayout"></div>
+
+						</div>
+					</div>
+				</div>
+				<!-- Chart END -->
+
+				<!-- Course List table START -->
+				<div class="row">
+					<div class="col-12">
+						<div class="card border bg-transparent rounded-3 mt-5">
+							<!-- Card header START -->
+							<div class="card-header bg-transparent border-bottom">
+								<div class="d-sm-flex justify-content-sm-between align-items-center">
+									<h3 class="mb-2 mb-sm-0">Last courses</h3>
+									<a href="{{ path('app_instructor_courses') }}" class="btn btn-sm btn-primary-soft mb-0">View all</a>
+								</div>
+							</div>
+							<!-- Card header END -->
+
+							<!-- Card body START -->
+							<div class="card-body">
+								<div class="table-responsive border-0 rounded-3">
+									<!-- Table START -->
+									<table class="table table-dark-gray align-middle p-4 mb-0">
+										<!-- Table head -->
+										<head>
+											<tr>
+												<th scope="col" class="border-0 rounded-start">Course Title</th>
+												<th scope="col" class="border-0">Students</th>
+												<th scope="col" class="border-0">Status</th>
+												<th scope="col" class="border-0">Price</th>
+												<th scope="col" class="border-0 rounded-end">Action</th>
+											</tr>
+										</thead>
+
+										<!-- Table body START -->
+										<tbody>
+											<!-- Table item -->
+											{% for course in lastCourses %}
+												{{ include('instructor/courses/include/_table_course_item.html.twig') }}
+											{% else %}
+												<tr>
+													<td colspan="5">No data found</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+										<!-- Table body END -->
+									</table>
+									<!-- Table END -->
+								</div>
+
+							</div>
+							<!-- Card body START -->
+						</div>
+					</div>
+				</div>
+				<!-- Course List table END -->
+
+{% endblock %}

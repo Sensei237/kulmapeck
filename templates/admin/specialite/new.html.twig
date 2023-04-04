@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} | Spécialités{% endblock %}
+
+{% block pageTitle %}Spécialités{% endblock %}
+
+{% block cardTitle %}Ajouter{% endblock %}
+
+{% block cardFooter %}
+    <a class="btn btn-app" href="{{ path('app_specialite_index') }}">
+        <i class="fas fa-arrow-left"></i> Liste
+    </a>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-6">
+            {{ include('specialite/_form.html.twig') }}
+        </div>
+    </div>
+
+{% endblock %}

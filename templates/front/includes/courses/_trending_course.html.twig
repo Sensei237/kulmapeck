@@ -1,0 +1,57 @@
+<!-- Card item START -->
+<div>
+    <div class="card action-trigger-hover border bg-transparent">
+        <!-- Image -->
+        <img src="{{ asset('uploads/media/courses/' ~ course.media.imageFile) }}" class="card-img-top" alt="{{ course.intitule }}">
+        <!-- Ribbon -->
+        <div class="ribbon mt-3"><span>{{ course.isFree ? 'Free' : 'Premium' }}</span></div>
+        <!-- Card body -->
+        <div class="card-body pb-0">
+            <!-- Badge and favorite -->
+            <div class="d-flex justify-content-between mb-3">
+                <span class="hstack gap-2">
+                    <span class="badge bg-primary bg-opacity-10 text-primary">{{ course.niveauDifficulte }}</span>
+                </span>
+                <a href="#" class="h6 fw-light mb-0"><i class="far fa-bookmark"></i></a>
+            </div>
+            <!-- Title -->
+            <h5 class="card-title"><a href="{{ url("app_front_course_details", {slug: course.slug}) }}">{{ course.intitule }}</a></h5>
+            <!-- Rating -->
+            <div class="d-flex justify-content-between mb-2">
+                <div class="hstack gap-2">
+                    <p class="text-warning m-0">{{ course.review }}<i class="fas fa-star text-warning ms-1"></i></p>
+                    <span class="small">({{ course.reviews|length }})</span>
+                </div>
+                <div class="hstack gap-2">
+                    <p class="h6 fw-light mb-0 m-0">{{ course.eleves|length }}</p>
+                    <span class="small">(Student)</span>
+                </div>
+            </div>
+            <!-- Time -->
+            <div class="hstack gap-3">
+                <span class="h6 fw-light mb-0"><i class="far fa-clock text-danger me-2"></i>{{ course.dureeApprentissage }}</span>
+                <span class="h6 fw-light mb-0"><i class="fas fa-table text-orange me-2"></i>{{ course.numberOfLessons }} Lessons</span>
+            </div>
+        </div>
+        <!-- Card footer -->
+        <div class="card-footer pt-0 bg-transparent">
+            <hr>
+            <!-- Avatar and Price -->
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Avatar -->
+                <div class="d-flex align-items-center">
+                    <div class="avatar avatar-sm">
+                        <img class="avatar-img rounded-1" src="{{ asset(course.enseignant.avatar) }}" alt="avatar">
+                    </div>
+                    <p class="mb-0 ms-2"><a href="#" class="h6 fw-light mb-0">{{ course.enseignant.utilisateur.personne.firstName }}</a></p>
+                </div>
+                <!-- Price -->
+                <div>
+                    <h4 class="text-success mb-0 item-show">{{ course.isFree ? 'Free' : course.montantAbonnement ~ 'XAF' }}</h4>
+                    <a href="{{ url("app_front_course_details", {slug: course.slug}) }}" class="btn btn-sm btn-success-soft item-show-hover"><i class="fas fa-eye me-2"></i>Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Card item END -->

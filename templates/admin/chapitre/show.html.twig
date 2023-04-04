@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} | Chapitres{% endblock %}
+
+{% block pageTitle %}Chapitres{% endblock %}
+
+{% block cardTitle %}Editer{% endblock %}
+
+{% block cardFooter %}
+    <a class="btn btn-app" href="{{ path('app_chapitre_index', {coursId: chapitre.cours.id}) }}">
+        <i class="fas fa-plus"></i> Liste
+    </a>
+    <a class="btn btn-app" href="{{ path('app_chapitre_edit', {'id': chapitre.id}) }}"><i class="fas fa-edit"></i> Editer</a>
+    {{ include('includes/_delete_form.html.twig', {path: path('app_chapitre_delete', {'id': chapitre.id}), token: csrf_token('delete' ~ chapitre.id), classes: 'btn-danger'}) }}
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-8">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ chapitre.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Title</th>
+                        <td>{{ chapitre.title }}</td>
+                    </tr>
+                    <tr>
+                        <th>Slug</th>
+                        <td>{{ chapitre.slug }}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="bg-dark">Objectifs</th>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div>
+                                {{ chapitre.objectifs|raw }}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="bg-dark">Description</th>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div>
+                                {{ chapitre.description|raw }}
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <h5>Liste des leçons</h5>
+            <hr>
+            <ul>
+                {% for lesson in chapitre.lessons %}
+                    <li>
+                        <a href="">
+                            {{ lesson.title }}
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        Aucune leçon trouvée !
+                    </li>    
+                {% endfor %}
+            </ul>
+            <a href="" class="btn btn-outline-primary">Ajouter une leçon</a>
+        </div>
+    </div>
+    
+{% endblock %}

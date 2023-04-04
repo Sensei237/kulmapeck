@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ sous_systeme.name }}{% endblock %}
+
+{% block pageTitle %}Sous-systèmes scolaire{% endblock %}
+
+{% block cardTitle %}Détails{% endblock %}
+
+{% block cardFooter %}
+    <a class="btn btn-app" href="{{ path('app_sous_systeme_index') }}">
+        <i class="fas fa-arrow-left"></i> Liste
+    </a>
+    <a class="btn btn-app" href="{{ path('app_sous_systeme_edit', {'id': sous_systeme.id}) }}">
+        <i class="fas fa-edit"></i> Modifier
+    </a>
+    {{ include('sous_systeme/_delete_form.html.twig') }}
+{% endblock %}
+
+{% block body %}
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ sous_systeme.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ sous_systeme.name }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ sous_systeme.slug }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

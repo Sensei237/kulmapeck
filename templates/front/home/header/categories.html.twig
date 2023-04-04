@@ -1,0 +1,28 @@
+<ul class="dropdown-menu" aria-labelledby="categoryMenu">
+    {% for category in categories %}
+        <li class="{{ category.subCategories|length > 0 ? 'dropdown-submenu dropend' : '' }}">
+            <a class="dropdown-item {{ category.subCategories|length > 0 ? 'dropdown-toggle' : '' }}" href="{{ url("app_front_category_courses", {slug: category.slug}) }}">{{ category.name }}</a>
+            {% if category.subCategories|length > 0 %}
+                <ul class="dropdown-menu dropdown-menu-start" data-bs-popper="none">
+                    {% for subCategory in category.subCategories %}
+                        <!-- dropdown submenu open right -->
+                        <li class="{{ subCategory.subCategories|length > 0 ? 'dropdown-submenu dropend' : '' }}">
+                            <a class="dropdown-item {{ subCategory.subCategories|length > 0 ? 'dropdown-toggle' : '' }}" href="{{ url("app_front_category_courses", {slug: subCategory.slug}) }}">{{ subCategory.name }}</a>
+                            {% if subCategory.subCategories|length > 0 %}
+                                <ul class="dropdown-menu" data-bs-popper="none">
+                                    {% for scat in subCategory.subCategories %}
+                                        <li> <a class="dropdown-item" href="{{ url("app_front_category_courses", {slug: scat.slug}) }}">{{ scat.name }}</a> </li>
+                                    {% endfor %}
+                                    <hr class="divider">
+                                    <li><a href="{{ url("app_front_category_courses", {slug: subCategory.slug}) }}" class="dropdown-item">All {{ subCategory.name }} Courses</a></li>
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    <hr class="divider">
+                    <li><a href="{{ url("app_front_category_courses", {slug: category.slug}) }}" class="dropdown-item">All {{ category.name }} Courses</a></li>
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

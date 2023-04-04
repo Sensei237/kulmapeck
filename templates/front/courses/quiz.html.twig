@@ -1,0 +1,271 @@
+{% extends "front/base.html.twig" %}
+
+{% block title %} - Course détails{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('assets/vendor/stepper/css/bs-stepper.min.css') }}">
+{% endblock %}
+
+{% block script1 %}{% endblock %}
+
+{% block script %}
+    <script src="{{ asset('assets/vendor/stepper/js/bs-stepper.min.js') }}"></script>
+    
+    <script>
+        const toogleRequiredAttr = (e) => {
+            if ($(e.currentTarget).attr('type') == 'checkbox') {
+                if ($(e.currentTarget).is(':checked')) {
+                    $(e.currentTarget.dataset.parent + ' .btn-quiz-check').attr('required', false)
+                } else {
+                    let isChecked = false
+                    $(e.currentTarget.dataset.parent + ' .btn-quiz-check').each((index, item) => {
+                        if ($(item).is(':checked')) {
+                            isChecked = true
+                        }
+                    })
+                    if (isChecked) {
+                        $(e.currentTarget.dataset.parent + ' .btn-quiz-check').attr('required', false)
+                    } else {
+                        $(e.currentTarget.dataset.parent + ' .btn-quiz-check').attr('required', true)
+                    }
+                }
+            }
+        }
+
+        document.querySelectorAll('.btn-quiz-check').forEach(item => {
+            item.addEventListener("change", toogleRequiredAttr)
+        })
+    </script>
+{% endblock %}
+
+{% block mainContent %}
+
+    <!-- =======================
+    Page content START -->
+    <section class="pt-0">
+        <div class="container">
+            <div class="row">
+
+                <!-- Main content START -->
+                <div class="col-xl-12">
+                    <!-- Course item START -->
+                    <div class="card border">
+        
+                            <div class="card-header border-bottom">
+                                <!-- Course list START -->
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="row g-0">
+                                                <div class="col-md-2">
+                                                    <img src="{{ asset('uploads/media/courses/' ~ cours.media.imageFile) }}" class="rounded-2" alt="Card image">
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <div class="card-body">
+                                                        <!-- Title -->
+                                                        <h3 class="card-title"><a href="#">{{ chapitre is not same as null ? chapitre.title : cours.intitule }}</a> / QUIZ</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Course list END -->
+                            </div>
+
+                            <div class="card-body">
+                                <!-- Step content START -->
+                                <div class="card bg-transparent border rounded-3 mb-1">
+                                    <div id="stepper" class="bs-stepper stepper-outline">
+                                        <!-- Card header -->
+                                        <div class="card-header bg-light border-bottom px-lg-5">
+                                            <!-- Step Buttons START -->
+                                            <div class="bs-stepper-header" role="tablist">
+                                                {% for quiz in quizzes %}
+                                                    <div class="step" data-target="#step-{{ loop.index }}">
+                                                        <div class="d-grid text-center align-items-center">
+                                                            <button type="button" class="btn btn-link step-trigger mb-0" role="tab" id="steppertrigger{{ loop.index }}" aria-controls="step-{{ loop.index }}">
+                                                                <span class="bs-stepper-circle">{{ loop.index }}</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    {% if not loop.last %}
+                                                        <div class="line"></div>
+                                                    {% endif %}
+                                                {% endfor %}
+
+                                            </div>
+                                            <!-- Step Buttons END -->
+                                        </div>
+                        
+                                        <!-- Card body START -->
+                                        <div class="card-body">
+
+                                            <h6 class="text-danger text-end mb-0"><i class="bi bi-clock-history me-2"></i>Time Left: 00:01:30</h6>
+
+                                            <!-- Step content START -->
+                                            <div class="bs-stepper-content">
+                                                {% if not isCorrectionMode %}
+                                                    <form method="post" action="{{ submitUri }}" onsubmit="return confirm('Confirmez-vous la soumission de ce quiz ?')">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token('postquiz' ~ cours.id) }}">
+                                                        {% for quiz in quizzes %}
+                                                            <div id="step-{{ loop.index }}" role="tabpanel" class="content fade " aria-labelledby="steppertrigger{{ loop.index }}">
+                                                                <!-- Title -->
+                                                                <h4>{{ quiz.question }}</h4>
+                                                                {% if quiz.propositionJuste|length > 1 %}
+                                                                    <div class="text-info alert alert-info"><i class="fas fa-info" style="font-size: 2em;"></i> Plusieurs réponses sont possibles pour cette question</div>
+                                                                {% endif %}
+                                                                <input type="hidden" value="{{ quiz.id }}" name="quizzes[{{ loop.index }}][id]">
+                                                                <hr> <!-- Divider -->
+                                                                <div class="vstack gap-2 {{ quiz.propositionJuste|length > 1 ? 'checkbox' : ''}}">
+                                                                    <!-- Feed ques item -->
+                                                                    <div>
+                                                                        <input data-parent="#step-{{ loop.index }}" required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check btn-quiz-check" value="1" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option1">
+                                                                        <label class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option1">{{ quiz.proposition1 }}</label>
+                                                                    </div>
+                                                                    <!-- Feed ques item -->
+                                                                    <div>
+                                                                        <input data-parent="#step-{{ loop.index }}" required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check btn-quiz-check" value="2" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option2">
+                                                                        <label class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option2">{{ quiz.proposition2 }}</label>
+                                                                    </div>
+                                                                    <!-- Feed ques item -->
+                                                                    <div>
+                                                                        <input data-parent="#step-{{ loop.index }}" required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check btn-quiz-check" value="3" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option3">
+                                                                        <label class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option3">{{ quiz.proposition3 }}</label>
+                                                                    </div>
+                                                                    <!-- Feed ques item -->
+                                                                    <div>
+                                                                        <input data-parent="#step-{{ loop.index }}" required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check btn-quiz-check" value="4" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option4">
+                                                                        <label class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option4">{{ quiz.proposition4 }}</label>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Step button -->
+                                                                <div class="d-flex justify-content-center mt-3">
+                                                                    {% if not loop.first %}
+                                                                        <button type="button" class="btn btn-danger-soft prev-btn mb-0 " style="margin-right: 15px;">Prev question</button>
+                                                                    {% endif %}
+                                                                    {% if not loop.last %}
+                                                                        <button type="button" class="btn btn-primary-soft next-btn mb-0">Next question</button>
+                                                                    {% endif %}
+                                                                    {% if loop.last %}
+                                                                        <button type="submit" name="submit" class="btn btn-success-soft mb-0" style="margin-left: 15px;">Soumettre</button>
+                                                                    {% endif %}
+                                                                </div>
+                                                        
+                                                            </div>
+                                                        {% endfor %}
+                                                    </form>
+                                                {% else %}
+                                                    <div>
+                                                        {% if lecture is not same as null %}
+                                                            <div class="alert alert-info">
+                                                                <p>Vous pourrez repasser le test à partir de {{ nextQuizAt|date('d/m/Y - H:i:s') }}</p>
+                                                            </div>
+                                                        {% endif %}
+                                                        {% for qr in quizzesResults %}
+                                                            {% set quiz = qr.quiz %}
+                                                            <div id="step-{{ loop.index }}" role="tabpanel" class="content fade " aria-labelledby="steppertrigger{{ loop.index }}">
+                                                                <!-- Title -->
+                                                                <h4>{{ quiz.question }}</h4>
+                                                                {% if quiz.propositionJuste|length > 1 %}
+                                                                    <div class="text-info alert alert-info"><i class="fas fa-info" style="font-size: 2em;"></i> Plusieurs réponses sont possibles pour cette question</div>
+                                                                {% endif %}
+                                                                <hr> <!-- Divider -->
+                                                                <div class="vstack gap-2">
+                                                                    <!-- Feed ques item -->
+                                                                    <div>
+                                                                        {% set className = 'btn-outline-primary' %}
+                                                                        {% set value = 1 %}
+                                                                        {% if value in quiz.propositionJuste and value in qr.result %}
+                                                                            {% set className = 'btn-success' %}
+                                                                        {% elseif value in quiz.propositionJuste and value not in qr.result %}
+                                                                            {% set className = 'btn-secondary' %}
+                                                                        {% elseif value not in quiz.propositionJuste and value in qr.result %}
+                                                                            {% set className = 'btn-danger' %}
+                                                                        {% endif %}
+                                                                        <input disabled {{ value in quiz.propositionJuste ? 'checked' : '' }} required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check" id="quiz{{ quiz.id }}option1">
+                                                                        <label class="btn {{ className }} w-100" for="quiz{{ quiz.id }}option1">{{ quiz.proposition1 }}</label>
+                                                                    </div>
+                                                                    <!-- Feed ques item -->
+                                                                    <div>
+                                                                        {% set value = 2 %}
+                                                                        {% set className = 'btn-outline-primary' %}
+                                                                        {% if value in quiz.propositionJuste and value in qr.result %}
+                                                                            {% set className = 'btn-success' %}
+                                                                        {% elseif value in quiz.propositionJuste and not value not in qr.result %}
+                                                                            {% set className = 'btn-secondary' %}
+                                                                        {% elseif value not in quiz.propositionJuste and value in qr.result %}
+                                                                            {% set className = 'btn-danger' %}
+                                                                        {% endif %}
+                                                                        <input disabled {{ value in quiz.propositionJuste ? 'checked' : '' }} required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check" value="2" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option2">
+                                                                        <label class="btn {{ className }} w-100" for="quiz{{ quiz.id }}option2">{{ quiz.proposition2 }}</label>
+                                                                    </div>
+                                                                    <!-- Feed ques item -->
+                                                                    <div>
+                                                                        {% set value = 3 %}
+                                                                        {% set className = 'btn-outline-primary' %}
+                                                                        {% if value in quiz.propositionJuste and value in qr.result %}
+                                                                            {% set className = 'btn-success' %}
+                                                                        {% elseif value in quiz.propositionJuste and not value not in qr.result %}
+                                                                            {% set className = 'btn-secondary' %}
+                                                                        {% elseif value not in quiz.propositionJuste and value in qr.result %}
+                                                                            {% set className = 'btn-danger' %}
+                                                                        {% endif %}
+                                                                        <input disabled {{ value in quiz.propositionJuste ? 'checked' : '' }} required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check" value="3" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option3">
+                                                                        <label class="btn {{ className }} w-100" for="quiz{{ quiz.id }}option3">{{ quiz.proposition3 }}</label>
+                                                                    </div>
+                                                                    <!-- Feed ques item -->
+                                                                    <div>
+                                                                        {% set value = 4 %}
+                                                                        {% set className = 'btn-outline-primary' %}
+                                                                        {% if value in quiz.propositionJuste and value in qr.result %}
+                                                                            {% set className = 'btn-success' %}
+                                                                        {% elseif value in quiz.propositionJuste and not value not in qr.result %}
+                                                                            {% set className = 'btn-secondary' %}
+                                                                        {% elseif  value not in quiz.propositionJuste and value in qr.result %}
+                                                                            {% set className = 'btn-danger' %}
+                                                                        {% endif %}
+                                                                        <input disabled {{ value in quiz.propositionJuste ? 'checked' : '' }} required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check" value="4" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option4">
+                                                                        <label class="btn {{ className }} w-100" for="quiz{{ quiz.id }}option4">{{ quiz.proposition4 }}</label>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Step button -->
+                                                                <div class="d-flex justify-content-center mt-3">
+                                                                    {% if not loop.first %}
+                                                                        <button type="button" class="btn btn-danger-soft prev-btn mb-0 " style="margin-right: 15px;">Prev</button>
+                                                                    {% endif %}
+                                                                    {% if not loop.last %}
+                                                                        <button type="button" class="btn btn-primary-soft next-btn mb-0">Next</button>
+                                                                    {% endif %}
+                                                                </div>
+                                                        
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        {% if isCorrectionMode %}
+                                            <div class="card-footer">
+                                                <a class="btn btn-primary-soft" href="{{ url("app_front_course_start", {slug: cours.slug}) }}">Back to course</a>
+                                            </div>
+                                        {% endif %}
+                                        <!-- Card body END -->
+                                    </div>
+                                </div>		
+                            </div>
+                        
+                    </div>
+                    <!-- Course item END -->
+
+                </div>
+                <!-- Main content END -->
+
+            </div> <!-- Row END -->
+        </div>	
+    </section>
+    <!-- =======================
+    Page content END -->
+{% endblock %}
