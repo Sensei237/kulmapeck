@@ -20,6 +20,6 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app_student_home');
         }
 
-        return $this->redirectToRoute('app_front');
+        return $this->redirectToRoute('app_admin_dashboard');
     }
 }

@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Categorie;
+use App\Entity\Classe;
 use App\Entity\Exam;
+use App\Entity\SkillLevel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -39,20 +42,44 @@ class ExamRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Exam[] Returns an array of Exam objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+        * @return Exam[] Returns an array of Exam objects
+        */
+    public function findByFilter(?string $language, ?Categorie $category, ?Classe $classe, ?SkillLevel $skillLevel): array
+    {
+        $query = $this->createQueryBuilder('e');
+        
+        if ($language) {
+            $query->andWhere('e.language = :language')
+                ->setParameter('language', $language);
+        }
+
+        if ($category) {
+            $query->join('e.category', 'cat')
+                ->andWhere('e.category = :category')
+                ->setParameter('category', $category);
+        }
+
+        if ($classe) {
+            $query->join('e.classe', 'cls')
+            ->andWhere('e.classe = :classe')
+            ->setParameter('classe', $classe);
+        }
+
+        if ($skillLevel) {
+            $query->join('e.classe', 'cl')
+            ->andWhere('cl.skillLevel = :skillLevel')
+            ->setParameter('skillLevel', $skillLevel);
+        }
+        
+        return $query
+            // ->andWhere('e.isValidated = :isValidated')
+            // ->setParameter('isValidated', true)
+            ->orderBy('e.publishedAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?Exam
 //    {

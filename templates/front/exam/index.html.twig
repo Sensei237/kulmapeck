@@ -29,8 +29,7 @@
         </div>
     </section>
 	
-	<!-- =======================
-	Page content START -->
+	<!-- Page content START -->
 	<section class="pb-0 py-sm-5">
 		<div class="container">
 			<!-- Title and select START -->
@@ -84,7 +83,6 @@
 				</div>
 				<!-- Main content END -->
 
-                {% if exams|length > 0 %}
 				<!-- Right sidebar START -->
 				<div class="col-lg-3 col-xxl-4">
 					<!-- Responsive offcanvas body START -->
@@ -94,46 +92,67 @@
 							<button  type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasSidebar" aria-label="Close"></button>
 						</div>
 						<div class="offcanvas-body p-3 p-xl-0">
-							<form>
+							<form id="filter-form">
 								<!-- Category START -->
 								<div class="card card-body shadow p-4 mb-4">
 									<!-- Title -->
 									<h4 class="mb-4">Category</h4>
-										<div class="row">
-											<!-- Category group -->
-											<div class="col-xxl-6">
-												<div class="form-check">
-													<input checked required name="category" class="form-check-input" type="radio" value="" id="flexCheckDefaultall">
-													<label class="form-check-label" for="flexCheckDefaultall">All</label>
-												</div>
-												{% set i = 1 %}
-												{% for category in categories %}
-													{% if i <= (categories|length) / 2 %}
-														<div class="form-check">
-															<input name="category" required data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title='{{ category.name }}' class="form-check-input" type="radio" value="{{ category.slug }}" id="flexCheckDefault{{ category.id }}">
-															<label data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title='{{ category.name }}' class="form-check-label" for="flexCheckDefault{{ category.id }}">{{ category.name }}</label>
-														</div>
-													{% endif %}
-													{% set i = i + 1 %}
-												{% endfor %}
+									<div class="row">
+										<!-- Category group -->
+										<div class="col-xxl-6">
+											<div class="form-check">
+												<input {{ sCategory is same as null ? 'checked' : '' }} required name="category" class="form-check-input" type="radio" value="all" id="flexCheckDefaultall">
+												<label class="form-check-label" for="flexCheckDefaultall">All</label>
 											</div>
-		
-											<!-- Category group -->
-											<div class="col-xxl-6">
-												{% set i = 1 %}
-												{% for category in categories %}
-													{% if i > (categories|length) / 2 %}
-														<div class="form-check">
-															<input name="category" required data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title='{{ category.name }}' class="form-check-input" type="radio" value="{{ category.slug }}" id="flexCheckDefault{{ category.id }}">
-															<label data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title='{{ category.name }}' title="{{ category.name }}" class="form-check-label" for="flexCheckDefault{{ category.id }}">{{ category.name|u.truncate(13) }}</label>
-														</div>
-													{% endif %}
-													{% set i = i + 1 %}
-												{% endfor %}
-											</div>
-										</div><!-- Row END -->
+											{% set i = 1 %}
+											{% for category in categories %}
+												{% if i <= (categories|length) / 2 %}
+													<div class="form-check">
+														<input {{ sCategory is same as category ? 'checked' :'' }} name="category" required data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title='{{ category.name }}' class="form-check-input" type="radio" value="{{ category.slug }}" id="flexCheckDefault{{ category.id }}">
+														<label data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title='{{ category.name }}' class="form-check-label" for="flexCheckDefault{{ category.id }}">{{ category.name }}</label>
+													</div>
+												{% endif %}
+												{% set i = i + 1 %}
+											{% endfor %}
+										</div>
+	
+										<!-- Category group -->
+										<div class="col-xxl-6">
+											{% set i = 1 %}
+											{% for category in categories %}
+												{% if i > (categories|length) / 2 %}
+													<div class="form-check">
+														<input {{ sCategory is same as category ? 'checked' : '' }} name="category" required data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title='{{ category.name }}' class="form-check-input" type="radio" value="{{ category.slug }}" id="flexCheckDefault{{ category.id }}">
+														<label data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title='{{ category.name }}' title="{{ category.name }}" class="form-check-label" for="flexCheckDefault{{ category.id }}">{{ category.name|u.truncate(13) }}</label>
+													</div>
+												{% endif %}
+												{% set i = i + 1 %}
+											{% endfor %}
+										</div>
+									</div><!-- Row END -->
 								</div>
 								<!-- Category END -->
+
+								<!-- Price START -->
+								<div class="card card-body shadow p-4 mb-4">
+									<!-- Title -->
+									<h4 class="mb-3">Skill Level</h4>
+									<ul class="list-inline mb-0">
+										<!-- Price item -->
+										<li class="list-inline-item">
+											<input {{ skillLevel is same as null ? 'checked' : '' }} type="radio" value="all" class="btn-check" name="skill" id="skill">
+											<label class="btn btn-light btn-primary-soft-check" for="skill">All</label>
+										</li>
+										{% for skill in skillLevels %}
+											<!-- Price item -->
+											<li class="list-inline-item">
+												<input {{ skillLevel is same as skill ? 'checked' : '' }} type="radio" class="btn-check" name="skill" value="{{ skill.slug }}" id="skill{{ loop.index }}">
+												<label class="btn btn-light btn-primary-soft-check" for="skill{{ loop.index }}">{{ skill.name }}</label>
+											</li>
+										{% endfor %}
+									</ul>
+								</div>
+								<!-- Price END -->
 		
 								<!-- Price START -->
 								<div class="card card-body shadow p-4 mb-4">
@@ -142,13 +161,13 @@
 									<ul class="list-inline mb-0">
 										<!-- Price item -->
 										<li class="list-inline-item">
-											<input checked type="radio" value="" class="btn-check" name="classe" id="option">
+											<input {{ sClasse is same as null ? 'checked' : '' }} checked type="radio" value="all" class="btn-check" name="classe" id="option">
 											<label class="btn btn-light btn-primary-soft-check" for="option">All</label>
 										</li>
 										{% for classe in classes %}
 											<!-- Price item -->
 											<li class="list-inline-item">
-												<input type="radio" class="btn-check" name="classe" value="{{ classe.slug }}" id="option{{ loop.index }}">
+												<input {{ sClasse is same as classe ? 'checked' : '' }} type="radio" class="btn-check" name="classe" value="{{ classe.slug }}" id="option{{ loop.index }}">
 												<label class="btn btn-light btn-primary-soft-check" for="option{{ loop.index }}">{{ classe.name }}</label>
 											</li>
 										{% endfor %}
@@ -163,90 +182,39 @@
 									<ul class="list-inline mb-0 g-3">
 										<!-- Item -->
 										<li class="list-inline-item mb-2">
-											<input value="all" type="checkbox" name="language[]" class="btn-check" id="btn-check-2">
+											<input {{ language is same as null ? 'checked' : '' }} value="all" checked type="radio" name="language" class="btn-check" id="btn-check-2">
 											<label class="btn btn-light btn-primary-soft-check" for="btn-check-2">All</label>
 										</li>
 										<!-- Item -->
 										<li class="list-inline-item mb-2">
-											<input name="language[]" value="French" type="checkbox" class="btn-check" id="btn-check-3">
+											<input  {{ language|upper is same as 'FRENCH' ? 'checked' : '' }} name="language" value="French" type="radio" class="btn-check" id="btn-check-3">
 											<label class="btn btn-light btn-primary-soft-check" for="btn-check-3">French</label>
 										</li>
 										<!-- Item -->
 										<li class="list-inline-item mb-2">
-											<input value="English" name="language[]" type="checkbox" class="btn-check" id="btn-check-4">
+											<input {{ language|upper is same as 'ENGLISH' ? 'checked' : '' }} value="English" name="language" type="radio" class="btn-check" id="btn-check-4">
 											<label class="btn btn-light btn-primary-soft-check" for="btn-check-4">English</label>
 										</li>
 									</ul>
 								</div>
 								<!-- Language END -->
-							</form><!-- Form End -->
+							</form>
+							<!-- Form End -->
 						</div>
 
 						<!-- Button -->
 						<div class="d-grid p-2 p-xl-0 bg-body text-center">
-							<button class="btn btn-primary mb-0">Filter Results</button>
+							<button class="btn btn-primary mb-0" type="button" onclick="$('#filter-form').submit()">Filter Results</button>
 						</div>
 					</div>
 					<!-- Responsive offcanvas body END -->
 				</div>
 				<!-- Right sidebar END -->
-                {% endif %}
 			</div><!-- Row END -->
 		</div>
 	</section>
-	<!-- =======================
-	Page content END -->
+	<!-- Page content END -->
 
-	<!-- ======================= Newsletter START -->
-	<section class="pt-5 pt-lg-0">
-		<div class="container position-relative overflow-hidden">
-			<!-- SVG decoration -->
-			<figure class="position-absolute top-50 start-50 translate-middle ms-3">
-				<svg>
-					<path class="fill-white opacity-3" d="m496 22.999c0 10.493-8.506 18.999-18.999 18.999s-19-8.506-19-18.999 8.507-18.999 19-18.999 18.999 8.506 18.999 18.999z"/>
-					<path class="fill-white opacity-3" d="m775 102.5c0 5.799-4.701 10.5-10.5 10.5-5.798 0-10.499-4.701-10.499-10.5 0-5.798 4.701-10.499 10.499-10.499 5.799 0 10.5 4.701 10.5 10.499z"/>
-					<path class="fill-white opacity-3" d="m192 102c0 6.626-5.373 11.999-12 11.999s-11.999-5.373-11.999-11.999c0-6.628 5.372-12 11.999-12s12 5.372 12 12z"/>
-					<path class="fill-white opacity-3" d="m20.499 10.25c0 5.66-4.589 10.249-10.25 10.249-5.66 0-10.249-4.589-10.249-10.249-0-5.661 4.589-10.25 10.249-10.25 5.661-0 10.25 4.589 10.25 10.25z"/>
-				</svg>
-			</figure>
-			<!-- Svg decoration -->
-			<figure class="position-absolute bottom-0 end-0 mb-5 d-none d-sm-block">
-				<svg class="rotate-130" width="258.7px" height="86.9px" viewBox="0 0 258.7 86.9">
-					<path stroke="white" fill="none" stroke-width="2" d="M0,7.2c16,0,16,25.5,31.9,25.5c16,0,16-25.5,31.9-25.5c16,0,16,25.5,31.9,25.5c16,0,16-25.5,31.9-25.5 c16,0,16,25.5,31.9,25.5c16,0,16-25.5,31.9-25.5c16,0,16,25.5,31.9,25.5s16-25.5,31.9-25.5"/>
-					<path stroke="white" fill="none" stroke-width="2" d="M0,57c16,0,16,25.5,31.9,25.5c16,0,16-25.5,31.9-25.5c16,0,16,25.5,31.9,25.5c16,0,16-25.5,31.9-25.5 c16,0,16,25.5,31.9,25.5c16,0,16-25.5,31.9-25.5c16,0,16,25.5,31.9,25.5s16-25.5,31.9-25.5"/>
-				</svg>
-			</figure>
-			
-			<div class="bg-grad p-3 p-sm-5 rounded-3">
-				<div class="row justify-content-center position-relative">
-					<!-- SVG decoration -->
-					<figure class="fill-white opacity-1 position-absolute top-50 start-0 translate-middle-y">
-						<svg width="141px" height="141px">
-							<path d="M140.520,70.258 C140.520,109.064 109.062,140.519 70.258,140.519 C31.454,140.519 -0.004,109.064 -0.004,70.258 C-0.004,31.455 31.454,-0.003 70.258,-0.003 C109.062,-0.003 140.520,31.455 140.520,70.258 Z"/>
-						</svg>
-					</figure>
-					<!-- Newsletter -->
-					<div class="col-12 position-relative my-2 my-sm-3">
-						<div class="row align-items-center">
-							<!-- Title -->
-							<div class="col-lg-6">
-								<h3 class="text-white mb-3 mb-lg-0">Are you ready for a more great Conversation?</h3>
-							</div>
-							<!-- Input item -->
-							<div class="col-lg-6 text-lg-end">
-								<form class="bg-body rounded p-2">
-									<div class="input-group">
-										<input class="form-control border-0 me-1" type="email" placeholder="Type your email here">
-										<button type="button" class="btn btn-dark mb-0 rounded">Subscribe</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div> <!-- Row END -->
-			</div>
-		</div>
-	</section>
-	<!-- ======================= Newsletter END -->
+	{{ include('front/includes/_newsletterorange.html.twig') }}
 
 {% endblock %}

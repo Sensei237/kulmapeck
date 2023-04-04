@@ -313,7 +313,7 @@ class Personne
         if ($this->getUtilisateur()->getEleve() !== null) {
             $avatarPath = 'uploads/images/eleves/' . $this->getAvatar();
         }elseif ($this->getUtilisateur()->getEnseignant() !== null) {
-            $avatarPath = 'uploads/images/enseigants/kyc/' . $this->getAvatar();
+            $avatarPath = 'uploads/images/enseignants/kyc/' . $this->getAvatar();
         }
 
         return $avatarPath;

@@ -388,7 +388,7 @@
                                                         <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
                                                     {% endfor %}
                                                     {% if review.rating < 5 %}
-                                                        {% for i in review..5 %}
+                                                        {% for i in review.rating..4 %}
                                                             <li class="list-inline-item me-0 small"><i class="far fa-star text-warning"></i></li>
                                                         {% endfor %}
                                                     {% endif %}
@@ -453,7 +453,7 @@
                                             <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
                                         {% endfor %}
                                         {% if review.rating < 5 %}
-                                            {% for i in review..5 %}
+                                            {% for i in review.rating..4 %}
                                                 <li class="list-inline-item me-0 small"><i class="far fa-star text-warning"></i></li>
                                             {% endfor %}
                                         {% endif %}

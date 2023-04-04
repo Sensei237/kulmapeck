@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Mirrored from eduport.webestica.com/admin-dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 12 Mar 2023 00:46:26 GMT -->
 <head>
 	<title>Kulmapeck - admin </title>
 	<!-- Meta Tags -->
@@ -107,6 +106,7 @@
         {{ include('admin/_navbar.html.twig') }}
 
         <!-- Page main content START -->
+		{% block mainPageContent %}
         <div class="page-content-wrapper border">
             <!-- Title -->
             <div class="row">
@@ -120,6 +120,7 @@
 
         </div>
         <!-- Page main content END -->
+		{% endblock %}
     </div>
     <!-- Page content END -->
 
@@ -179,5 +180,4 @@
 
 </body>
 
-<!-- Mirrored from eduport.webestica.com/admin-dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 12 Mar 2023 00:46:42 GMT -->
 </html>

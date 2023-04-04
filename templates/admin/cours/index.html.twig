@@ -109,7 +109,7 @@
                                             </div>
                                             <!-- Title -->
                                             <h6 class="table-responsive-title mb-0 ms-2">	
-                                                <a href="{{ path('app_admin_cours_show', {slug: course.slug}) }}" class="stretched-link">{{ course.intitule }}</a>
+                                                <a href="{{ path('app_admin_cours_show', {slug: course.slug}) }}" class="stretched-link">{{ course.intitule|u.truncate(40, '...') }}</a>
                                             </h6>
                                         </div>
                                     </td>
@@ -123,7 +123,7 @@
                                             </div>
                                             <!-- Info -->
                                             <div class="ms-2">
-                                                <h6 class="mb-0 fw-light">{{ course.enseignant.utilisateur.personne.nomComplet }}</h6>
+                                                <h6 class="mb-0 fw-light">{{ course.enseignant.utilisateur.personne.nomComplet|u.truncate(15, '...') }}</h6>
                                             </div>
                                         </div>
                                     </td>
@@ -152,10 +152,11 @@
 
                                     <!-- Table data -->
                                     <td>
+										<a class="btn btn-round btn-primary-soft btn-sm" target="_blank" data-bs-toggle="tooltip" title="Preview" href="{{ url("app_front_course_details", {slug: course.slug}) }}"><i class="fas fa-eye"></i></a>
                                         {% if not course.isValidated %}
                                             {% if course.isPublished %}
-                                                <a href="#" class="btn btn-sm btn-success-soft me-1 mb-1 mb-md-0">Approve</a>
-                                                <button class="btn btn-sm btn-secondary-soft mb-0">Reject</button>
+                                                <a href="#" data-bs-toggle="tooltip" title="Approve" class="btn btn-sm btn-round btn-success-soft"><i class="fas fa-check-circle"></i></a>
+                                                <button data-bs-toggle="tooltip" class="btn btn-sm btn-danger-soft btn-round" title="Rejected"><i class="fas fa-times"></i></button>
                                             {% else %}
                                                 <span class="badge bg-warning bg-opacity-15 text-warning">Pending</span>
                                             {% endif %}

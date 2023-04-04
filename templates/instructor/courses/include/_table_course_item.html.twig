@@ -38,7 +38,8 @@
         {% endif %}
     </td>
     <!-- Action item -->
-    <td>
+    <td class="text-center">
+        <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Preview" href="{{ path('app_instructor_courses_preview', {slug: course.slug}) }}" class="btn btn-sm btn-primary-soft btn-round me-1 mb-0"><i class="far fa-fw fa-eye"></i></a>
         {% if course.chapitres|length > 0 %}
             <div class="dropdown text-end" style="float: right;">
                 <a title="Quizzes" href="#" class="btn btn-sm btn-light btn-round small mb-0" role="button" id="dropdownShare2" data-bs-toggle="dropdown" aria-expanded="false">
@@ -75,7 +76,7 @@
             <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="published" href="{{ path('app_instructor_courses_published', {slug: course.slug, _token: csrf_token('published' ~ course.id)}) }}" class="btn btn-sm btn-success-soft btn-round me-1 mb-0"><i class="far fa-fw fa-paper-plane"></i></a>
         {% endif %}
         {% if not course.isPublished %}
-            <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit" target="_blank" href="{{ path('app_instructor_courses_edit', {slug: course.slug}) }}" class="btn btn-sm btn-warning-soft btn-round me-1 mb-0"><i class="far fa-fw fa-edit"></i></a>
+            <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit" href="{{ path('app_instructor_courses_edit', {slug: course.slug}) }}" class="btn btn-sm btn-warning-soft btn-round me-1 mb-0"><i class="far fa-fw fa-edit"></i></a>
         {% endif %}
     </td>
 </tr>

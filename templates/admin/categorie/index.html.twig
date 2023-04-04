@@ -57,8 +57,10 @@
 					<thead>
 						<tr>
 							<th scope="col" class="border-0 rounded-start">Category Name</th>
-							<th scope="col" class="border-0">Courses</th>
-							<th scope="col" class="border-0 rounded-end">Action</th>
+							<th scope="col" class="border-0 text-center">SubCategories</th>
+							<th scope="col" class="border-0 text-center">Courses</th>
+							<th scope="col" class="border-0 text-center">Exams</th>
+							<th scope="col" class="border-0 rounded-end text-center">Action</th>
 						</tr>
 					</thead>
 					
@@ -78,15 +80,13 @@
 											<a href="" class="stretched-link">{{ category.name }}</a>
 										</h6>
 									</div>
-								</td>
-
+								</td >
+								<td class="text-center">{{ category.subCategories|length }}</td>
 								<!-- Table data -->
-								<td>
-									{{ category.cours|length }}
-								</td>
-
+								<td class="text-center">{{ category.cours|length }}</td>
+								<td class="text-center">{{ category.exams|length }}</td>
 								<!-- Table data -->
-								<td>
+								<td class="text-center">
 									<a data-url="{{ path('app_admin_categorie_edit', {id: category.id}) }}" href="#" class="btn btn-sm btn-success-soft edit_with_modal_btn me-1 mb-1 mb-md-0">Edit</a>
                                     {{ include('admin/categorie/_delete_form.html.twig', {categorie: category}) }}
 								</td>

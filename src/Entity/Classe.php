@@ -37,6 +37,9 @@ class Classe
     #[ORM\OneToMany(mappedBy: 'classe', targetEntity: Exam::class)]
     private Collection $exams;
 
+    #[ORM\ManyToOne(inversedBy: 'classes')]
+    private ?SkillLevel $skillLevel = null;
+
     public function __construct()
     {
         $this->cours = new ArrayCollection();
@@ -168,6 +171,18 @@ class Classe
                 $exam->setClasse(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSkillLevel(): ?SkillLevel
+    {
+        return $this->skillLevel;
+    }
+
+    public function setSkillLevel(?SkillLevel $skillLevel): self
+    {
+        $this->skillLevel = $skillLevel;
 
         return $this;
     }

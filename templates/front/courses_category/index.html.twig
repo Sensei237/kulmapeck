@@ -49,10 +49,10 @@
 							<p class="mb-3">Grow your skill with the most reliable online courses and certifications</p>
 
 							<!-- Search -->
-							<form class="bg-body rounded p-2">
+							<form class="bg-body rounded p-2" action="{{ url("app_front_courses") }}">
 								<div class="input-group">
-									<input class="form-control border-0 me-1" type="search" placeholder="Search course ">
-									<button type="button" class="btn btn-dark mb-0 rounded">Search</button>
+									<input required class="form-control border-0 me-1" name="search" type="search" placeholder="Search course ">
+									<button type="submit" class="btn btn-dark mb-0 rounded">Search</button>
 								</div>
 							</form>
 						</div>

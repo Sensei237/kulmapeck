@@ -129,7 +129,7 @@ class CoursRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('c')
             ->join('c.categorie', 'cat')
-            ->join('c.classes', 'cl')
+            ->join('c.classe', 'cl')
             ->join('cl.specialite', 's')
             ->join('s.filiere', 'f');
 

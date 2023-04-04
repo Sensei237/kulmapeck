@@ -71,6 +71,17 @@ class CoursesController extends AbstractController
         ]);
     }
 
+    #[Route('/{slug}/preview', name: 'app_instructor_courses_preview')]
+    public function coursePreview(Cours $cours, Request $request): Response
+    {
+
+        return $this->render('instructor/courses/course_details.html.twig', [
+            'course' => $cours,
+            'isTeacher' => true,
+            'instructorCourses' => true, 
+        ]);
+    }
+
     #[Route('/{slug}/edit', name: 'app_instructor_courses_edit')]
     #[Route('/new', name: 'app_instructor_courses_new')]
     public function edit(Cours $cours = null, Request $request, SluggerInterface $slugger, ForumRepository $forumRepository, CoursRepository $coursRepository, EnseignantRepository $enseignantRepository, FileUploader $fileUploader): Response
