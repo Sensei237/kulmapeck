@@ -39,6 +39,9 @@ class Payment
     #[ORM\Column(length: 20)]
     private ?string $reference = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $amount = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -136,6 +139,18 @@ class Payment
     public function setReference(string $reference): self
     {
         $this->reference = $reference;
+
+        return $this;
+    }
+
+    public function getAmount(): ?float
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(?float $amount): self
+    {
+        $this->amount = $amount;
 
         return $this;
     }

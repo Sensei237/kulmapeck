@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<title>NotificationTemplate index</title>
+
+{% block body %}
+    <h1>NotificationTemplate index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Template</th>
+                <th>NotificationType</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for notification_template in notification_templates %}
+            <tr>
+                <td>{{ notification_template.id }}</td>
+                <td>{{ notification_template.template }}</td>
+                <td>{{ notification_template.notificationType }}</td>
+                <td>
+                    <a href="{{ path('app_admin_notification_template_show', {'id': notification_template.id}) }}">show</a>
+                    <a href="{{ path('app_admin_notification_template_edit', {'id': notification_template.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_notification_template_new') }}">Create new</a>
+{% endblock %}

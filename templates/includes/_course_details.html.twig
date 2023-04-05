@@ -299,7 +299,7 @@
                                         <!-- Table data -->
                                         <td>
                                             <a href="#" class="btn btn-sm btn-info-soft mb-0" data-bs-toggle="modal" data-bs-target="#viewReview{{ review.id }}">View</a>
-                                            <button class="btn btn-sm btn-danger-soft me-1 mb-1 mb-md-0">Delete</button>
+                                            <a onclick="return confirm ('Are you sure you want to delete these review?')" href="{{ url("app_admin_cours_remove_review", {id: review.id, '_token': csrf_token('delete' ~ review.id)}) }}" class="btn btn-sm btn-danger-soft me-1 mb-1 mb-md-0">Delete</a>
                                         </td>
                                     </tr>
                                 {% else %}

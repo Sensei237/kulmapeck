@@ -1,6 +1,6 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block pageTitle %}Students{% endblock %}
+{% block pageTitle %}Students {{ search ? ("<br><small>Search Results for key : <b>" ~ search ~ "</b></small>")|raw : '' }}{% endblock %}
 
 {% block mainContent %}
 
@@ -12,8 +12,8 @@
 
                 <!-- Search bar -->
                 <div class="col-md-8">
-                    <form class="rounded position-relative">
-                        <input class="form-control bg-transparent" type="search" placeholder="Search" aria-label="Search">
+                    <form method="get" action="{{ url("app_admin_eleve_index")}}" class="rounded position-relative">
+                        <input value="{{ search }}" class="form-control bg-transparent" name="search" required type="search" placeholder="Search" aria-label="Search">
                         <button class="bg-transparent p-2 position-absolute top-50 end-0 translate-middle-y border-0 text-primary-hover text-reset" type="submit">
                             <i class="fas fa-search fs-6 "></i>
                         </button>
@@ -41,7 +41,7 @@
                                     </div>
                                     <!-- Info -->
                                     <div class="ms-0 ms-sm-2 mt-2 mt-sm-0">
-                                        <h5 class="mb-0"><a href="{{ path('app_admin_eleve_show', {reference: eleve.reference}) }}">{{ eleve.utilisateur.personne.nomComplet }}</a></h5>
+                                        <h5 class="mb-0"><a href="{{ path('app_admin_eleve_show', {reference: eleve.reference}) }}">{{ eleve.utilisateur.personne.nomComplet|u.truncate(15) }}</a></h5>
                                         <span class="text-body small"><i class="fas fa-fw fa-map-marker-alt me-1 mt-1"></i>{{ eleve.utilisateur.personne.adresse }}</span>
                                     </div>
                                 </div>
@@ -68,7 +68,11 @@
                                         <div class="icon-md bg-success bg-opacity-10 text-success rounded-circle flex-shrink-0"><i class="bi bi-currency-dollar fa-fw"></i></div>
                                         <h6 class="mb-0 ms-2 fw-light">Payments</h6>
                                     </div>
-                                    <span class="mb-0 fw-bold">$6,205</span>
+                                    {% set totalAmount = 0 %}
+									{% for p in eleve.payments %}
+										{% set totalAmount = totalAmount + p.amount %}
+									{% endfor %}
+                                    <span class="mb-0 fw-bold">{{ totalAmount|number_format(2) }} XAF</span>
                                 </div>
 
                                 <!-- Total courses -->
@@ -91,9 +95,17 @@
                                 
                                 <!-- Progress -->
                                 <div class="overflow-hidden">
-                                    <h6 class="mb-0">85%</h6>
+                                    {% set nbCourses = eleve.cours|length > 0 ? eleve.cours|length : 1 %}
+                                    {% set nbCoursesFinished = 0 %}
+                                    {% for l in eleve.lectures %}
+                                        {% if l.cours and l.isFinished %}
+                                            {% set nbCoursesFinished = nbCoursesFinished + 1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% set percent = (nbCoursesFinished * 100) / nbCourses %}
+                                    <h6 class="mb-0">{{ percent|number_format(2) }}%</h6>
                                     <div class="progress progress-sm bg-primary bg-opacity-10">
-                                        <div class="progress-bar bg-primary aos" role="progressbar" data-aos="slide-right" data-aos-delay="200" data-aos-duration="1000" data-aos-easing="ease-in-out" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar bg-primary aos" role="progressbar" data-aos="slide-right" data-aos-delay="200" data-aos-duration="1000" data-aos-easing="ease-in-out" style="width: {{ percent|number_format(2) }}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                                         </div>
                                     </div>
                                 </div>
@@ -109,9 +121,9 @@
                                     <!-- Buttons -->
                                     <div class="text-end text-primary-hover">
                                         <a href="#" class="btn btn-link text-body p-0 mb-0 me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Message" aria-label="Message">
-                                            <i class="bi bi-envelope-fill"></i>
+                                            <i class="bi bi-bell"></i>
                                         </a>
-                                        <a href="{{ path('app_admin_eleve_block', {reference: eleve.reference}) }}" onclick="return confirm('Are you sure ?')" class="btn btn-link text-body p-0 mb-0" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="{{ eleve.utilisateur.isBlocked ? 'UnBlock' : 'Block' }}" aria-label="{{ eleve.utilisateur.isBlocked ? 'UnBlock' : 'Block' }}">
+                                        <a href="{{ path('app_admin_eleve_block', {reference: eleve.reference}) }}" onclick="return confirm('Are you sure ?')" class="btn btn-link {{eleve.utilisateur.isBlocked ? 'text-danger' : 'text-success'}} p-0 mb-0" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="{{ eleve.utilisateur.isBlocked ? 'UnBlock' : 'Block' }}" aria-label="{{ eleve.utilisateur.isBlocked ? 'UnBlock' : 'Block' }}">
                                             <i class="fas {{ eleve.utilisateur.isBlocked ? 'fa-lock' : 'fa-unlock' }}"></i>
                                         </a>
                                     </div>

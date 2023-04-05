@@ -4,10 +4,16 @@ namespace App\Controller\Admin;
 
 use App\Entity\Cours;
 use App\Entity\Forum;
+use App\Entity\Notification;
+use App\Entity\Review;
 use App\Form\CoursType;
 use App\Repository\CoursRepository;
+use App\Repository\NotificationRepository;
+use App\Repository\NotificationTemplateRepository;
+use App\Repository\ReviewRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,7 +39,7 @@ class CoursController extends AbstractController
                     $courses = $coursRepository->findBy(['isFree' => false], ['isPublished' => 'ASC', 'createdAt' => 'DESC']);
                     break;
                 case 'oldest':
-                    $courses = $coursRepository->findBy(['isPublished' => true], ['created' => 'ASC']);
+                    $courses = $coursRepository->findBy(['isPublished' => true], ['createdAt' => 'ASC']);
                     break;
                 case 'accepted':
                     $courses = $coursRepository->findBy(['isValidated' => true], ['createdAt' => 'DESC']);
@@ -61,6 +67,8 @@ class CoursController extends AbstractController
     #[Route('/new', name: 'app_admin_cours_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CoursRepository $coursRepository, SluggerInterface $slugger): Response
     {
+        throw $this->createAccessDeniedException();
+
         $cour = new Cours();
         $form = $this->createForm(CoursType::class, $cour);
         $form->handleRequest($request);
@@ -91,28 +99,85 @@ class CoursController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_admin_cours_approve', methods: ['GET'])]
-    public function approveCourse(Cours $course, CoursRepository $coursRepository)
+    #[Route('/{slug}/approve-course', name: 'app_admin_cours_approve', methods: ['GET'])]
+    public function approveCourse(Cours $course, CoursRepository $coursRepository, NotificationRepository $notificationRepository, NotificationTemplateRepository $notificationTemplateRepository): Response
     {
+        if (!$course->isIsPublished() || $course->isIsValidated()) {
+            throw $this->createAccessDeniedException("Action Impossible");
+        }
+
         $forum = $course->getForum();
         if ($forum === null) {
             $forum = new Forum();
             $course->setForum($forum);
         }
-        $course->setIsValidated(true);
+
+        $course->setIsValidated(true)->setIsPublished(true)->setPublishedAt(new \DateTimeImmutable());
         $coursRepository->save($course, true);
+
+        $notfType = 2;
+        $template = $notificationTemplateRepository->findOneBy(['notificationType' => $notfType]);
+        if ($template) {
+            $notification = new Notification();
+            $notification->setDestinataire($course->getEnseignant()->getUtilisateur());
+            $notification->setTitle($course->getIntitule());
+            $content = str_replace("__title__", $course->getIntitule(), $template->getTemplate());
+            $notification->setContent($content);
+            $notification->setType($notfType);
+
+            $notificationRepository->save($notification, true);
+        }
+
+        return $this->redirectToRoute('app_admin_cours_show', ['slug' => $course->getSlug()]);
     }
 
-    #[Route('/{slug}', name: 'app_admin_cours_reject', methods: ['GET'])]
-    public function rejectCourse(Cours $course, CoursRepository $coursRepository)
+    #[Route('/{slug}/rejected-course', name: 'app_admin_cours_rejected', methods: ['POST'])]
+    public function rejectedCourse(Cours $course, Request $request, NotificationRepository $notificationRepository, CoursRepository $coursRepository)
     {
-        $course->setIsRejected(true);
-        $coursRepository->save($course, true);
+        if (!$course->isIsPublished() || $course->isIsValidated()) {
+            throw $this->createAccessDeniedException("Action Impossible");
+        }
+
+        $notfType = 3;
+        $template = $request->request->get('message');
+        if ($template) {
+            $course->setIsRejected(true)->setIsPublished(false)->setIsValidated(false);
+            $coursRepository->save($course, true);
+
+            $notification = new Notification();
+            $notification->setDestinataire($course->getEnseignant()->getUtilisateur());
+            $notification->setTitle($course->getIntitule());
+            $content = str_replace("__title__", $course->getIntitule(), $template);
+            $notification->setContent($content);
+            $notification->setType($notfType);
+
+            $notificationRepository->save($notification, true);
+        }
+
+        return $this->redirectToRoute('app_admin_cours_show', ['slug' => $course->getSlug()]);
+
     }
+
+    #[Route('/{id}/remove-review', name: 'app_admin_cours_remove_review', methods: ['POST'])]
+    public function deleteReview(Request $request, Review $review, ReviewRepository $reviewRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $review->getId(), $request->request->get('_token'))) {
+            $reviewRepository->remove($review, true);
+        }
+
+        if (!$request->isXmlHttpRequest()) {
+            return $this->redirectToRoute('app_admin_cours_show', ['slug' => $review->getCours()->getSlug()]);
+        }
+
+        return new JsonResponse(['hasDone' => true]);
+    }
+
 
     #[Route('/{id}/edit', name: 'app_admin_cours_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Cours $cour, CoursRepository $coursRepository, SluggerInterface $slugger): Response
     {
+        throw $this->createAccessDeniedException();
+
         $form = $this->createForm(CoursType::class, $cour);
         $form->handleRequest($request);
 
@@ -134,6 +199,8 @@ class CoursController extends AbstractController
     #[Route('/{id}', name: 'app_admin_cours_delete', methods: ['POST'])]
     public function delete(Request $request, Cours $cour, CoursRepository $coursRepository): Response
     {
+        throw $this->createAccessDeniedException();
+
         if ($this->isCsrfTokenValid('delete'.$cour->getId(), $request->request->get('_token'))) {
             $coursRepository->remove($cour, true);
         }

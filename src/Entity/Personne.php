@@ -77,9 +77,13 @@ class Personne
      */
     private $imageFile;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $joinAt = null;
+
     public function __construct()
     {
         $this->invites = new ArrayCollection();
+        $this->joinAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -317,5 +321,17 @@ class Personne
         }
 
         return $avatarPath;
+    }
+
+    public function getJoinAt(): ?\DateTimeImmutable
+    {
+        return $this->joinAt;
+    }
+
+    public function setJoinAt(?\DateTimeImmutable $joinAt): self
+    {
+        $this->joinAt = $joinAt;
+
+        return $this;
     }
 }

@@ -40,6 +40,9 @@ class Classe
     #[ORM\ManyToOne(inversedBy: 'classes')]
     private ?SkillLevel $skillLevel = null;
 
+    #[ORM\ManyToOne(inversedBy: 'classes')]
+    private ?SousSysteme $sousSysteme = null;
+
     public function __construct()
     {
         $this->cours = new ArrayCollection();
@@ -183,6 +186,18 @@ class Classe
     public function setSkillLevel(?SkillLevel $skillLevel): self
     {
         $this->skillLevel = $skillLevel;
+
+        return $this;
+    }
+
+    public function getSousSysteme(): ?SousSysteme
+    {
+        return $this->sousSysteme;
+    }
+
+    public function setSousSysteme(?SousSysteme $sousSysteme): self
+    {
+        $this->sousSysteme = $sousSysteme;
 
         return $this;
     }

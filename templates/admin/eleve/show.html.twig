@@ -1,22 +1,9 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block pageTitle %}Instructor details{% endblock %}
-
-{% block script %}
-    <script>
-		$('#admin_filter_select_courses').on('change', (e) => {
-			window.location.href = $(e.currentTarget).val()
-		})
-	</script>
-{% endblock %}
-
-{% block actionBtn %}
-	<p>
-    </p>
-{% endblock %}
+{% block pageTitle %}Student details{% endblock %}
 
 {% block mainContent %}
-
+	{% set student = eleve %}
     <div class="row g-4">
 
 			<!-- Personal information START -->
@@ -31,15 +18,11 @@
 					<!-- Card body START -->
 					<div class="card-body">
 						<!-- Profile picture -->
-						<div class="avatar avatar-xl mb-3">
-							<img class="avatar-img rounded-circle border border-white border-3 shadow" src="{{ asset('uploads/images/enseignants/kyc/' ~ eleve.utilisateur.personne.avatar) }}" alt="">
-						</div>
-
-						<!-- Information START -->
-						<div class="row">
-
-							<!-- Information item -->
-							<div class="col-md-6">
+						<div class="d-flex">
+							<div class="avatar mb-3" style="min-width: 14rem;height: 14rem;">
+								<img class="avatar-img border border-white border-3 shadow" src="{{ asset(eleve.utilisateur.personne.avatarPath) }}" alt="">
+							</div>
+							<div class="p-4 pt-2">
 								<ul class="list-group list-group-borderless">
 									<li class="list-group-item">
 										<span>Title:</span>
@@ -60,12 +43,6 @@
 										<span>Mobile Number:</span>
 										<span class="h6 mb-0">{{ eleve.utilisateur.personne.telephone }}</span>
 									</li>
-								</ul>
-							</div>
-
-							<!-- Information item -->
-							<div class="col-md-6">
-								<ul class="list-group list-group-borderless">
 									<li class="list-group-item">
 										<span>Email ID:</span>
 										<span class="h6 mb-0">{{ eleve.utilisateur.email }}</span>
@@ -76,9 +53,48 @@
 										<span class="h6 mb-0">{{ eleve.utilisateur.personne.adresse }}</span>
 									</li>
 
+								</ul>
+							</div>
+						</div>
+
+						<!-- Information START -->
+						<div class="row">
+
+							<!-- Information item -->
+							<div class="col-md-6">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Sous system:</span>
+										<span class="h6 mb-0">{{ eleve.classe.sousSystme.name|default('Undefined') }}</span>
+									</li>
+									<li class="list-group-item">
+										<span>Type of :</span>
+										<span class="h6 mb-0">{{ eleve.classe.specialite.filiere.typeEnseignement.name|default('Undefined') }}</span>
+									</li>
+									<li class="list-group-item">
+										<span>Filière</span>
+										<span class="h6 mb-0">{{ eleve.classe.specialite.filiere.name|default('Undefined') }}</span>
+									</li>
 									<li class="list-group-item">
 										<span>Joining Date:</span>
 										<span class="h6 mb-0">{{ eleve.joinAt|date('d/m/Y')|default('') }}</span>
+									</li>
+								</ul>
+							</div>
+
+							<div class="col-md-6">
+								<ul class="list-group list-group-borderless">
+									<li class="list-group-item">
+										<span>Spécialité:</span>
+										<span class="h6 mb-0">{{ eleve.classe.specialite.name|default('Undefined') }}</span>
+									</li>
+									<li class="list-group-item">
+										<span>Classe:</span>
+										<span class="h6 mb-0">{{ eleve.classe.name|default('Undefined') }}</span>
+									</li>
+									<li class="list-group-item">
+										<span>Ecole:</span>
+										<span class="h6 mb-0">{{ eleve.etablissement.name|default('Undefined') }}</span>
 									</li>
 								</ul>
 							</div>
@@ -162,16 +178,47 @@
 						<div class="card bg-transparent border overflow-hidden">
 							<!-- Card header -->
 							<div class="card-header bg-light border-bottom">
-								<h5 class="card-header-title mb-0">Active Network</h5>
+								<h5 class="card-header-title mb-0">Paymens</h5>
 							</div>
 							<!-- Card body -->
 							<div class="card-body p-0">
 								<div class="d-sm-flex justify-content-between p-4">
-									<h4 class="text-blue mb-0">984</h4>
-									<p class="mb-0"><span class="text-success me-1">0.20%<i class="bi bi-arrow-up"></i></span>vs last Week</p>
+									{% set totalAmount = 0 %}
+									{% for p in eleve.payments %}
+										{% set totalAmount = totalAmount + p.amount %}
+									{% endfor %}
+									<h4 class="text-blue mb-0">{{ totalAmount|number_format(2) }} XAF</h4>
 								</div>
-								<!-- Apex chart -->
-								<div id="activeChartstudent"></div>
+								<div class="table-responsive border-0" style="max-height: 250px;overflow: auto;">
+										<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+
+											<!-- Table head -->
+											<thead>
+												<tr>
+													<th scope="col">Date</th>
+													<th>Type</th>
+													<th>Amount</th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for payment in eleve.payments %}
+													<tr>
+														<td>{{ payment.paidAt|date('d/m/Y') }}</td>
+														<td>{{ payment.cours ? 'Buy Course' : 'Plan' }}</td>
+														<td>{{ payment.amount|number_format(2) }} XAF</td>
+														<td>
+
+														</td>
+													</tr>
+												{% else %}
+													<tr>
+														<td colspan="3">Empty</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
 							</div>
 						</div>
 					</div>
@@ -182,16 +229,54 @@
 						<div class="card bg-transparent border overflow-hidden">
 							<!-- Card header -->
 							<div class="card-header bg-light border-bottom">
-								<h5 class="card-header-title mb-0">New Enrollment</h5>
+								<h5 class="card-header-title mb-0">Network</h5>
 							</div>
 							<!-- Card body -->
 							<div class="card-body p-0">
 								<div class="d-sm-flex justify-content-between p-4">
-									<h4 class="text-blue mb-0">140</h4>
-									<p class="mb-0"><span class="text-success me-1">0.35%<i class="bi bi-arrow-up"></i></span>vs last Week</p>
+									<h4 class="text-blue mb-0">{{ eleve.utilisateur.personne.invites|length < 10 ? '0' ~ eleve.utilisateur.personne.invites|length : eleve.utilisateur.personne.invites|length }}</h4>
 								</div>
-								<!-- Apex chart -->
-								<div id="activeChartstudent2"></div>
+								<div>
+									<div class="table-responsive border-0" style="max-height: 250px;overflow: auto;">
+										<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+
+											<!-- Table head -->
+											<thead>
+												<tr>
+													<th scope="col">Name</th>
+													<th>Joining date</th>
+													<th>Network</th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for inv in eleve.utilisateur.personne.invites %}
+													<tr>
+														<td>
+															<div class="d-flex align-items-center">
+																<!-- Image -->
+																<div class="w-50px">
+																	<img src="{{ asset(inv.avatarPath) }}" class="rounded" alt="">
+																</div>
+																<div class="mb-0 ms-2">
+																	<!-- Title -->
+																	<h6><a href="#">{{ inv.nomComplet }}</a></h6>
+																</div>
+															</div>
+														</td>
+														<td>
+															{{ inv.joinAt|date('d/m/Y') }}
+														</td>
+														<td>{{ inv.invites|length }}</td>
+													</tr>
+												{% else %}
+													<tr>
+														<td colspan="3">Empty</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -213,53 +298,78 @@
 					<!-- Card body START -->
 					<div class="card-body pb-0">
 						<!-- Table START -->
-						<div class="table-responsive border-0" style="max-height: 600px;overflow: auto;">
+						<div class="table-responsive border-0" style="max-height: 500px;overflow: auto;">
 							<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
-
 								<!-- Table head -->
 								<thead>
 									<tr>
-										<th scope="col" class="border-0 rounded-start">Course Name</th>
-										<th scope="col" class="border-0">Chapter</th>
-										<th scope="col" class="border-0">Lessons</th>
+										<th scope="col" class="border-0 rounded-start">Course Title</th>
+										<th scope="col" class="border-0">Total Lectures</th>
+										<th scope="col" class="border-0">Completed Lecture</th>
+										<th scope="col" class="border-0 rounded-end">Action</th>
 									</tr>
 								</thead>
 
 								<!-- Table body START -->
 								<tbody>
-									{% for course in eleve.cours %}
-                                        <tr>
-                                            <!-- Table data -->
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <!-- Image -->
-                                                    <div class="w-100px">
-                                                        <img src="{{ asset('uploads/media/courses/' ~ course.media.imageFile) }}" class="rounded" alt="">
-                                                    </div>
-                                                    <div class="mb-0 ms-2">
-                                                        <!-- Title -->
-                                                        <h6><a href="#">{{ course.intitule }}</a></h6>
-                                                        <!-- Info -->
-                                                        <div class="overflow-hidden">
-                                                            <h6 class="mb-0 text-end">85%</h6>
-                                                            <div class="progress progress-sm bg-primary bg-opacity-10">
-                                                                <div class="progress-bar bg-primary aos aos-init aos-animate" role="progressbar" data-aos="slide-right" data-aos-delay="200" data-aos-duration="1000" data-aos-easing="ease-in-out" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
+									{% for course in student.cours %}
+										{% set leconTerminees = 0 %}
+										{% for l in student.lectures %}
+											{% if l.isFinished and l.lesson.chapitre.cours is same as course %}
+												{% set leconTerminees = leconTerminees + 1 %}
+											{% endif %}
+										{% endfor %}
+										{% set numberOfLessons = course.numberOfLessons > 0 ? course.numberOfLessons : 1 %}
+										{% set percent = (leconTerminees * 100 ) / numberOfLessons %}
+										<tr>
+											<!-- Table data -->
+											<td>
+												<div class="d-flex align-items-center">
+													<!-- Image -->
+													<div class="w-100px">
+														<img src="{{asset('uploads/media/courses/' ~ course.media.imageFile)}}" class="rounded" alt="">
+													</div>
+													<div class="mb-0 ms-2">
+														<!-- Title -->
+														<h6><a href="{{ url("app_front_course_start", {slug: course.slug}, "http", false) }}">{{ course.intitule }}</a></h6>
+														<!-- Info -->
+														<div class="overflow-hidden">
+															<h6 class="mb-0 text-end">{{ percent|number_format(0) }}%</h6>
+															<div class="progress progress-sm bg-primary bg-opacity-10">
+																<div class="progress-bar bg-primary aos" role="progressbar" data-aos="slide-right" data-aos-delay="200" data-aos-duration="1000" data-aos-easing="ease-in-out" style="width: {{ percent|number_format(0) }}%" aria-valuenow="{{ percent|number_format(0) }}" aria-valuemin="0" aria-valuemax="100">
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</td>
 
-                                            <!-- Table data -->
-                                            <td>{{ course.chapitres|length }}</td>
+											<!-- Table data -->
+											<td>{{ course.numberOfLessons }}</td>
 
-                                            <!-- Table data -->
-                                            <td>{{ course.numberOfLessons }}</td>
-									</tr>
-                                    {% else %}
-                                        <td colspan="3">No data found</td>
-                                    {% endfor %}
+											<!-- Table data -->
+											<td>{{ leconTerminees }}</td>
+
+											<!-- Table data -->
+											<td>
+												{% if leconTerminees is same as course.numberOfLessons %}
+													<button class="btn btn-sm btn-success me-1 mb-1 mb-x;-0 disabled"><i class="bi bi-check me-1"></i>Complete</button>
+													<a href="#" class="btn btn-sm btn-light me-1"><i class="bi bi-arrow-repeat me-1"></i>Restart</a>
+												{% else %}
+													<a title="Continue" href="{{ url("app_front_course_start", {slug: course.slug}, "http", false) }}" class="btn btn-sm btn-primary-soft me-1 mb-1 mb-md-0"><i class="bi bi-play-circle me-1"></i></a>
+												{% endif %}
+												
+												{% if course.isFree %}
+													<a onclick="return confirm('Etes-vous sure de vouloir supprimer ce cours de votre liste de lecture')" href="{{ url("app_front_course_start", {id: student.reference, slug: course.slug}, "http", false) }}" class="btn btn-sm btn-danger-soft me-1 mb-1 mb-md-0"><i class="bi bi-trash me-1"></i></a>
+												{% endif %}
+											</td>
+										</tr>
+										
+									{% else %}
+										<tr>
+											<td colspan="4">No Courses found</td>
+										</tr>
+									{% endfor %}
 								</tbody>
 								<!-- Table body END -->
 							</table>
@@ -280,7 +390,6 @@
 				</div>
 			</div>
 			<!-- Instructor course list END -->
-
 
 		</div> 
 

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<title>NotificationTemplate</title>
+
+{% block body %}
+    <h1>NotificationTemplate</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ notification_template.id }}</td>
+            </tr>
+            <tr>
+                <th>Template</th>
+                <td>{{ notification_template.template }}</td>
+            </tr>
+            <tr>
+                <th>NotificationType</th>
+                <td>{{ notification_template.notificationType }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_notification_template_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_notification_template_edit', {'id': notification_template.id}) }}">edit</a>
+
+    {{ include('admin/notification_template/_delete_form.html.twig') }}
+{% endblock %}

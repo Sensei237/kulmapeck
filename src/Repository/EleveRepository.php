@@ -39,20 +39,23 @@ class EleveRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Eleve[] Returns an array of Eleve objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+        * @return Eleve[] Returns an array of Eleve objects
+        */
+    public function search(?string $value): array
+    {
+        return $this->createQueryBuilder('e')
+            ->join('e.utilisateur', 'u')
+            ->join('u.personne', 'p')
+            ->andWhere('p.lastName LIKE :val')
+            ->orWhere('p.firstName LIKE :val')
+            ->orWhere('p.telephone LIKE :val')
+            ->setParameter('val', '%' . $value . '%')
+            ->orderBy('p.lastName', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?Eleve
 //    {

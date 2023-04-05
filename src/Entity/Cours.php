@@ -129,6 +129,9 @@ class Cours
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Quiz::class)]
     private Collection $quizzes;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $publishedAt = null;
+
     public function __construct()
     {
         $this->classe = new ArrayCollection();
@@ -741,6 +744,18 @@ class Cours
                 $quiz->setCours(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPublishedAt(): ?\DateTimeImmutable
+    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(?\DateTimeImmutable $publishedAt): self
+    {
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }

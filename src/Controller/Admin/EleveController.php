@@ -18,11 +18,12 @@ class EleveController extends AbstractController
     #[Route('/', name: 'app_admin_eleve_index', methods: ['GET'])]
     public function index(EleveRepository $eleveRepository, Request $request, PaginatorInterface $paginatorInterface): Response
     {
-        $eleves = $eleveRepository->findAll();
+        $eleves = $eleveRepository->search($request->query->get('search'));
 
         return $this->render('admin/eleve/index.html.twig', [
             'eleves' => $paginatorInterface->paginate($eleves, $request->query->getInt('page', 1), 15),
             'elc' => true,
+            'search' => $request->query->get('search')
         ]);
     }
 

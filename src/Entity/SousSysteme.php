@@ -28,9 +28,13 @@ class SousSysteme
     #[ORM\ManyToMany(targetEntity: Filiere::class, mappedBy: 'sousSysteme')]
     private Collection $filieres;
 
+    #[ORM\OneToMany(mappedBy: 'sousSysteme', targetEntity: Classe::class)]
+    private Collection $classes;
+
     public function __construct()
     {
         $this->filieres = new ArrayCollection();
+        $this->classes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -84,6 +88,36 @@ class SousSysteme
     {
         if ($this->filieres->removeElement($filiere)) {
             $filiere->removeSousSysteme($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Classe>
+     */
+    public function getClasses(): Collection
+    {
+        return $this->classes;
+    }
+
+    public function addClass(Classe $class): self
+    {
+        if (!$this->classes->contains($class)) {
+            $this->classes->add($class);
+            $class->setSousSysteme($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClass(Classe $class): self
+    {
+        if ($this->classes->removeElement($class)) {
+            // set the owning side to null (unless already changed)
+            if ($class->getSousSysteme() === $this) {
+                $class->setSousSysteme(null);
+            }
         }
 
         return $this;
