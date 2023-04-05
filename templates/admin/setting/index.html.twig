@@ -1,0 +1,64 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Users{% endblock %}
+
+{% block actionBtn %}
+	
+{% endblock %}
+
+{% block script %}
+    
+{% endblock %}
+
+{% block mainPageContent %}
+
+    <!-- Page main content START -->
+	<div class="page-content-wrapper border">
+
+		<!-- Title -->
+		<div class="row">
+			<div class="col-12 mb-3">
+				<h1 class="h3 mb-2 mb-sm-0">Admin Settings</h1>
+			</div>
+		</div>
+
+		<div class="row g-4">
+			<!-- Left side START -->
+			<div class="col-xl-3">
+				<!-- Tab START -->
+				<ul class="nav nav-pills nav-tabs-bg-dark flex-column">
+					<li class="nav-item"> <a class="nav-link active" data-bs-toggle="tab" href="#tab-1"><i class="fas fa-globe fa-fw me-2"></i>Website Settings</a> </li>
+					<li class="nav-item"> <a class="nav-link" data-bs-toggle="tab" href="#tab-2"><i class="fas fa-cog fa-fw me-2"></i>General Settings</a> </li>
+					<li class="nav-item"> <a class="nav-link" data-bs-toggle="tab" href="#tab-3"><i class="fas fa-bell fa-fw me-2"></i>Notification Settings</a> </li>
+					<li class="nav-item"> <a class="nav-link" data-bs-toggle="tab" href="#tab-5"><i class="fas fa-sliders-h fa-fw me-2"></i>Social Settings</a> </li>
+					<li class="nav-item"> <a class="nav-link mb-0" data-bs-toggle="tab" href="#tab-6"><i class="fas fa-envelope-open-text fa-fw me-2"></i>Email Settings</a> </li>
+				</ul>
+				<!-- Tab END -->
+			</div>
+			<!-- Left side END -->
+
+			<!-- Right side START -->
+			<div class="col-xl-9">
+
+				<!-- Tab Content START -->
+				<div class="tab-content">
+
+					{{ include('admin/setting/_website_setting.html.twig') }}
+
+					{{ include('admin/setting/_general_setting.html.twig') }}
+
+					{{ include('admin/setting/_notification_setting.html.twig') }}
+
+                    {{ include('admin/setting/_social_setting.html.twig') }}
+
+                    {{ include('admin/setting/_email_setting.html.twig') }}
+
+				</div>
+				<!-- Tab Content END -->
+			</div>
+			<!-- Right side END -->
+		</div> <!-- Row END -->		
+	</div>
+	<!-- Page main content END -->
+
+{% endblock %}

@@ -1,0 +1,59 @@
+<!-- Personal Information content START -->
+<div class="tab-pane show active" id="tab-1">
+    <div class="card shadow">
+
+        <!-- Card header -->
+        <div class="card-header border-bottom">
+            <h5 class="card-header-title">Website Settings</h5>
+        </div>
+
+        <!-- Card body START -->
+        <div class="card-body">
+            {{ form_start(siteSettingForm) }}
+
+                <!-- Input item -->
+                <div class="col-lg-4">
+                    {{ form_row(siteSettingForm.siteName) }}
+                </div>
+
+                <!-- Input item -->
+                <div class="col-lg-4">
+                    {{ form_row(siteSettingForm.siteCopyrights) }}
+                </div>
+
+                <!-- Input item -->
+                <div class="col-lg-4">
+                    {{ form_row(siteSettingForm.siteEmail) }}
+                </div>
+
+                <!-- Textarea item -->
+                <div class="col-12">
+                    {{ form_row(siteSettingForm.siteDescription) }}
+                </div>
+
+                <!-- Input item -->
+                <div class="col-lg-6">
+                    {{ form_row(siteSettingForm.contactPhone) }}
+                </div>
+
+                <!-- Input item -->
+                <div class="col-lg-6">
+                    {{ form_row(siteSettingForm.supportEmail) }}
+                </div>
+
+                <!-- Textarea item -->
+                <div class="col-12">
+                    {{ form_row(siteSettingForm.contactAddress) }}
+                </div>
+
+                <!-- Save button -->
+                <div class="d-sm-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary mb-0">Update</button>
+                </div>
+            {{ form_end(siteSettingForm) }}
+        </div>
+        <!-- Card body END -->
+
+    </div>			
+</div>
+<!-- Personal Information content END -->

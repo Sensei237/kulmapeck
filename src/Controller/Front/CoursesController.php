@@ -373,8 +373,6 @@ class CoursesController extends AbstractController
         return $this->redirectToRoute('app_front_read_lesson', ['slug' => $lesson->getSlug()]);
     }
 
-
-    
     #[Route('/course/{slugCours}/{slugChapitre}/quizzes', name: 'app_front_course_chapitre_quizzes', methods: ['GET', 'POST'])]
     #[Route('/course/{slugCours}/quizzes', name: 'app_front_course_course_quizzes', methods: ['GET', 'POST'])]
     #[ParamConverter('cours', options: ['mapping' => ['slugCours' => 'slug']])]

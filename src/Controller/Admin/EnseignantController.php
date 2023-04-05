@@ -3,8 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Enseignant;
+use App\Entity\Notification;
 use App\Form\EnseignantType;
 use App\Repository\EnseignantRepository;
+use App\Repository\NotificationRepository;
+use App\Repository\NotificationTemplateRepository;
 use App\Repository\ReviewRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -45,8 +48,6 @@ class EnseignantController extends AbstractController
             $enseignants = $enseignantRepository->findAll();
         }
 
-        
-
         return $this->render('admin/enseignant/request.html.twig', [
             'enseignants' => $paginatorInterface->paginate($enseignants, $request->query->getInt('page', 1), 10),
             'isEnseignants' => true,
@@ -57,19 +58,49 @@ class EnseignantController extends AbstractController
     }
 
     #[Route('/request/{reference}/accept', name: 'app_admin_enseignant_accept_request', methods: ['GET'])]
-    public function accept(Enseignant $enseignant, EnseignantRepository $enseignantRepository)
+    public function accepted(Enseignant $enseignant, NotificationTemplateRepository $ntr, NotificationRepository $notificationRepository, EnseignantRepository $enseignantRepository)
     {
         $enseignant->getUtilisateur()->setIsBlocked(false);
         $enseignantRepository->save($enseignant->setIsValidated(true)->setIsRejected(false), true);
+
+        $notification = new Notification();
+        $template = $ntr->findOneBy(['type' => 7]);
+        if ($template) {
+            $content = $template->getTemplate();
+        } else {
+            $content = "Kulmapck a approuvé votre candidature comme enseigant. Vous pouvez dès à présent rédiger des cours depuis votre espace personnel";
+        }
+
+        $notification->setTitle("Rejet de candidature")
+        ->setType(7)
+            ->setDestinataire($enseignant->getUtilisateur())
+            ->setContent($content);
+        $notificationRepository->save($notification, true);
 
         return $this->redirectToRoute('app_admin_enseignant_request');
     }
 
     #[Route('/request/{reference}/reject', name: 'app_admin_enseignant_reject_request', methods: ['GET'])]
-    public function reject(Enseignant $enseignant, EnseignantRepository $enseignantRepository)
+    public function rejected(Enseignant $enseignant, NotificationTemplateRepository $ntr, NotificationRepository $notificationRepository, EnseignantRepository $enseignantRepository)
     {
         $enseignant->getUtilisateur()->setIsBlocked(true);
-        $enseignantRepository->save($enseignant->setIsValidated(false)->setIsRejected(true), true);
+        $enseignant->setIsValidated(false)
+            ->setIsRejected(true);
+        $enseignantRepository->save($enseignant, true);
+        
+        $notification = new Notification();
+        $template = $ntr->findOneBy(['type' => 6]);
+        if ($template) {
+            $content = $template->getTemplate();
+        } else {
+            $content = "Kulmapck n'a pas approuvé votre candidature comme enseigant. Veuillez prendre contact avec les dirigeants pour plus de détails sur ce rejet";
+        }
+
+        $notification->setTitle("Rejet de candidature")
+            ->setType(6)
+            ->setDestinataire($enseignant->getUtilisateur())
+            ->setContent($content);
+        $notificationRepository->save($notification, true);
 
         return $this->redirectToRoute('app_admin_enseignant_request');
     }
@@ -77,6 +108,8 @@ class EnseignantController extends AbstractController
     #[Route('/new', name: 'app_admin_enseignant_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EnseignantRepository $enseignantRepository): Response
     {
+        throw $this->createAccessDeniedException();
+
         $enseignant = new Enseignant();
         $form = $this->createForm(EnseignantType::class, $enseignant);
         $form->handleRequest($request);
@@ -108,6 +141,8 @@ class EnseignantController extends AbstractController
     #[Route('/{id}/edit', name: 'app_admin_enseignant_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Enseignant $enseignant, EnseignantRepository $enseignantRepository): Response
     {
+        throw $this->createAccessDeniedException();
+
         $form = $this->createForm(EnseignantType::class, $enseignant);
         $form->handleRequest($request);
 

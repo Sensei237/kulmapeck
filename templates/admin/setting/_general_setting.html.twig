@@ -1,0 +1,44 @@
+<!-- General Settings content START -->
+					<div class="tab-pane" id="tab-2">
+
+						<div class="card shadow">
+
+							<!-- Card header -->
+							<div class="card-header border-bottom">
+								<h5 class="card-header-title">General Settings</h5>
+							</div>
+
+							<!-- Card body START -->
+							<div class="card-body">
+								{{ form_start(generalSettingForm) }}
+
+									<!-- Input item -->
+									<div class="col-12">
+										{{ form_row(generalSettingForm.mainSiteUrl) }}
+									</div>
+
+									<!-- Switch item -->
+									<div class="col-lg-4">
+										<label class="form-label">Maintainance mode</label>
+										<div class="form-check form-switch form-check-lg mb-0">
+											{{ form_widget(generalSettingForm.isMaintenanceMode) }}
+											{{ form_label(generalSettingForm.isMaintenanceMode) }}
+										</div>
+									</div>
+		
+									<!-- Textarea item -->
+									<div class="col-lg-8">
+										{{ form_row(generalSettingForm.maintenanceText) }}	
+									</div>
+		
+									<!-- Save button -->
+									<div class="d-sm-flex justify-content-end">
+										<button type="submit" class="btn btn-primary mb-0">Update</button>
+									</div>
+								{{ form_end(generalSettingForm) }}
+							</div>
+							<!-- Card body END -->
+
+						</div>
+					</div>
+					<!-- General Settings content END -->

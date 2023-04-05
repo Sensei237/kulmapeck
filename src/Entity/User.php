@@ -64,11 +64,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Exam::class)]
     private Collection $exams;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: NotificationSetting::class, orphanRemoval: true)]
+    private Collection $notificationSettings;
+
     public function __construct()
     {
         $this->notifications = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->exams = new ArrayCollection();
+        $this->notificationSettings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -314,6 +318,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($exam->getUser() === $this) {
                 $exam->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NotificationSetting>
+     */
+    public function getNotificationSettings(): Collection
+    {
+        return $this->notificationSettings;
+    }
+
+    public function addNotificationSetting(NotificationSetting $notificationSetting): self
+    {
+        if (!$this->notificationSettings->contains($notificationSetting)) {
+            $this->notificationSettings->add($notificationSetting);
+            $notificationSetting->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotificationSetting(NotificationSetting $notificationSetting): self
+    {
+        if ($this->notificationSettings->removeElement($notificationSetting)) {
+            // set the owning side to null (unless already changed)
+            if ($notificationSetting->getUser() === $this) {
+                $notificationSetting->setUser(null);
             }
         }
 

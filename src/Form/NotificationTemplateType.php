@@ -21,6 +21,8 @@ class NotificationTemplateType extends AbstractType
                     'When an administrator has rejeted a course' => 3,
                     'When a student become premium (Subscribe a plan)' => 4,
                     'When a student subscribe to a course' => 5,
+                    'Lorsque la candidature de l\'nseignant est rejetée' => 6,
+                    "Lorsque la cantidature de l'enseignant est acceptée" => 7,
                     'Other' => 0,
                 ]
             ])
