@@ -16,7 +16,7 @@
  
 <div class="accordion accordion-icon accordion-bg-light" id="accordionExample3">
     
-    {% for sujet in course.forum.sujets %}
+    {% for sujet in course.forum.sujets|default([]) %}
         
         <div class="accordion-item mb-3">
             <h6 class="accordion-header font-base" id="heading-forum-{{ sujet.id }}">

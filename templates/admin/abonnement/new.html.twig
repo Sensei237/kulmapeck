@@ -1,0 +1,14 @@
+
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Create new Abonnement{% endblock %}
+
+{% block actionBtn %}
+    <a href="{{ path('app_admin_abonnement_index') }}"  class="btn btn-sm btn-secondary mb-0">back to list</a>
+	<a href="#" data-bs-toggle="modal" data-bs-target="#itemAbonnementModal" class="btn btn-sm btn-primary mb-0">Add new plan item</a>
+{% endblock %}
+
+    
+{% block mainContent %}
+    {{ include('admin/abonnement/_form.html.twig') }}
+{% endblock %}

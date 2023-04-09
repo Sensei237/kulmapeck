@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<title>Abonnement</title>
+
+{% block body %}
+    <h1>Abonnement</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ abonnement.id }}</td>
+            </tr>
+            <tr>
+                <th>Label</th>
+                <td>{{ abonnement.label }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ abonnement.slug }}</td>
+            </tr>
+            <tr>
+                <th>Montant</th>
+                <td>{{ abonnement.montant }}</td>
+            </tr>
+            <tr>
+                <th>Duree</th>
+                <td>{{ abonnement.duree }}</td>
+            </tr>
+            <tr>
+                <th>IsRecommended</th>
+                <td>{{ abonnement.isRecommended ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_abonnement_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_abonnement_edit', {'id': abonnement.id}) }}">edit</a>
+
+    {{ include('admin/abonnement/_delete_form.html.twig') }}
+{% endblock %}

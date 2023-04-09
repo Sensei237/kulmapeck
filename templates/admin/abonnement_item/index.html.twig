@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<title>AbonnementItem index</title>
+
+{% block body %}
+    <h1>AbonnementItem index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Label</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for abonnement_item in abonnement_items %}
+            <tr>
+                <td>{{ abonnement_item.id }}</td>
+                <td>{{ abonnement_item.label }}</td>
+                <td>
+                    <a href="{{ path('app_admin_abonnement_item_show', {'id': abonnement_item.id}) }}">show</a>
+                    <a href="{{ path('app_admin_abonnement_item_edit', {'id': abonnement_item.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_abonnement_item_new') }}">Create new</a>
+{% endblock %}

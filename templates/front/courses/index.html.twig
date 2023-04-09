@@ -151,10 +151,6 @@
 
 						<!-- Pagination START -->
 						<div class="col-12">
-							{% if courses.getTotalItemCount > 0 %}
-								<p class="mb-0 text-center text-sm-start">Showing {{ ((courses.getCurrentPageNumber - 1) * courses.getItemNumberPerPage) + 1 }} to {{ courses.getItemNumberPerPage * courses.getCurrentPageNumber }} of {{courses.getTotalItemCount}} entries</p>
-							{% endif %}
-
 							{{ knp_pagination_render(courses) }}
 						</div>
 						<!-- Pagination END -->

@@ -1,0 +1,51 @@
+{{ form_start(form, {'attr': {'class': 'row g-4'}}) }}
+    <div class="col-md-6">
+        {{ form_row(form.label) }}
+    </div>
+    <div class="col-md-3">
+        {{ form_row(form.duree) }}
+    </div>
+    <div class="col-md-3">
+        {{ form_row(form.montant) }}
+    </div>
+    <div class="col-md-12">
+        {{ form_row(form.paymentMethods) }}
+    </div>
+    {% for item in form.items %}
+        <div class="col-md-4">
+        {{ form_row(item) }}
+    </div>
+    {% endfor %}
+    <div class="col-md-12">
+        {{ form_row(form.isRecommended) }}
+    </div>
+    <div class="col-12">
+        <button class="btn btn-success" type="submit">{{ button_label|default('created') }}</button>
+    </div>
+{{ form_end(form) }}
+
+<!-- Modal START -->
+	<div class="modal fade" id="itemAbonnementModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header border-0 bg-transparent">
+					<!-- Close button -->
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<!-- Modal body -->
+				<div class="modal-body px-5 pb-5 position-relative overflow-hidden">
+                    <div class="d-flex mb-4 mt-3">
+                        {{ form_start(itemForm) }}
+                            {{ form_widget(itemForm) }}
+                            {% if redirectUri is defined %}
+                                <input type="hidden" name="redirectUri" value="{{ redirectUri }}">
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary mt-3">Save</button>
+                        {{ form_end(itemForm) }}
+                    </div>
+				</div>
+				
+			</div>
+		</div>
+	</div>  
+	<!-- Modal END -->

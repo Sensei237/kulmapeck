@@ -93,7 +93,7 @@
                 {% for category in categories %}
                     <!-- Tab item -->
                     <li class="nav-item me-2 me-sm-5">
-                        <button class="nav-link mb-2 mb-md-0 {{ loop.index is same as 1 ? 'active' : '' }}" id="course-pills-tab-{{ loop.index }}" data-bs-toggle="pill" data-bs-target="#course-pills-tabs-{{ loop.index }}" type="button" role="tab" aria-controls="course-pills-tabs-{{ loop.index }}" aria-selected="false">{{ category.name }}</button>
+                        <button class="nav-link mb-2 mb-md-0 {{ loop.index is same as 1 ? 'active' : '' }}" id="course-pills-tab-{{ loop.index }}" data-bs-toggle="pill" data-bs-target="#course-pills-tabs-{{ loop.index }}" type="button" role="tab" aria-controls="course-pills-tabs-{{ loop.index }}" aria-selected="false">{{ category.category.name }}</button>
                     </li>
                 {% endfor %}
                 <li class="nav-item me-2 me-sm-5">
@@ -109,7 +109,7 @@
                     <!-- Content START -->
                     <div class="tab-pane fade show {{ loop.index is same as 1 ? 'active' : '' }}" id="course-pills-tabs-{{ loop.index }}" role="tabpanel" aria-labelledby="course-pills-tab-{{ loop.index }}">
                         <div class="row g-4">
-                            {% for course in category.cours %} 
+                            {% for course in category.courses %} 
                                 <div class="col-sm-6 col-lg-4 col-xl-3">
                                     {{ include('front/includes/courses/_course_item.html.twig') }}
                                 </div>

@@ -1,20 +1,104 @@
-<!DOCTYPE html>
+{% extends 'admin/base.html.twig' %}
 
-<title>Hello ExamController!</title>
+{% block pageTitle %}Exams{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block mainContent %}
+    <!-- Card START -->
+	<div class="card bg-transparent border">
+        <!-- Card body START -->
+		<div class="card-body">
+			<!-- Course table START -->
+			<div class="table-responsive border-0 rounded-3">
+				<!-- Table START -->
+				<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+					<!-- Table head -->
+					<thead>
+						<tr>
+							<th scope="col" class="border-0 rounded-start">Exam title</th>
+							<th scope="col" class="border-0">Added By</th>
+							<th scope="col" class="border-0">Added Date</th>
+							<th scope="col" class="border-0">Duration</th>
+							<th scope="col" class="border-0">Language</th>
+							<th scope="col" class="border-0">Category</th>
+							<th scope="col" class="border-0 rounded-end">Action</th>
+						</tr>
+					</thead>
+					
+					<!-- Table body START -->
+					<tbody>
+						{% for exam in exams %}
+							<tr class="text-center">
+								<!-- Table data -->
+								<td>
+									<div class="d-flex align-items-center position-relative">
+										<!-- Image -->
+										<div class="w-60px">
+											<img src="{{ asset('uploads/media/exams/files/' ~ exam.imageFile) }}" class="rounded" alt="">
+										</div>
+										<!-- Title -->
+										<h6 class="table-responsive-title mb-0 ms-2">	
+											<a href="{{ path('app_admin_cours_show', {slug: exam.reference}) }}" class="stretched-link">{{ exam.title|u.truncate(40, '...') }}</a>
+										</h6>
+									</div>
+								</td>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+								<!-- Table data -->
+								<td>
+									<div class="d-flex align-items-center mb-3">
+										<!-- Avatar -->
+										<div class="avatar avatar-xs flex-shrink-0">
+											<img class="avatar-img rounded-circle" src="{{ asset(exam.user.personne.avatarPath) }}" alt="avatar">
+										</div>
+										<!-- Info -->
+										<div class="ms-2">
+											<h6 class="mb-0 fw-light">{{ exam.user.personne.nomComplet|u.truncate(15, '...') }}</h6>
+										</div>
+									</div>
+								</td>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/media/sensei/Disque local/Projets/kulmapeck/src/Controller/Admin/ExamController.php'|file_link(0) }}">src/Controller/Admin/ExamController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/media/sensei/Disque local/Projets/kulmapeck/templates/admin/exam/index.html.twig'|file_link(0) }}">templates/admin/exam/index.html.twig</a></code></li>
-    </ul>
-</div>
+								<!-- Table data -->
+								<td>{{ exam.publishedAt|date('d/m/Y') }}</td>
+
+								<!-- Table data -->
+								<td> <span class="badge text-bg-primary">{{ exam.duration }}</span> </td>
+
+								<!-- Table data -->
+								<td>{{ exam.language}}</td>
+
+								<!-- Table data -->
+								<td>{{ exam.category.name }}</td>
+
+								<!-- Table data -->
+								<td>
+									{% if exam.isPublished %}
+                                        <a class="btn btn-round btn-primary-soft btn-sm" target="_blank" data-bs-toggle="tooltip" title="Preview" href="{{ url("app_front_exam_show", {reference: exam.reference}) }}"><i class="fas fa-eye"></i></a>
+                                        {% if not exam.isValidated %}
+                                            <a href="{{ url("app_admin_exam_remove", {reference: exam.reference, _token: csrf_token('validated' ~ exam.reference)}) }}" onclick="return confirm('Are you sure you want to approve this exam?')" data-bs-toggle="tooltip" title="Approve" class="btn btn-sm btn-round btn-success-soft"><i class="fas fa-check-circle"></i></a>
+                                        {% endif %}
+									    <a href="{{ url("app_admin_exam_approve", {reference: exam.reference, _token: csrf_token('delete' ~ exam.reference)}) }}" onclick="return confirm('Are you sure you want to delete this exam?')" data-bs-toggle="tooltip" title="Delete" class="btn btn-sm btn-round btn-danger-soft"><i class="fas fa-trash"></i></a>
+                                    {% else %}
+                                        <span class="badge bg-danger">Waiting</span>
+                                    {% endif %}
+								</td>
+							</tr>
+						{% else %}
+							<tr><td colspan="7">No data found</td></tr>
+						{% endfor %}
+					</tbody>
+					<!-- Table body END -->
+				</table>
+				<!-- Table END -->
+			</div>
+			<!-- Course table END -->
+		</div>
+		<!-- Card body END -->
+        <div class="card-footer bg-transparent pt-0">
+			<!-- Pagination START -->
+			<div class="d-sm-flex justify-content-sm-between align-items-sm-center">
+				{{ knp_pagination_render(exams) }}
+			</div>
+			<!-- Pagination END -->
+		</div>
+		<!-- Card footer END -->
+    </div>
 {% endblock %}

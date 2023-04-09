@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<title>AbonnementItem</title>
+
+{% block body %}
+    <h1>AbonnementItem</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ abonnement_item.id }}</td>
+            </tr>
+            <tr>
+                <th>Label</th>
+                <td>{{ abonnement_item.label }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_abonnement_item_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_abonnement_item_edit', {'id': abonnement_item.id}) }}">edit</a>
+
+    {{ include('admin/abonnement_item/_delete_form.html.twig') }}
+{% endblock %}

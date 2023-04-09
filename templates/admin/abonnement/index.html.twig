@@ -1,0 +1,74 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Abonnements{% endblock %}
+
+{% block actionBtn %}
+	<a href="{{ url("app_admin_abonnement_new") }}" class="btn btn-sm btn-primary mb-0">Add new plan</a>
+{% endblock %}
+
+{% block script %}
+    
+{% endblock %}
+
+{% block mainContent %}
+
+
+    <!-- Pricing START -->
+    <div class="row g-4">
+
+        {% for plan in plans %}
+            
+            <!-- Pricing item START -->
+            <div class="col-md-6 col-xl-4">
+                <div class="card border rounded-3 p-2 p-sm-4 h-100">
+                    <!-- Card Header -->
+                    <div class="card-header p-0">
+                        <!-- Price and Info -->
+                        <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded-2">
+                            <!-- Info -->
+                            <div>
+                                <h5 class="mb-0">{{ plan.label }}</h5>
+                                {% if plan.isRecommended %}
+                                    <div class="badge bg-grad mb-0 rounded-pill">Recommended</div>
+                                {% endif %}
+                            </div>
+                            <!-- Price -->
+                            <div>
+                                <h4 class="text-success mb-0 plan-price" data-monthly-price="{{ plan.montant }} XAF" data-annual-price="{{ plan.montant }} XAF">{{ plan.montant }} XAF</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="position-relative my-3 text-center">
+                        <hr>
+                        <p class="small position-absolute top-50 start-50 translate-middle bg-body px-3">All plans included</p>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="card-body pt-0">
+                        <ul class="list-unstyled mt-2 mb-0">
+                            {% for item in abonnementItems %}
+                                {% if item in plan.items %}
+                                    <li class="mb-3 h6 fw-light"><i class="bi bi-patch-check-fill text-success me-2"></i>{{ item.label }}</li>
+                                {% else %}
+                                    <li class="mb-3 h6 fw-light"><i class="bi bi-x-octagon-fill text-danger me-2"></i>{{ item.label }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <!-- Card Footer -->
+                    <div class="card-footer text-center d-grid pb-0">
+                        <a href="{{ url("app_admin_abonnement_edit", {id: plan.id}) }}" type="button" class="btn btn-dark mb-0">Edit</a>
+                        {{ include('admin/abonnement/_delete_form.html.twig', {abonnement: plan}) }}
+                    </div>
+                </div>
+            </div>
+            <!-- Pricing item END -->
+
+        {% endfor %}
+        
+    </div>	<!-- Row END -->
+    <!-- Pricing END -->
+
+{% endblock %}

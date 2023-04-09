@@ -31,9 +31,20 @@ class Abonnement
     #[ORM\OneToMany(mappedBy: 'abonnement', targetEntity: Payment::class)]
     private Collection $payments;
 
+    #[ORM\Column]
+    private ?bool $isRecommended = null;
+
+    #[ORM\ManyToMany(targetEntity: AbonnementItem::class, inversedBy: 'abonnements')]
+    private Collection $items;
+
+    #[ORM\ManyToMany(targetEntity: PaymentMethod::class, inversedBy: 'abonnements')]
+    private Collection $paymentMethods;
+
     public function __construct()
     {
         $this->payments = new ArrayCollection();
+        $this->items = new ArrayCollection();
+        $this->paymentMethods = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -115,6 +126,66 @@ class Abonnement
                 $payment->setAbonnement(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isIsRecommended(): ?bool
+    {
+        return $this->isRecommended;
+    }
+
+    public function setIsRecommended(bool $isRecommended): self
+    {
+        $this->isRecommended = $isRecommended;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AbonnementItem>
+     */
+    public function getItems(): Collection
+    {
+        return $this->items;
+    }
+
+    public function addItem(AbonnementItem $item): self
+    {
+        if (!$this->items->contains($item)) {
+            $this->items->add($item);
+        }
+
+        return $this;
+    }
+
+    public function removeItem(AbonnementItem $item): self
+    {
+        $this->items->removeElement($item);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PaymentMethod>
+     */
+    public function getPaymentMethods(): Collection
+    {
+        return $this->paymentMethods;
+    }
+
+    public function addPaymentMethod(PaymentMethod $paymentMethod): self
+    {
+        if (!$this->paymentMethods->contains($paymentMethod)) {
+            $this->paymentMethods->add($paymentMethod);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentMethod(PaymentMethod $paymentMethod): self
+    {
+        $this->paymentMethods->removeElement($paymentMethod);
 
         return $this;
     }

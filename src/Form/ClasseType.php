@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Classe;
+use App\Entity\SkillLevel;
+use App\Entity\SousSysteme;
 use App\Entity\Specialite;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -22,8 +24,30 @@ class ClasseType extends AbstractType
                     'class' => 'form-label'
                 ]
             ])
+            ->add('skillLevel', EntityType::class, [
+                'class' => SkillLevel::class,
+                'choice_label' => 'name',
+                'label_attr' => [
+                    'class' => 'form-label'
+                ],
+                'attr' => [
+                    'class' => 'border-0 js-choice bg-light rounded-end ps-1'
+                ],
+                'label' => 'Level'
+            ])
             ->add('specialite', EntityType::class, [
                 'class' => Specialite::class,
+                'choice_label' => 'name',
+                'label_attr' => [
+                    'class' => 'form-label'
+                ],
+                'attr' => [
+                    'class' => 'border-0 js-choice bg-light rounded-end ps-1'
+                ],
+                'required' => false,
+            ])
+            ->add('sousSysteme', EntityType::class, [
+                'class' => SousSysteme::class,
                 'choice_label' => 'name',
                 'label_attr' => [
                     'class' => 'form-label'

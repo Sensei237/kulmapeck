@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Review;
+use App\Repository\AbonnementItemRepository;
+use App\Repository\AbonnementRepository;
 use App\Repository\CategorieRepository;
 use App\Repository\CoursRepository;
 use App\Repository\EleveRepository;
@@ -22,11 +24,18 @@ class FrontController extends AbstractController
     #[Route('/', name: 'app_front')]
     public function index(Request $request, EleveRepository $eleveRepository, CategorieRepository $categorieRepository, CoursRepository $coursRepository, ReviewRepository $reviewRepository): Response
     {
+        $categories = [];
+        foreach ($categorieRepository->findBCategories() as $category) {
+            $categories[] = [
+                'category' => $category,
+                'courses' => $coursRepository->findBy(['categorie' => $category, 'isValidated' => true], ['vues' => 'DESC'], 8)
+            ];
+        }
 
         return $this->render('front/home/index.html.twig', [
             'controller_name' => 'FrontController',
-            'categories' => $categorieRepository->findBCategories(),
-            'trendingCourses' => $coursRepository->findBy(['isValidated' => true], ['review' => 'DESC', 'createdAt' => 'DESC'], 6),
+            'categories' => $categories,
+            'trendingCourses' => $coursRepository->findBy(['isValidated' => true], ['isFree' => 'ASC', 'review' => 'DESC', 'createdAt' => 'DESC'], 6),
             'topReviews' => $reviewRepository->findBy([], ['rating' => 'DESC', 'createdAt' => 'DESC'], 2),
             'dailyStudents' => $eleveRepository->findBy([], ['joinAt' => 'DESC'], 4),
             'isHomePage' => true,
@@ -65,4 +74,14 @@ class FrontController extends AbstractController
             'lastCourses' => $coursRepository->findBy(['isValidated' => true], ['createdAt' => 'DESC', 'vues' => 'DESC'], 8)
         ]);
     }
+
+    #[Route('/plans', name: 'app_plan')]
+    public function plan(Request $request, AbonnementItemRepository $abonnementItemRepository, AbonnementRepository $abonnementRepository) {
+
+        return $this->render('front/plan/index.html.twig', [
+            'plans' => $abonnementRepository->findAll(),
+            'abonnementItems' => $abonnementItemRepository->findAll(),
+        ]);
+    }
+
 }

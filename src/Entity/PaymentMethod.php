@@ -30,10 +30,14 @@ class PaymentMethod
     #[ORM\ManyToMany(targetEntity: Cours::class, mappedBy: 'paymentMethods')]
     private Collection $cours;
 
+    #[ORM\ManyToMany(targetEntity: Abonnement::class, mappedBy: 'paymentMethods')]
+    private Collection $abonnements;
+
     public function __construct()
     {
         $this->payments = new ArrayCollection();
         $this->cours = new ArrayCollection();
+        $this->abonnements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -129,6 +133,33 @@ class PaymentMethod
     {
         if ($this->cours->removeElement($cour)) {
             $cour->removePaymentMethod($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Abonnement>
+     */
+    public function getAbonnements(): Collection
+    {
+        return $this->abonnements;
+    }
+
+    public function addAbonnement(Abonnement $abonnement): self
+    {
+        if (!$this->abonnements->contains($abonnement)) {
+            $this->abonnements->add($abonnement);
+            $abonnement->addPaymentMethod($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAbonnement(Abonnement $abonnement): self
+    {
+        if ($this->abonnements->removeElement($abonnement)) {
+            $abonnement->removePaymentMethod($this);
         }
 
         return $this;
