@@ -7,11 +7,13 @@ use App\Entity\Cours;
 use App\Entity\Lesson;
 use App\Entity\Media;
 use App\Entity\PaymentMethod;
+use App\Entity\Quiz;
 use App\Repository\CategorieRepository;
 use App\Repository\CoursRepository;
 use App\Repository\EleveRepository;
 use App\Repository\EnseignantRepository;
 use App\Repository\PaymentMethodRepository;
+use App\Repository\QuizRepository;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -38,7 +40,7 @@ class HomeController extends AbstractController
     }
 
     #[Route('/add-defaul-courses', name: 'app_add_def_courses')]
-    public function courses(EnseignantRepository $er, PaymentMethodRepository $paymentMethodRepository, FileUploader $fileUploader, CategorieRepository $categorieRepository, EntityManagerInterface $em, CoursRepository $cr, SluggerInterface $sluggerInterface)
+    public function courses(EnseignantRepository $er, QuizRepository $quizRepository, PaymentMethodRepository $paymentMethodRepository, FileUploader $fileUploader, CategorieRepository $categorieRepository, EntityManagerInterface $em, CoursRepository $cr, SluggerInterface $sluggerInterface)
     {
         $faker = Factory::create('fr_FR');
         $enseignant = $er->findOneBy([]);
@@ -100,10 +102,34 @@ class HomeController extends AbstractController
                     $chap->addLesson($lesson);
                 }
                 $em->persist($chap);
+                for ($q = 0; $q < $faker->numberBetween(8, 12); $q++) {
+                    $quiz = new Quiz();
+                    $quiz->setQuestion($faker->paragraph());
+                    $quiz->setProposition1($faker->sentence($faker->numberBetween(6, 15)))
+                        ->setProposition2($faker->sentence($faker->numberBetween(6, 15)))
+                        ->setProposition3($faker->sentence($faker->numberBetween(6, 15)))
+                        ->setReference(time()+$faker->numberBetween(1000)+$chap->getId())
+                        ->setProposition4($faker->sentence($faker->numberBetween(6, 15)));
+                    $quiz->setPropositionJuste([$faker->numberBetween(1, 4)]);
+                    $quiz->setChapitre($chap);
+                    $em->persist($quiz);
+                }
             }
 
             $media->setCours($cours);
             $cr->save($cours);
+            for ($q = 0; $q < $faker->numberBetween(10, 12); $q++) {
+                $quiz = new Quiz();
+                $quiz->setQuestion($faker->paragraph());
+                $quiz->setProposition1($faker->sentence($faker->numberBetween(6, 15)))
+                    ->setProposition2($faker->sentence($faker->numberBetween(6, 15)))
+                    ->setProposition3($faker->sentence($faker->numberBetween(6, 15)))
+                    ->setReference(time() + $faker->numberBetween(1000) + $cours->getId())
+                    ->setProposition4($faker->sentence($faker->numberBetween(6, 15)));
+                $quiz->setPropositionJuste([$faker->numberBetween(1, 4)]);
+                $quiz->setCours($cours);
+                $em->persist($quiz);
+            }
         }
 
         $em->flush();

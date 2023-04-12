@@ -109,23 +109,31 @@
                                                     <!-- Item -->
                                                     <div class="accordion-item mb-3">
                                                         <h6 class="accordion-header font-base" id="heading-{{ loop.index }}">
-                                                            <a class="accordion-button fw-bold rounded collapsed d-block" href="#collapse-{{ loop.index }}" data-bs-toggle="collapse" data-bs-target="#collapse-{{ loop.index }}" aria-expanded="{{ loop.index is same as 1 ? 'true' : 'false'}}" aria-controls="collapse-{{ loop.index }}">
+                                                            <a class="accordion-button fw-bold rounded collapsed d-block" href="#collapse-{{ loop.index }}" data-bs-toggle="collapse" data-bs-target="#collapse-{{ loop.index }}" aria-expanded="{{ lesson.chapitre is same as chapter ? 'true' : 'false'}}" aria-controls="collapse-{{ loop.index }}">
                                                                 <span class="mb-0">{{ chapter.title }}</span> 
                                                                 <span class="small d-block mt-1">({{chapter.lessons|length}} Lectures)</span> 
                                                             </a>
                                                         </h6>
-                                                        <div id="collapse-{{ loop.index }}" class="accordion-collapse collapse {{ loop.index is same as 1 ? 'show' : '' }}" aria-labelledby="heading-{{ loop.index }}" data-bs-parent="#accordionExample2">
+                                                        <div id="collapse-{{ loop.index }}" class="accordion-collapse collapse {{ lesson.chapitre is same as chapter ? 'show' : '' }}" aria-labelledby="heading-{{ loop.index }}" data-bs-parent="#accordionExample2">
                                                             <div class="accordion-body mt-3">
                                                                 <div class="vstack gap-3">
-
+                                                                    {% set finishedLessons = 0 %}
+                                                                    {% if eleve %}
+                                                                        {% for l in eleve.lectures %}
+                                                                            {% if l.lesson is not same as null and l.lesson in chapter.lessons %}
+                                                                                {% set finishedLessons = finishedLessons + 1 %}
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                    {% endif %}
                                                                     <!-- Progress bar -->
                                                                     <div class="overflow-hidden">
                                                                         <div class="d-flex justify-content-between">
-                                                                            <p class="mb-1 h6">0/{{ chapter.lessons|length }} Completed</p>
-                                                                            <h6 class="mb-1 text-end">{{ 0 * 100 / chapter.lessons|length }}</h6>
+                                                                            <p class="mb-1 h6">{{ finishedLessons }}/{{ chapter.lessons|length }} Completed</p>
+                                                                            {% set percent = finishedLessons * 100 / chapter.lessons|length %}
+                                                                            <h6 class="mb-1 text-end">{{ percent }}</h6>
                                                                         </div>
                                                                         <div class="progress progress-sm bg-primary bg-opacity-10">
-                                                                            <div class="progress-bar bg-primary aos" role="progressbar" data-aos="slide-right" data-aos-delay="200" data-aos-duration="1000" data-aos-easing="ease-in-out" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                                            <div class="progress-bar bg-primary aos" role="progressbar" data-aos="slide-right" data-aos-delay="200" data-aos-duration="1000" data-aos-easing="ease-in-out" style="width: {{ percent }}%" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -139,9 +147,19 @@
                                                                                 </a>
                                                                                 <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">{{ les.title }}</span>
                                                                             </div>
-                                                                            <p class="mb-0 text-truncate">2m 10s</p>
+                                                                            <p class="mb-0 text-truncate"></p>
                                                                         </div>
                                                                     {% endfor %}
+
+                                                                    <div class="d-flex justify-content-between align-items-center">
+                                                                        <div class="position-relative d-flex align-items-center">
+                                                                            <a href="{{ lecture ? '#' : url("app_front_course_chapitre_quizzes", {slugChapitre: chapter.slug, slugCours: chapter.cours.slug})  }}" class="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
+                                                                                <i class="fas fa-play me-0"></i>
+                                                                            </a>
+                                                                            <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">Quiz</span>
+                                                                        </div>
+                                                                        <p class="mb-0 text-truncate"></p>
+                                                                    </div>
 
 
                                                                 </div>

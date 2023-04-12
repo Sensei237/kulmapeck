@@ -127,40 +127,51 @@ class CoursRepository extends ServiceEntityRepository
      */
     public function frontSearch(?Categorie $categorie, ?string $text, ?bool $isFree, ?string $level, ?string $language, ?Filiere $filiere, ?Specialite $specialite, ?Classe $classe): array
     {
-        $query = $this->createQueryBuilder('c')
-            ->join('c.categorie', 'cat')
-            ->join('c.classe', 'cl')
-            ->join('cl.specialite', 's')
-            ->join('s.filiere', 'f');
+        $query = $this->createQueryBuilder('c');
+        if ($categorie) {
+            $query->join('c.categorie', 'cat');
+        }
+        if ($classe) {
+            $query->join('c.classe', 'cl');
+        }
+        if ($specialite) {
+            $query->join('c.classe', 'cls');
+            $query->join('cls.specialite', 's');
+        }
+        if ($filiere) {
+            $query->join('c.classe', 'scls');
+            $query->join('scls.specialite', 'sps');
+            $query->join('sps.filiere', 'f');
+        }
 
-            if ($categorie !== null) {
-                $query->andWhere('c.categorie = :category')->setParameter('category', $categorie);
-            }
-            if ($text !== null) {
-                $query->andWhere('c.intitule LIKE :val')->setParameter('val', '%' . $text . '%');
-            }
-            if ($isFree !== null) {
-                $query->andWhere('c.isFree = :isFree')->setParameter('isFree', $isFree);
-            }
-            if ($level !== null) {
-                $query->andWhere('c.niveauDifficulte = :level')->setParameter('level', $level);
-            }
-            if ($level !== null) {
-                $query->andWhere('c.language = :language')->setParameter('language', $language);
-            }
-            if ($filiere !== null) {
-                $query->andWhere('s.filiere = :filiere')->setParameter('filiere', $filiere);
-            }
-            if ($specialite !== null) {
-                $query->andWhere('cl.specialite = :specialite')->setParameter('specialite', $specialite);
-            }
-            if ($classe !== null) {
-                $query->andWhere('cl.id = :classe')->setParameter('classe', $classe->getId());
-            }
-            
-            $query->andWhere('c.isValidated = :isValidated')->setParameter('isValidated', true);
+        if ($categorie !== null) {
+            $query->andWhere('c.categorie = :category')->setParameter('category', $categorie);
+        }
+        if ($text !== null) {
+            $query->andWhere('c.intitule LIKE :val')->setParameter('val', '%' . $text . '%');
+        }
+        if ($isFree !== null) {
+            $query->andWhere('c.isFree = :isFree')->setParameter('isFree', $isFree);
+        }
+        if ($level !== null) {
+            $query->andWhere('c.niveauDifficulte = :level')->setParameter('level', $level);
+        }
+        if ($level !== null) {
+            $query->andWhere('c.language = :language')->setParameter('language', $language);
+        }
+        if ($filiere !== null) {
+            $query->andWhere('sps.filiere = :filiere')->setParameter('filiere', $filiere);
+        }
+        if ($specialite !== null) {
+            $query->andWhere('cls.specialite = :specialite')->setParameter('specialite', $specialite);
+        }
+        if ($classe !== null) {
+            $query->andWhere('cl.id = :classe')->setParameter('classe', $classe->getId());
+        }
+  
+        $query->andWhere('c.isValidated = :isValidated')->setParameter('isValidated', true);
 
-            return $query->getQuery()
+        return $query->getQuery()
             ->getResult();
     }
 }

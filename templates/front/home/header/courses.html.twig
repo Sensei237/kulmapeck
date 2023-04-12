@@ -44,7 +44,7 @@
             <div class="d-flex mb-4 position-relative">
                 <h2 class="mb-0"><i class="fas fa-fw {{ icons[loop.index - 1] }}"></i></h2>
                 <div class="ms-2">
-                    <a class="stretched-link h6 mb-0" href="{{ url("app_front_course_details", {slug: course.slug}) }}">{{ course.intitule }}</a>
+                    <a class="stretched-link h6 mb-0" href="{{ url("app_front_course_details", {slug: course.slug}) }}">{{ course.intitule|u.truncate(30, '...') }}</a>
                     <p class="mb-0 small">{{ course.description|u.truncate(80, '...') }}</p>
                 </div>
             </div>

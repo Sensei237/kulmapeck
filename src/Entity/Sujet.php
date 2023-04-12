@@ -19,7 +19,7 @@ class Sujet
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'sujet', targetEntity: ForumMessage::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'sujet', targetEntity: ForumMessage::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private Collection $forumMessages;
 
     #[ORM\ManyToOne(inversedBy: 'sujets')]

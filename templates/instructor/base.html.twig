@@ -36,7 +36,21 @@
 {% endblock %}
 
 {% block script %}
-    
+    <script>
+        $('#newForumMessageForm, #replyForumMessage form, #newForumSubjectFormContainer form').on('submit', function(e){
+            e.preventDefault();
+            const form = $(this);
+            $.ajax({
+                url: $(form).attr('action'),
+                type: $(form).attr('method'),
+                data: $(form).serialize(),
+                success: (response) => {
+                    window.location.reload();
+                }
+            })
+        })
+
+    </script>
 {% endblock %}
 
 {% block mainContent %}

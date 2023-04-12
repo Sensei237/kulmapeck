@@ -73,8 +73,8 @@ class ExamRepository extends ServiceEntityRepository
         }
         
         return $query
-            // ->andWhere('e.isValidated = :isValidated')
-            // ->setParameter('isValidated', true)
+            ->andWhere('e.isValidated = :isValidated')
+            ->setParameter('isValidated', true)
             ->orderBy('e.publishedAt', 'DESC')
             ->getQuery()
             ->getResult()

@@ -7,6 +7,13 @@
 		<!-- Card header START -->
 		<div class="card-header bg-transparent border-bottom">
 			<h3 class="mb-0">My Network</h3>
+			<tr>
+				<td colspan="4">
+					<b>Invitez les enseignants via le lien : <i class="text-primary">{{ enseignant.utilisateur.personne.invitationLink.trainer }}</i></b> <br>
+					<b>Invitez les élèves via le lien : <i class="text-primary">{{ enseignant.utilisateur.personne.invitationLink.student }}</i></b> <br>
+					<b>Ou partagez le code suivant : <i class="text-primary">{{ enseignant.utilisateur.personne.invitationCode }}</i></b> 
+				</td>
+			</tr>
 		</div>
 		<!-- Card header END -->
 

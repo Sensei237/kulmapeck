@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PaymentRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
@@ -41,6 +42,11 @@ class Payment
 
     #[ORM\Column(nullable: true)]
     private ?float $amount = null;
+
+    public function __construct()
+    {
+        $this->paidAt = new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {

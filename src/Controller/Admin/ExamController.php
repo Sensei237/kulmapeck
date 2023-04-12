@@ -29,7 +29,7 @@ class ExamController extends AbstractController
     #[Route('/admin/exam/{reference}/remove', name: 'app_admin_exam_remove')]
     public function remove(Exam $exam, ExamRepository $examRepository, Request $request): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $exam->getReference(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $exam->getId(), $request->query->get('_token'))) {
             $examRepository->remove($exam, true);
         }
 
@@ -39,8 +39,10 @@ class ExamController extends AbstractController
     #[Route('/admin/exam/{reference}/approve', name: 'app_admin_exam_approve')]
     public function approved(Exam $exam, ExamRepository $examRepository, Request $request): Response
     {
-        if ($this->isCsrfTokenValid('validated' . $exam->getReference(), $request->request->get('_token'))) {
-            $examRepository->save($exam->setIsPublished(true)->setIsValidated(true), true);
+        if ($this->isCsrfTokenValid('validated' . $exam->getId(), $request->query->get('_token'))) {
+            // dd("");
+            $exam->setIsPublished(true)->setIsValidated(true);
+            $examRepository->save($exam, true);
         }
 
         return $this->redirectToRoute('app_admin_exam', [], Response::HTTP_SEE_OTHER);

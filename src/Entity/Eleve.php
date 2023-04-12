@@ -57,6 +57,9 @@ class Eleve
     #[ORM\OneToMany(mappedBy: 'eleve', targetEntity: QuizResult::class, orphanRemoval: true)]
     private Collection $quizResults;
 
+    #[ORM\OneToMany(mappedBy: 'eleve', targetEntity: QuizLost::class, orphanRemoval: true)]
+    private Collection $quizLosts;
+
     public function __construct()
     {
         $this->cours = new ArrayCollection();
@@ -68,6 +71,7 @@ class Eleve
         $this->lectures = new ArrayCollection();
         $this->quizResults = new ArrayCollection();
         $this->isPremium = false;
+        $this->quizLosts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -342,6 +346,36 @@ class Eleve
             // set the owning side to null (unless already changed)
             if ($quizResult->getEleve() === $this) {
                 $quizResult->setEleve(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, QuizLost>
+     */
+    public function getQuizLosts(): Collection
+    {
+        return $this->quizLosts;
+    }
+
+    public function addQuizLost(QuizLost $quizLost): self
+    {
+        if (!$this->quizLosts->contains($quizLost)) {
+            $this->quizLosts->add($quizLost);
+            $quizLost->setEleve($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuizLost(QuizLost $quizLost): self
+    {
+        if ($this->quizLosts->removeElement($quizLost)) {
+            // set the owning side to null (unless already changed)
+            if ($quizLost->getEleve() === $this) {
+                $quizLost->setEleve(null);
             }
         }
 

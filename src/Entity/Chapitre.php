@@ -46,11 +46,15 @@ class Chapitre
     #[ORM\OneToMany(mappedBy: 'chapitre', targetEntity: Lecture::class)]
     private Collection $lectures;
 
+    #[ORM\OneToMany(mappedBy: 'chapitre', targetEntity: QuizLost::class)]
+    private Collection $quizLosts;
+
     public function __construct()
     {
         $this->lessons = new ArrayCollection();
         $this->quizzes = new ArrayCollection();
         $this->lectures = new ArrayCollection();
+        $this->quizLosts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -202,6 +206,36 @@ class Chapitre
             // set the owning side to null (unless already changed)
             if ($lecture->getChapitre() === $this) {
                 $lecture->setChapitre(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, QuizLost>
+     */
+    public function getQuizLosts(): Collection
+    {
+        return $this->quizLosts;
+    }
+
+    public function addQuizLost(QuizLost $quizLost): self
+    {
+        if (!$this->quizLosts->contains($quizLost)) {
+            $this->quizLosts->add($quizLost);
+            $quizLost->setChapitre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuizLost(QuizLost $quizLost): self
+    {
+        if ($this->quizLosts->removeElement($quizLost)) {
+            // set the owning side to null (unless already changed)
+            if ($quizLost->getChapitre() === $this) {
+                $quizLost->setChapitre(null);
             }
         }
 

@@ -182,11 +182,13 @@
                 </li>
 
                 <!-- Nav item 3 Account -->
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_plan') }}" aria-haspopup="true" aria-expanded="false">
-                        <b class="badge bg-danger">Devenir premium</b>
-                    </a>
-                </li>
+                {% if not app.user or (app.user.eleve and not app.user.eleve.isPremium) %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_plan') }}" aria-haspopup="true" aria-expanded="false">
+                            <b class="badge bg-success">Devenir premium</b>
+                        </a>
+                    </li>
+                {% endif %}
 
             </ul>
             <!-- Nav Main menu END -->
@@ -539,15 +541,22 @@
     <script src="{{asset('assets/vendor/overlay-scrollbar/js/overlayscrollbars.min.js')}}"></script>
     <script src="{{ asset('assets/vendor/choices/js/choices.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/aos/aos.js') }}"></script>
+    <script>
+        $('.pagination-container nav').addClass('mt-4 d-flex justify-content-center')
+        $('.pagination-container nav ul.pagination li').addClass('mb-0')
+        $('.pagination-container nav ul.pagination').addClass('pagination-primary-soft d-inline-block d-md-flex rounded mb-0')
+
+        $('.delete-item').on('click', (e) => {
+            return confirm('Are you sure you want to purchasse ?');
+        })
+    </script>
+
     {% block custumJS %}
             
         <script>
             setTimeout(function() {
                 $("#bottom-notification").addClass('d-none');
             }, 10000)
-            $('.pagination-container nav').addClass('d-flex justify-content-center mb-0')
-            $('.pagination-container nav ul.pagination li').addClass('mb-0')
-            $('.pagination-container nav ul.pagination').addClass('pagination-sm pagination-primary-soft d-inline-block d-md-flex rounded mb-0')
         </script>
 
         <script>

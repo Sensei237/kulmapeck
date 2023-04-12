@@ -49,12 +49,12 @@
                                 <div class="d-sm-flex align-items-center">
                                     <!-- Avatar -->
                                     <div class="avatar avatar-md flex-shrink-0">
-                                        <img class="avatar-img rounded-circle" src="{{asset('uploads/images/enseignants/' ~ e.utilisateur.personne.avatar)}}" alt="avatar">
+                                        <img class="avatar-img rounded-circle" src="{{asset(e.utilisateur.personne.avatarPath)}}" alt="avatar">
                                     </div>
                                     <!-- Info -->
                                     <div class="ms-0 ms-sm-2 mt-2 mt-sm-0">
                                         <h5 class="mb-0"><a href="{{ path('app_admin_enseignant_show', {reference: e.reference}) }}">{{ e.utilisateur.personne.nomComplet }}</a></h5>
-                                        <p class="mb-0 small">Web Developer</p>
+                                        <p class="mb-0 small">{{ e.discipline.name|default('') }}</p>
                                     </div>
                                 </div>
 
@@ -132,6 +132,7 @@
         <div class="card-footer bg-transparent pt-0">
             <!-- Pagination START -->
             <div class="d-sm-flex justify-content-sm-between align-items-sm-center">
+                <p class="mb-0 text-center text-sm-start"></p>
                 {{ knp_pagination_render(enseignants) }}
             </div>
             <!-- Pagination END -->

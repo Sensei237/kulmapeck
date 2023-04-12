@@ -5,6 +5,8 @@ namespace App\Controller\Admin;
 use App\Entity\Forum;
 use App\Form\ForumType;
 use App\Repository\ForumRepository;
+use App\Repository\SujetRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,16 +16,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class ForumController extends AbstractController
 {
     #[Route('/', name: 'app_forum_index', methods: ['GET'])]
-    public function index(ForumRepository $forumRepository): Response
+    public function index(Request $request, ForumRepository $forumRepository, SujetRepository $sujetRepository, PaginatorInterface $paginatorInterface): Response
     {
-        return $this->render('forum/index.html.twig', [
-            'forums' => $forumRepository->findAll(),
+        return $this->render('admin/forum/index.html.twig', [
+            'forums' => $paginatorInterface->paginate($sujetRepository->findAll(), $request->query->getInt('page', 1), 10),
+            'isForumController' => true,
+            'isCourses' => true,
         ]);
     }
 
     #[Route('/new', name: 'app_forum_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ForumRepository $forumRepository): Response
     {
+        throw $this->createNotFoundException();
+
         $forum = new Forum();
         $form = $this->createForm(ForumType::class, $forum);
         $form->handleRequest($request);
@@ -43,6 +49,8 @@ class ForumController extends AbstractController
     #[Route('/{id}', name: 'app_forum_show', methods: ['GET'])]
     public function show(Forum $forum): Response
     {
+        throw $this->createNotFoundException();
+
         return $this->render('forum/show.html.twig', [
             'forum' => $forum,
         ]);
@@ -51,6 +59,8 @@ class ForumController extends AbstractController
     #[Route('/{id}/edit', name: 'app_forum_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Forum $forum, ForumRepository $forumRepository): Response
     {
+        throw $this->createNotFoundException();
+
         $form = $this->createForm(ForumType::class, $forum);
         $form->handleRequest($request);
 
@@ -69,6 +79,8 @@ class ForumController extends AbstractController
     #[Route('/{id}', name: 'app_forum_delete', methods: ['POST'])]
     public function delete(Request $request, Forum $forum, ForumRepository $forumRepository): Response
     {
+        throw $this->createNotFoundException();
+        
         if ($this->isCsrfTokenValid('delete'.$forum->getId(), $request->request->get('_token'))) {
             $forumRepository->remove($forum, true);
         }

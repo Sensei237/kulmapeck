@@ -92,7 +92,7 @@
                                     {% for course in student.cours %}
 										{% set leconTerminees = 0 %}
 										{% for l in student.lectures %}
-											{% if l.isFinished and l.lesson.chapitre.cours is same as course %}
+											{% if l.isFinished and l.lesson is not same as null and l.lesson.chapitre.cours is same as course %}
 												{% set leconTerminees = leconTerminees + 1 %}
 											{% endif %}
 										{% endfor %}

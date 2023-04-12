@@ -76,7 +76,14 @@ class FrontController extends AbstractController
     }
 
     #[Route('/plans', name: 'app_plan')]
-    public function plan(Request $request, AbonnementItemRepository $abonnementItemRepository, AbonnementRepository $abonnementRepository) {
+    public function plan(Request $request, AbonnementItemRepository $abonnementItemRepository, EleveRepository $eleveRepository, AbonnementRepository $abonnementRepository) {
+
+        $eleve = $eleveRepository->findOneBy(['utilisateur' => $this->getUser()]);
+
+        if ($eleve && $eleve->isIsPremium()) {
+            $this->addFlash('success', "Vous êtes déjà premium !");
+            return $this->redirectToRoute('app_student_subscriptions');
+        }
 
         return $this->render('front/plan/index.html.twig', [
             'plans' => $abonnementRepository->findAll(),

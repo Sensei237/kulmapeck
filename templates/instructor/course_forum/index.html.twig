@@ -1,0 +1,13 @@
+{% extends "instructor/base.html.twig" %}
+
+{% block pageContent %}
+
+    <div class="d-flex justify-content-between mb-3">
+        <div>
+            <a href="{{ url("app_instructor_courses_preview", {slug: course.slug}) }}" class="btn btn-secondary-soft ml-2">Back to course details</a>
+        </div>
+    </div>
+
+    {{ include('front/course_forum/_subjects.html.twig') }}
+
+{% endblock %}

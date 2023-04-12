@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Eleve;
 use App\Entity\Enseignant;
 use App\Entity\Payment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -53,6 +54,20 @@ class PaymentRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function findStudentActivePlan(Eleve $eleve): ?Payment
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.eleve = :eleve')
+            ->andWhere('p.cours = :empty')
+            ->andWhere('p.isExpired = :isExpired')
+            ->setParameter('eleve', $eleve)
+            ->setParameter('empty', null)
+            ->setParameter('isExpired', false)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 //    public function findOneBySomeField($value): ?Payment

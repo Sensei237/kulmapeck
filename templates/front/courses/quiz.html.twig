@@ -100,8 +100,12 @@
                         
                                         <!-- Card body START -->
                                         <div class="card-body">
-
-                                            <h6 class="text-danger text-end mb-0"><i class="bi bi-clock-history me-2"></i>Time Left: 00:01:30</h6>
+                                            {% if not isCorrectionMode %}
+                                                <h6 class="text-danger text-end mb-0"><i class="bi bi-clock-history me-2"></i>Time Left: 00:01:30</h6>
+                                            {% endif %}
+                                            {% if lecture is not same as null %}
+                                                <h2 class="text-danger text-end mb-0 rounded">{{ lecture.note|number_format(2) }} / 20</h2>
+                                            {% endif %}
 
                                             <!-- Step content START -->
                                             <div class="bs-stepper-content">
@@ -158,9 +162,9 @@
                                                     </form>
                                                 {% else %}
                                                     <div>
-                                                        {% if lecture is not same as null %}
+                                                        {% if nextQuizAt is not same as null %}
                                                             <div class="alert alert-info">
-                                                                <p>Vous pourrez repasser le test à partir de {{ nextQuizAt|date('d/m/Y - H:i:s') }}</p>
+                                                                <p>Vous pourrez repasser le test à partir de <strong>{{ nextQuizAt|date('H:i:s') }}</strong> le temps pour vous de reviser les parties du cours qui vous ont dérangé</p>
                                                             </div>
                                                         {% endif %}
                                                         {% for qr in quizzesResults %}

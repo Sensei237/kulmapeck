@@ -126,6 +126,7 @@
                                     <!-- Dashboard menu -->
                                     <div class="list-group list-group-dark list-group-borderless">
                                         <a class="list-group-item {{ studentHome is defined ? 'active' : '' }}" href="{{ path('app_student_home') }}"><i class="bi bi-ui-checks-grid fa-fw me-2"></i>Dashboard</a>
+                                        <a class="list-group-item {{ isSubscriptions is defined ? 'active' : '' }}" href="{{ path('app_student_subscriptions') }}"><i class="bi bi-basket fa-fw me-2"></i>My Subscriptions</a>
                                         <a class="list-group-item {{ studentCourses is defined ? 'active' : '' }}" href="{{ path('app_student_courses') }}"><i class="bi bi-basket fa-fw me-2"></i>My Courses</a>
                                         <a class="list-group-item {{ isPayments is defined ? 'active' : '' }}" href="{{ url("app_student_payments") }}"><i class="bi bi-credit-card-2-front fa-fw me-2"></i>Payments</a>
                                         <a class="list-group-item {{ isNetWork is defined ? 'active' : '' }}" href="{{ url("app_student_network") }}"><i class="bi bi-people fa-fw me-2"></i>Network</a>

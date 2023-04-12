@@ -1,75 +1,14 @@
 {% extends "front/base.html.twig" %}
 
-{% block title %} - Course détails{% endblock %}
+{% block title %} - Forum, {{ course.intitule }}{% endblock %}
 
 {% block mainContent %}
-
 
     <!-- =======================
     Page content START -->
     <section class="pb-0 py-lg-5">
         <div class="container">
-            <div class="row">
-                <!-- Main content START -->
-                <div class="col-lg-12">
-                    <div class="card shadow rounded-2 p-0">
-
-                        <!-- Tab contents START -->
-                        <div class="card-body p-4">
-                            <h5>Questions Asked</h5>
-                            <hr>
-                            <div>
-                                <ul class="list-unstyled">
-                                    {% for sujet in course.forum.sujets|sort((a, b) => b.createdAt <=> a.createdAt) %}
-                                        <li>
-                                            <div  class="d-flex mb-4 mt-3">
-                                                <div class="avatar avatar-sm flex-shrink-0 me-2">
-                                                    <a href="#"> <img class="avatar-img rounded-circle" src="{{ asset(sujet.membre.utilisateur.personne.avatarPath) }}" alt=""> </a>
-                                                </div>
-
-                                                <div class="w-100 d-flex">
-                                                    <p>
-                                                        {{ sujet.content|raw }}
-                                                        <br>
-                                                        <span class="badge {{ sujet.isSolved ? "btn-success-soft" : 'btn-danger-soft' }}">{{ sujet.isSolved ? "Resolved" : "Unresolved" }}</span> |
-                                                        <i class="badge btn-info-soft">{{ sujet.createdAt|date('d/m/Y - H:i:s') }}</i>
-                                                        | <span class="badge btn-warning-soft">{{ sujet.forumMessages|length }} comments</span>
-                                                        | <a href="{{ url("app_front_course_forum_subject_message", {slug: course.slug, reference: sujet.reference}, "http", false) }}" class="btn btn-primary-soft">Show comment</a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <hr>
-                                    {% else %}
-                                        <h3 class="text-danger">No topics found! Be the first to ask a problem</h3>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- Tab contents END -->
-
-                        <div class="card-footer p-4">
-                            {% if heIsMembre %}
-                                <h5 class="mb-4">Ask Your Question</h5>
-                                <!-- Comment box -->
-                                <div class="d-flex mb-4">
-                                    <!-- Avatar -->
-                                    <div class="avatar avatar-sm flex-shrink-0 me-2">
-                                        <a href="#"> <img class="avatar-img rounded-circle" src="{{ asset(membre.utilisateur.personne.avatarPath) }}" alt=""> </a>
-                                    </div>
-
-                                    {{ form_start(sujetForm) }}
-                                        {{ form_widget(sujetForm.content) }}
-                                        <button class="btn btn-primary ms-2 mb-0" type="submit">Post</button>
-                                    {{ form_end(sujetForm) }}
-                                </div>
-                                {% endif %}
-                        </div>
-                    </div>
-                </div>
-                <!-- Main content END -->
-
-            </div><!-- Row END -->
+            {{ include('front/course_forum/_subjects.html.twig') }}
         </div>
     </section>
     <!-- =======================

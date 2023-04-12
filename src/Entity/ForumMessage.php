@@ -40,7 +40,7 @@ class ForumMessage
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'forumMessages')]
     private ?self $forumMessage = null;
 
-    #[ORM\OneToMany(mappedBy: 'forumMessage', targetEntity: self::class)]
+    #[ORM\OneToMany(mappedBy: 'forumMessage', targetEntity: self::class, cascade: ['persist', 'remove'])]
     private Collection $forumMessages;
 
     #[ORM\Column(nullable: true)]

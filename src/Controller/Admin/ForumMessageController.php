@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\ForumMessage;
+use App\Entity\Sujet;
 use App\Form\ForumMessageType;
 use App\Repository\ForumMessageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,20 +11,26 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/admin/forum/message')]
+#[Route('/admin/forum/{reference}/messages')]
 class ForumMessageController extends AbstractController
 {
     #[Route('/', name: 'app_forum_message_index', methods: ['GET'])]
-    public function index(ForumMessageRepository $forumMessageRepository): Response
+    public function index(Sujet $sujet): Response
     {
-        return $this->render('forum_message/index.html.twig', [
-            'forum_messages' => $forumMessageRepository->findAll(),
+        return $this->render('admin/forum_message/index.html.twig', [
+            'forum_messages' => $sujet->getForumMessages(),
+            'sujet' => $sujet,
+            'isForumController' => true,
+            'isCourses' => true,
+            'heIsMembre' => false,
+            'membre' => null,
         ]);
     }
 
     #[Route('/new', name: 'app_forum_message_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ForumMessageRepository $forumMessageRepository): Response
     {
+        throw $this->createNotFoundException();
         $forumMessage = new ForumMessage();
         $form = $this->createForm(ForumMessageType::class, $forumMessage);
         $form->handleRequest($request);
@@ -43,6 +50,8 @@ class ForumMessageController extends AbstractController
     #[Route('/{id}', name: 'app_forum_message_show', methods: ['GET'])]
     public function show(ForumMessage $forumMessage): Response
     {
+        throw $this->createNotFoundException();
+
         return $this->render('forum_message/show.html.twig', [
             'forum_message' => $forumMessage,
         ]);
@@ -51,6 +60,8 @@ class ForumMessageController extends AbstractController
     #[Route('/{id}/edit', name: 'app_forum_message_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, ForumMessage $forumMessage, ForumMessageRepository $forumMessageRepository): Response
     {
+        throw $this->createNotFoundException();
+
         $form = $this->createForm(ForumMessageType::class, $forumMessage);
         $form->handleRequest($request);
 
@@ -69,6 +80,8 @@ class ForumMessageController extends AbstractController
     #[Route('/{id}', name: 'app_forum_message_delete', methods: ['POST'])]
     public function delete(Request $request, ForumMessage $forumMessage, ForumMessageRepository $forumMessageRepository): Response
     {
+        throw $this->createNotFoundException();
+
         if ($this->isCsrfTokenValid('delete'.$forumMessage->getId(), $request->request->get('_token'))) {
             $forumMessageRepository->remove($forumMessage, true);
         }

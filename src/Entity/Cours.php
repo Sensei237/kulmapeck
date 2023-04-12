@@ -132,6 +132,9 @@ class Cours
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $publishedAt = null;
 
+    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: QuizLost::class)]
+    private Collection $quizLosts;
+
     public function __construct()
     {
         $this->classe = new ArrayCollection();
@@ -151,6 +154,7 @@ class Cours
         $this->paymentMethods = new ArrayCollection();
         $this->lectures = new ArrayCollection();
         $this->quizzes = new ArrayCollection();
+        $this->quizLosts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -756,6 +760,36 @@ class Cours
     public function setPublishedAt(?\DateTimeImmutable $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, QuizLost>
+     */
+    public function getQuizLosts(): Collection
+    {
+        return $this->quizLosts;
+    }
+
+    public function addQuizLost(QuizLost $quizLost): self
+    {
+        if (!$this->quizLosts->contains($quizLost)) {
+            $this->quizLosts->add($quizLost);
+            $quizLost->setCours($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuizLost(QuizLost $quizLost): self
+    {
+        if ($this->quizLosts->removeElement($quizLost)) {
+            // set the owning side to null (unless already changed)
+            if ($quizLost->getCours() === $this) {
+                $quizLost->setCours(null);
+            }
+        }
 
         return $this;
     }

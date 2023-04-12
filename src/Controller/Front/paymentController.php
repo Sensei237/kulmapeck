@@ -4,9 +4,12 @@ namespace App\Controller\Front;
 
 use App\Entity\Abonnement;
 use App\Entity\Cours;
+use App\Entity\Payment;
 use App\Entity\PaymentMethod;
+use App\Repository\AbonnementItemRepository;
 use App\Repository\EleveRepository;
 use App\Repository\PaymentMethodRepository;
+use App\Repository\PaymentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,17 +65,8 @@ class paymentController extends AbstractController
         ]);
     }
 
-    private function initierPayment(Cours $course, ?PaymentMethod $paymentMethod): bool
-    {
-        $isPaied = true;
-
-
-
-        return $isPaied;
-    }
-
     #[Route('/abonnement/{slug}/subscribe', name: 'app_front_payment_buy_plan', methods: ['GET', 'POST'])]
-    public function subscribePlan(Abonnement $abonnement, EleveRepository $eleveRepository): Response
+    public function subscribePlan(Request $request, Abonnement $abonnement, EleveRepository $eleveRepository, PaymentRepository $paymentRepository, PaymentMethodRepository $paymentMethodRepository, AbonnementItemRepository $abonnementItemRepository): Response
     {
 
         // La fonction nécessite que l'on soit connecté et surtout qu'on soit élève
@@ -83,11 +77,63 @@ class paymentController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
+        if ($request->request->get('initiate_payment')) {
+            if ($this->isCsrfTokenValid('payment' . $abonnement->getId(), $request->request->get('_token'))) {
+                // En fonction de la methode de payment choisie on fait appel à l'API indiquée
+                $paymentMethod = $paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
+                if ($this->initierPaymentPlan($abonnement, $paymentMethod)) {
+
+                    $payment = new Payment();
+                    $today = date_format(new \DateTimeImmutable(), 'Y-m-d');
+                    $expiredAt = strtotime($today . ' +' . $abonnement->getDuree() . ' day');
+                    $payment->setEleve($eleve)
+                        ->setAbonnement($abonnement)
+                        ->setIsExpired(false)
+                        ->setPaymentMethod($paymentMethod)
+                        ->setReference(time()+$eleve->getId())
+                        ->setAmount($abonnement->getMontant())
+                        ->setExpiredAt(new \DateTimeImmutable(date('Y-m-d H:i:s', $expiredAt)));
+                    
+                    $paymentRepository->save($payment);
+
+                    $eleve->setIsPremium(true);
+                    
+                    $eleveRepository->save($eleve, true);
+                    $this->addFlash('success', "Votre paiement a été effectué !");
+
+                    return $this->redirectToRoute('app_home');
+                }
+
+                throw $this->createAccessDeniedException("Impossible d'effectuer le paiement !");
+            }
+            else {
+                throw $this->createAccessDeniedException("Operation impossible");
+            }
+            
+        }
+
 
         return $this->render('front/payment/subscribe_abonnement.html.twig', [
             'plan' => $abonnement,
             'student' => $eleve,
-
+            'abonnementItems' => $abonnementItemRepository->findAll(),
         ]);
+    }
+
+    private function initierPaymentPlan(Abonnement $abonnement, ?PaymentMethod $paymentMethod): bool
+    {
+        $isPaied = true;
+
+
+        return $isPaied;
+    }
+
+    private function initierPayment(Cours $course, ?PaymentMethod $paymentMethod): bool
+    {
+        $isPaied = true;
+
+
+
+        return $isPaied;
     }
 }

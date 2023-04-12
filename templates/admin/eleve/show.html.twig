@@ -178,7 +178,7 @@
 						<div class="card bg-transparent border overflow-hidden">
 							<!-- Card header -->
 							<div class="card-header bg-light border-bottom">
-								<h5 class="card-header-title mb-0">Paymens</h5>
+								<h5 class="card-header-title mb-0">Payments</h5>
 							</div>
 							<!-- Card body -->
 							<div class="card-body p-0">
@@ -315,7 +315,7 @@
 									{% for course in student.cours %}
 										{% set leconTerminees = 0 %}
 										{% for l in student.lectures %}
-											{% if l.isFinished and l.lesson.chapitre.cours is same as course %}
+											{% if l.isFinished and l.lesson is not same as null and l.lesson.chapitre.cours is same as course %}
 												{% set leconTerminees = leconTerminees + 1 %}
 											{% endif %}
 										{% endfor %}

@@ -9,8 +9,8 @@
             <a href="#" class="h6 mb-0"><i class="far fa-heart"></i></a>
         </div>
         <!-- Title -->
-        <h5 class="card-title fw-normal"><a href="{{ path('app_front_course_details', {slug: course.slug}) }}">{{ course.intitule }}</a></h5>
-        <p class="mb-2 text-truncate-2">Proposal indulged no do sociable he throwing settling.</p>
+        <h5 class="card-title fw-normal"><a href="{{ path('app_front_course_details', {slug: course.slug}) }}">{{ course.intitule|u.truncate(48, '...') }}</a></h5>
+        <p class="mb-2 text-truncate-2">{{ course.description|raw|u.truncate(100) }}</p>
         <!-- Rating star -->
         <ul class="list-inline mb-0">
             <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>

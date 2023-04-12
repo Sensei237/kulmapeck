@@ -39,6 +39,9 @@ class Lecture
     #[ORM\ManyToOne(inversedBy: 'lectures')]
     private ?Cours $cours = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $note = null;
+
     public function __construct()
     {
         $this->startAt = new \DateTimeImmutable();
@@ -141,6 +144,18 @@ class Lecture
     public function setCours(?Cours $cours): self
     {
         $this->cours = $cours;
+
+        return $this;
+    }
+
+    public function getNote(): ?float
+    {
+        return $this->note;
+    }
+
+    public function setNote(?float $note): self
+    {
+        $this->note = $note;
 
         return $this;
     }

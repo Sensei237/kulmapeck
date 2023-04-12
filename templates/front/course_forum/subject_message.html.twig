@@ -1,6 +1,6 @@
 {% extends "front/base.html.twig" %}
 
-{% block title %} - Course détails{% endblock %}
+{% block title %} - Forum, {{ course.intitule }}{% endblock %}
 
 {% block mainContent %}
 
@@ -12,128 +12,7 @@
             <div class="row">
                 <!-- Main content START -->
                 <div class="col-lg-12">
-                    <div class="card shadow rounded-2 p-0">
-
-                        <!-- Tab contents START -->
-                        <div class="card-body p-4">
-                            <div  class="d-flex mb-4 mt-3">
-                                <div class="avatar avatar-lg flex-shrink-0 me-2">
-                                    <a href="#"> <img class="avatar-img rounded-circle" src="{{ asset(sujet.membre.utilisateur.personne.avatarPath) }}" alt=""> </a>
-                                </div>
-
-                                <div class="w-100 d-flex">
-                                    <div>
-                                        <h6>
-                                            By {{ sujet.membre.utilisateur.personne.pseudo }}
-                                            <span class="badge btn-info-soft">{{ sujet.createdAt|date('d/m/Y - H:i:s') }}</span>
-                                            <span class="badge {{ sujet.isSolved ? "btn-success-soft" : 'btn-danger-soft' }}">{{ sujet.isSolved ? "Resolved" : "Unresolved" }}</span> 
-
-                                        </h6>
-                                        {{ sujet.content|raw }}
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-
-                            <div>
-
-                                <ul class="list-unstyled mb-0">
-                                    {% for message in sujet.forumMessages %}
-                                        {% if not message.isAnswer %}
-                                            <li class="comment-item" id="item-comment-{{ message.id }}">
-                                                <div class="d-flex mb-3">
-                                                    <!-- Avatar -->
-                                                    <div class="avatar avatar-sm flex-shrink-0">
-                                                        <a href="#"><img class="avatar-img rounded-circle" src="{{ asset(message.membre.utilisateur.personne.avatarPath) }}" alt=""></a>
-                                                    </div>
-                                                    <div class="ms-2">
-                                                        <!-- Comment by -->
-                                                        <div class="bg-light p-3 rounded">
-                                                            <div class="d-flex justify-content-center">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-1 lead fw-bold"> <a href="#!"> {{ message.membre.utilisateur.personne.pseudo }}</a></h6>
-                                                                    <p class="h6 mb-0">{{ message.content }}</p>
-                                                                </div>
-                                                                <small>{{ message.createdAt|date('d/m/Y - H:i:s') }}</small>
-                                                            </div>
-                                                        </div>
-                                                        <!-- Comment react -->
-                                                        <ul class="nav nav-divider py-2 small">
-                                                            <li class="nav-item"> <a class="text-primary-hover {{ heIsMembre and not sujet.isSolved ? 'like-forum-message' : ''}}" href="{{ heIsMembre and not sujet.isSolved ? url("app_course_like_forum_message", {id: message.id}) : '#item-comment-' ~ message.id }}"><i class="fas fa-thumbs-up"></i> Like (<span class="nb-likes">{{ message.likes }}</span>)</a> </li>
-                                                            {% if not sujet.isSolved and membre is not same as null %}
-                                                            <li class="nav-item"> <a class="text-primary-hover {{ heIsMembre and not sujet.isSolved ? 'reply-forum-message' : '' }}" data-forum-message="{{ message.id }}" data-membre="{{ membre.id }}" data-append-response="#reply-forum-message-{{ message.id }}" {{ heIsMembre and not sujet.isSolved ? 'data-bs-toggle="modal" data-bs-target="#replyForumMessage"' : '' }} href="#"><i class="fas fa-reply"></i> Reply</a> </li>
-                                                                {% if membre is same as sujet.membre %}
-                                                                    <li class="nav-item"> <a onclick="return confirm('Are you sure that you want to set these response as the top response that solved your problem ?')" class="text-primary-hover text-success" href="{{ url("app_course_solve_forum_message", {id: message.id}) }}"><i class="fas fa-check"></i> Resolved by these post</a> </li>
-                                                                {% endif %}
-                                                            {% endif %}
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                    <!-- Comment item nested START -->
-                                                    <ul class="list-unstyled ms-4" id="reply-forum-message-{{ message.id }}">
-                                                        {% if message.forumMessages|length > 0 %}
-                                                            <!-- Comment item START -->
-                                                            {% for fm in message.forumMessages %}
-                                                                <li class="comment-item" id="item-comment-{{ fm.id }}">
-                                                                    <div class="d-flex">
-                                                                        <!-- Avatar -->
-                                                                        <div class="avatar avatar-xs flex-shrink-0">
-                                                                            <a href="#"><img class="avatar-img rounded-circle" src="{{ asset(fm.membre.utilisateur.personne.avatarPath) }}" alt=""></a>
-                                                                        </div>
-                                                                        <!-- Comment by -->
-                                                                        <div class="ms-2">
-                                                                            <div class="bg-light p-3 rounded">
-                                                                                <div class="d-flex justify-content-center">
-                                                                                    <div class="me-2">
-                                                                                        <h6 class="mb-1  lead fw-bold"> <a href="#"> {{ fm.membre.utilisateur.personne.pseudo }} </a> </h6>
-                                                                                        <p class=" mb-0">{{ fm.content }}</p>
-                                                                                    </div>
-                                                                                    <small>{{ fm.createdAt|date('d/m/Y - H:i:s') }}</small>
-                                                                                </div>
-                                                                            </div>
-                                                                            <!-- Comment react -->
-                                                                            <ul class="nav nav-divider py-2 small">
-                                                                                <li class="nav-item"> <a class="text-primary-hover {{ heIsMembre and not sujet.isSolved ? 'like-forum-message' : ''}}" href="{{ heIsMembre and not sujet.isSolved ? url("app_course_like_forum_message", {id: fm.id}) : '#item-comment-' ~ fm.id }}"><i class="fas fa-thumbs-up"></i> Like (<span class="nb-likes">{{ fm.likes }}</span>)</a> </li>
-                                                                                {% if not sujet.isSolved and membre is same as sujet.membre %}
-                                                                                    <li class="nav-item"> <a onclick="return confirm('Are you sure that you want to set these response as the top response that solved your problem ?')" class="text-primary-hover text-success" href="{{ url("app_course_solve_forum_message", {id: fm.id}) }}"><i class="fas fa-check"></i> Resolved by these post</a> </li>
-                                                                                
-                                                                                {% endif %}
-                                                                            </ul>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                            {% endfor %}
-                                                                <!-- Comment item END -->
-                                                        {% endif %}
-                                                    </ul>
-                                            </li>
-                                        {% endif %}
-                                    {% else %}
-                                        <h5 class="mt-2 text-danger">No answer found</h5>
-                                    {% endfor %}
-                                </ul>
-
-                            </div>
-
-                        </div>
-                        <!-- Tab contents END -->
-
-                        <div class="card-footer p-4">
-                            {% if heIsMembre and not sujet.isSolved %}
-                                <div class="d-flex mb-4 mt-3">
-                                    <!-- Avatar -->
-                                    <div class="avatar avatar-sm flex-shrink-0 me-2">
-                                        <a href="#"> <img class="avatar-img rounded-circle" src="{{ asset(app.user.personne.avatarPath) }}" alt=""> </a>
-                                    </div>
-
-                                    <form method="POST" action="{{ url("app_front_course_new_forum_message", {referenceSujet: sujet.reference, membreId: membre.id}) }}" class="w-100 d-flex">
-                                        <textarea name="message" class="one form-control pe-4 bg-light" placeholder="Add a comment..." rows="1"></textarea>
-                                        <button class="btn btn-primary ms-2 mb-0" type="submit"><i class="fas fa-paper-plane"></i></button>
-                                    </form>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
+                    {{ include('front/course_forum/_messages.html.twig') }}
                 </div>
 
                 <div class="col-lg-12 mt-5">
@@ -147,29 +26,27 @@
                             <div>
                                 <ul class="list-unstyled">
                                     {% for subject in course.forum.sujets|sort((a, b) => b.createdAt <=> a.createdAt) %}
-                                    {% if subject is not same as sujet %}
-                                        <li>
-                                            <div  class="d-flex mb-4 mt-3">
-                                                <div class="avatar avatar-sm flex-shrink-0 me-2">
-                                                    <a href="#"> <img class="avatar-img rounded-circle" src="{{ asset(subject.membre.utilisateur.personne.avatarPath) }}" alt=""> </a>
-                                                </div>
+                                        {% if subject is not same as sujet %}
+                                            <li>
+                                                <div  class="d-flex mb-4 mt-3">
+                                                    <div class="avatar avatar-sm flex-shrink-0 me-2">
+                                                        <a href="#"> <img class="avatar-img rounded-circle" src="{{ asset(subject.membre.utilisateur.personne.avatarPath) }}" alt=""> </a>
+                                                    </div>
 
-                                                <div class="w-100 d-flex">
-                                                    <p>
-                                                        {{ subject.content|raw }}
-                                                        <br>
-                                                        <span class="badge {{ subject.isSolved ? "btn-success-soft" : 'btn-danger-soft' }}">{{ subject.isSolved ? "Resolved" : "Unresolved" }}</span> |
-                                                        <i class="badge btn-info-soft">{{ subject.createdAt|date('d/m/Y - H:i:s') }}</i>
-                                                        | <span class="badge btn-warning-soft">{{ subject.forumMessages|length }} comments</span>
-                                                        | <a href="{{ url("app_front_course_forum_subject_message", {slug: subject.forum.cours.slug, reference: subject.reference}, "http", false) }}" class="btn btn-primary-soft">Show comment</a>
-                                                    </p>
+                                                    <div class="w-100 d-flex">
+                                                        <p>
+                                                            {{ subject.content|raw }}
+                                                            <br>
+                                                            <span class="badge {{ subject.isSolved ? "btn-success-soft" : 'btn-danger-soft' }}">{{ subject.isSolved ? "Resolved" : "Unresolved" }}</span> |
+                                                            <i class="badge btn-info-soft">{{ subject.createdAt|date('d/m/Y - H:i:s') }}</i>
+                                                            | <span class="badge btn-warning-soft">{{ subject.forumMessages|length }} comments</span>
+                                                            | <a href="{{ url("app_front_course_forum_subject_message", {slug: subject.forum.cours.slug, reference: subject.reference}, "http", false) }}" class="btn btn-primary-soft">Show comment</a>
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                        <hr>
-                                    {% endif %}
-                                    {% else %}
-                                        <h3 class="text-danger">No topics found! Be the first to ask a problem</h3>
+                                            </li>
+                                            <hr>
+                                        {% endif %}
                                     {% endfor %}
                                 </ul>
                             </div>

@@ -1,23 +1,27 @@
 <?php
 
-namespace App\Controller\Front;
+namespace App\Controller\Instructor;
 
 use App\Entity\Cours;
 use App\Entity\Forum;
+use App\Entity\ForumMessage;
 use App\Entity\Membre;
 use App\Entity\Sujet;
 use App\Form\SujetType;
+use App\Repository\ForumMessageRepository;
 use App\Repository\ForumRepository;
 use App\Repository\MembreRepository;
 use App\Repository\SujetRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/course-forum')]
+#[Route('instructor/forum')]
 class CourseForumController extends AbstractController
 {
-    #[Route('/{slug}', name: 'app_front_course_forum_index')]
+    #[Route('/{slug}', name: 'app_instructor_course_forum_index')]
     public function index(Cours $cours, MembreRepository $membreRepository, SujetRepository $sujetRepository, ForumRepository $forumRepository): Response
     {
         if (!$cours->getForum()) {
@@ -33,12 +37,11 @@ class CourseForumController extends AbstractController
                 }
                 $membre->addForum($forum);
                 $forumRepository->save($forum, true);
-            }
-            else {
+            } else {
                 throw $this->createNotFoundException();
             }
         }
-        
+
         $heIsMembre = false;
         $membre = $membreRepository->findOneBy(['utilisateur' => $this->getUser()]);
         if ($membre !== null && $membre->getForums()->contains($cours->getForum())) {
@@ -51,17 +54,18 @@ class CourseForumController extends AbstractController
         ]);
 
 
-        return $this->render('front/course_forum/index.html.twig', [
+        return $this->render('instructor/course_forum/index.html.twig', [
             'controller_name' => 'CourseForumController',
             'course' => $cours,
             'heIsMembre' => $heIsMembre,
             'sujetForm' => $sujetForm,
             'membre' => $membre,
             'isForumPage' => true,
+            'heIsInstructor' => true,
         ]);
     }
 
-    #[Route('/{slug}/{reference}', name: 'app_front_course_forum_subject_message')]
+    #[Route('/{slug}/{reference}/subject-messages', name: 'app_instructor_course_forum_subject_message')]
     public function subjectMessage(Cours $cours, Sujet $sujet, MembreRepository $membreRepository)
     {
         $heIsMembre = false;
@@ -70,7 +74,7 @@ class CourseForumController extends AbstractController
             $heIsMembre = true;
         }
 
-        return $this->render('front/course_forum/subject_message.html.twig', [
+        return $this->render('instructor/course_forum/subject_message.html.twig', [
             'controller_name' => 'CourseForumController',
             'course' => $cours,
             'sujet' => $sujet,
@@ -79,4 +83,29 @@ class CourseForumController extends AbstractController
             'isForumPage' => true,
         ]);
     }
+
+    #[Route('/{id}/delete', name: 'app_instructor_course_forum_subject_delete', methods: ['POST'])]
+    public function deleteSubjet(Sujet $sujet, SujetRepository $sujetRepository, ForumMessageRepository $forumMessageRepository, Request $request): Response 
+    {
+        if ($this->isCsrfTokenValid('delete'.$sujet->getId(), $request->request->get('_token'))) {
+            $sujetRepository->remove($sujet, true);
+        }
+
+        return $this->redirectToRoute('app_instructor_course_forum_index', ['slug' => $sujet->getForum()->getCours()->getSlug()]);
+    }
+
+    #[Route('/{id}/delete-message', name: 'app_instructor_course_forum_subject_delete_message', methods: ['GET'])]
+    public function removeForumMessage(ForumMessage $forumMessage, ForumMessageRepository $forumMessageRepository, Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $forumMessage->getId(), $request->query->get('_token'))) {
+            $forumMessageRepository->remove($forumMessage, true);
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse(['hasDone' => true]);
+        }
+
+        return $this->redirectToRoute('app_instructor_course_forum_subject_message', ['slug' => $forumMessage->getSujet()->getForum()->getCours()->getSlug(), 'reference' => $forumMessage->getSujet()->getReference()]);
+    }
+    
 }
