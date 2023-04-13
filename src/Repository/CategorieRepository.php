@@ -42,7 +42,7 @@ class CategorieRepository extends ServiceEntityRepository
    /**
     * @return Categorie[] Returns an array of Categorie objects
     */
-    public function findBCategories(): array
+    public function findBCategories(int $maxResult = null): array
     {
         return $this->createQueryBuilder('c')
             ->join('c.cours', 'co')
@@ -51,6 +51,7 @@ class CategorieRepository extends ServiceEntityRepository
             ->setParameter('isValidated', true)
             ->setParameter('isSubCategory', false)
             ->orderBy('c.name', 'ASC')
+            ->setMaxResults($maxResult)
             ->getQuery()
             ->getResult()
         ;

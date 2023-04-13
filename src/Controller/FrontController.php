@@ -25,7 +25,7 @@ class FrontController extends AbstractController
     public function index(Request $request, EleveRepository $eleveRepository, CategorieRepository $categorieRepository, CoursRepository $coursRepository, ReviewRepository $reviewRepository): Response
     {
         $categories = [];
-        foreach ($categorieRepository->findBCategories() as $category) {
+        foreach ($categorieRepository->findBCategories(6) as $category) {
             $categories[] = [
                 'category' => $category,
                 'courses' => $coursRepository->findBy(['categorie' => $category, 'isValidated' => true], ['vues' => 'DESC'], 8)
