@@ -67,7 +67,7 @@
 
 								<!-- Table data -->
 								<td>
-                                    {{ classe.specialite.name }}
+                                    {{ classe.specialite.name|default('-') }}
 								</td>
                                 <td>{{ classe.cours|length }}</td>
                                 <td>{{ classe.eleves|length }}</td>
