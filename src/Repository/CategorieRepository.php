@@ -50,10 +50,18 @@ class CategorieRepository extends ServiceEntityRepository
             ->andWhere('c.isSubCategory = :isSubCategory')
             ->setParameter('isValidated', true)
             ->setParameter('isSubCategory', false)
-            ->orderBy('c.id', 'ASC')
+            ->orderBy('c.name', 'ASC')
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function findCats(bool $isSub = false) 
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.isSubCategory = :isSub')
+            ->setParameter('isSub', $isSub)
+            ->orderBy('c.name', 'ASC');
     }
 
 //    public function findOneBySomeField($value): ?Categorie

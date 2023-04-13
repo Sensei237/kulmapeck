@@ -3,7 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Categorie;
+use App\Repository\CategorieRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,6 +23,26 @@ class CategorieType extends AbstractType
                     'class' => 'form-control'
                 ],
                 'label' => 'Category Name',
+                'label_attr' => [
+                    'class' => 'form-label'
+                ]
+            ])
+            ->add('isSubCategory', CheckboxType::class, [
+                'label_attr' => [
+                    'class' => 'form-label'
+                ],
+                'required' => false,
+            ])
+            ->add('category', EntityType::class, [
+                'class' => Categorie::class,
+                'query_builder' => function (CategorieRepository $cr) {
+                    return $cr->findCats();
+                },
+                'choice_label' => 'name',
+                'required' => false,
+                'attr' => [
+                    'class' => 'js-choice'
+                ],
                 'label_attr' => [
                     'class' => 'form-label'
                 ]

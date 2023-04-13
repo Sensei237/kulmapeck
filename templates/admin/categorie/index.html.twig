@@ -129,10 +129,21 @@
                             <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
                         </div>
                         <!-- Modal body -->
-                        <div class="modal-body">
-                            {{ form_row(categoryForm.name) }}
-
-                            {{ form_row(categoryForm.image) }}
+                        <div class="modal-body g-3">
+                            <div class="row g-4">
+								<div class="col-12">
+									{{ form_row(categoryForm.name) }}
+								</div>
+								<div class="col-12">
+                            		{{ form_row(categoryForm.isSubCategory) }}
+								</div>
+								<div class="col-12">
+									{{ form_row(categoryForm.category) }}
+								</div>
+								<div class="col-12">
+									{{ form_row(categoryForm.image) }}
+								</div>
+							</div>
                         </div>
                         <!-- Modal footer -->
                         <div class="modal-footer">

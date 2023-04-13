@@ -33,7 +33,7 @@ class Categorie
      */
     public $image;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: false)]
     private ?bool $isSubCategory = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'subCategories')]
@@ -54,6 +54,7 @@ class Categorie
         $this->subCategories = new ArrayCollection();
         $this->enseignants = new ArrayCollection();
         $this->exams = new ArrayCollection();
+        $this->isSubCategory = false;
     }
 
     public function getId(): ?int
