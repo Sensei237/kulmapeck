@@ -62,7 +62,7 @@ class FrontController extends AbstractController
     public function showHeaderCategories(CategorieRepository $categorieRepository): Response 
     {
         return $this->render('front/home/header/categories.html.twig', [
-            'categories' => $categorieRepository->findBy(['isSubCategory' => false], [], 11)
+            'categories' => $categorieRepository->findBy(['isSubCategory' => false], ['name' => 'ASC'], 11)
         ]);
     }
 
@@ -70,7 +70,7 @@ class FrontController extends AbstractController
     public function showHeaderCourses(CategorieRepository $categorieRepository, CoursRepository $coursRepository, FormationRepository $formationRepository): Response
     {
         return $this->render('front/home/header/courses.html.twig', [
-            'categories' => $categorieRepository->findBy(['isSubCategory' => false]),
+            'categories' => $categorieRepository->findBy(['isSubCategory' => false], ['name' => 'ASC'], 12),
             'lastCourses' => $coursRepository->findBy(['isValidated' => true], ['createdAt' => 'DESC', 'vues' => 'DESC'], 8)
         ]);
     }
