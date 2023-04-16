@@ -6,6 +6,7 @@ use App\Repository\AbonnementItemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AbonnementItemRepository::class)]
 class AbonnementItem
@@ -13,9 +14,11 @@ class AbonnementItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:abonnement:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:abonnement:collection'])]
     private ?string $label = null;
 
     #[ORM\ManyToMany(targetEntity: Abonnement::class, mappedBy: 'items')]

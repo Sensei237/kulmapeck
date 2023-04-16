@@ -2,26 +2,45 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\PaysRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PaysRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: [
+                'groups' => ['read:pays:collection']
+            ]
+        )
+    ],
+    normalizationContext: [
+        'groups' => ['read:pays:collection']
+    ]
+)]
 class Pays
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:course:item', 'read:user:item', 'read:pays:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:course:item', 'read:user:item', 'read:pays:collection'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:course:item', 'read:user:item', 'read:pays:collection'])]
     private ?string $slug = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['read:course:item', 'read:user:item', 'read:pays:collection'])]
     private ?string $code = null;
 
     #[ORM\OneToMany(mappedBy: 'pays', targetEntity: Personne::class)]

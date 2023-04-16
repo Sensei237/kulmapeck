@@ -2,33 +2,51 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use App\Controller\Api\Controller\Etablissement\AllController;
 use App\Repository\EtablissementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EtablissementRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection(),
+        new GetCollection(
+            name: 'etablissements',
+            uriTemplate: 'schools',
+            controller: AllController::class
+        )
+    ],
+    normalizationContext: ['groups' => ['read:etablissement:collection']]
+)]
 class Etablissement
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:etablissement:collection', 'read:user:item'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
+    #[Groups(['read:etablissement:collection', 'read:user:item'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 150)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
+    #[Groups(['read:etablissement:collection', 'read:user:item'])]
     private ?string $ville = null;
 
     #[ORM\ManyToOne(inversedBy: 'etablissements')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:etablissement:collection', 'read:user:item'])]
     private ?Pays $pays = null;
 
     #[ORM\OneToMany(mappedBy: 'etablissement', targetEntity: Eleve::class)]

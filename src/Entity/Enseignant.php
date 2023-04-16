@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EnseignantRepository::class)]
 class Enseignant
@@ -15,6 +16,7 @@ class Enseignant
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:course:collection'])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'enseignant', targetEntity: Cours::class, orphanRemoval: true)]
@@ -22,12 +24,15 @@ class Enseignant
 
     #[ORM\OneToOne(inversedBy: 'enseignant', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:course:collection'])]
     private ?User $utilisateur = null;
 
     #[ORM\ManyToOne(inversedBy: 'enseignants')]
+    #[Groups(['read:course:collection'])]
     private ?Etablissement $etablissement = null;
 
     #[ORM\Column(length: 100, unique: true)]
+    #[Groups(['read:course:collection'])]
     private ?string $reference = null;
 
     #[ORM\Column(length: 255)]

@@ -2,42 +2,92 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
+
 use App\Repository\ExamRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ExamRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: [
+                'groups' => ['read:exam:collection', 'read:exam:item']
+            ],
+        ),
+        new GetCollection(
+            normalizationContext: [
+                'groups' => ['read:exam:collection']
+            ],
+
+        ),
+    ],
+    normalizationContext: [
+        'groups' => ['read:exam:collection']
+    ],
+),
+ApiFilter(SearchFilter::class, properties: [
+    'title' => 'partial',
+    'language' => 'exact',
+    'category' => 'exact',
+    'classe' => 'exact',
+    'classe.specialite' => 'exact',
+    'classe.specialite.filiere' => 'exact',
+    'classe.skillLevel' => 'exact',
+]),
+ApiFilter(BooleanFilter::class, properties: ['isValidated', 'isIsPublished']),
+ApiFilter(DateFilter::class, properties: ['publishedAt']),
+ApiFilter(OrderFilter::class, properties: ['id', 'publishedAt'], arguments: ['orderParameterName' => 'order']),
+]
 class Exam
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:exam:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:exam:item'])]
     private ?string $sujet = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:exam:item'])]
     private ?string $correction = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:exam:collection'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['read:exam:collection'])]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Groups(['read:exam:collection'])]
     private ?\DateTimeImmutable $publishedAt = null;
 
     #[ORM\Column]
+    #[Groups(['read:exam:collection'])]
     private ?bool $isPublished = null;
 
     #[ORM\ManyToOne(inversedBy: 'exams')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:exam:collection'])]
     private ?User $user = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:exam:collection'])]
     private ?string $reference = null;
 
     /**

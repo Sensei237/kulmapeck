@@ -23,11 +23,9 @@ use function PHPUnit\Framework\throwException;
 
 class RegistrationController extends AbstractController
 {
-    private EmailVerifier $emailVerifier;
 
-    public function __construct(EmailVerifier $emailVerifier)
+    public function __construct(private EmailVerifier $emailVerifier)
     {
-        $this->emailVerifier = $emailVerifier;
     }
 
     #[Route('/register', name: 'app_front_register')]
@@ -61,7 +59,7 @@ class RegistrationController extends AbstractController
             );
 
             
-            $codeInvitation = $this->generateInvitationCode($personneRepository);
+            $codeInvitation = self::generateInvitationCode($personneRepository);
             $invitationLink = json_encode([
                 'trainer' => $this->generateUrl('app_front_register', ['type' => 'trainer', 'invitation' => $codeInvitation]),
                 'student' => $this->generateUrl('app_front_register', ['type' => 'student', 'invitation' => $codeInvitation])
@@ -150,7 +148,7 @@ class RegistrationController extends AbstractController
         return $user;
     }
 
-    public function generateInvitationCode(PersonneRepository $pr)
+    public static function generateInvitationCode(PersonneRepository $pr)
     {
         $tab = ['A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'W', 'X', 'C', 'V', 'B', 'N', '1','2', '3', '4', '5', '6', '7', '8', '9', '0'];
         $exist = true;

@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
@@ -16,41 +17,51 @@ class Personne
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:course:collection', 'read:exam:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
     #[Assert\Length(min: 2, minMessage: "Le nom doit faire au moins 2 caractères !")]
+    #[Groups(['read:course:collection', 'read:exam:collection', 'post:user:item'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:course:collection','read:exam:collection', 'post:user:item'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
     #[Assert\Length(min: 5, max: 8, maxMessage: "Il faut 8 caractères maximun", minMessage: "Il faut 5 caractères minimum !")]
+    #[Groups(['read:course:collection','read:exam:collection', 'post:user:item'])]
     private ?string $pseudo = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['post:user:item'])]
     private ?\DateTimeInterface $bornAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['post:user:item'])]
     private ?string $lieuNaissance = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
+    #[Groups(['read:course:item', 'read:exam:collection', 'post:user:item'])]
     private ?string $sexe = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:course:collection', 'read:exam:collection'])]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:course:item', 'post:user:item'])]
     private ?string $adresse = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:course:item', 'post:user:item'])]
     private ?string $telephone = null;
 
     #[ORM\OneToOne(mappedBy: "personne", cascade: ['persist', 'remove'])]
@@ -70,6 +81,7 @@ class Personne
     private Collection $invites;
 
     #[ORM\ManyToOne(inversedBy: 'personnes')]
+    #[Groups(['read:course:item', 'post:user:item'])]
     private ?Pays $pays = null;
 
     /**

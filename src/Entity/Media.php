@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
 class Media
@@ -12,21 +13,27 @@ class Media
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:course:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:course:collection'])]
     private ?string $videoUrl = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:course:collection'])]
     private ?string $mp4File = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:course:collection'])]
     private ?string $webMFile = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:course:collection'])]
     private ?string $oggFile = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:course:collection'])]
     private ?string $imageFile = null;
 
     #[ORM\OneToOne(inversedBy: 'media', cascade: ['persist', 'remove'])]

@@ -2,19 +2,27 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\FiliereRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FiliereRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection()
+    ]
+)]
 class Filiere
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:user:item'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: SousSysteme::class, inversedBy: 'filieres')]
@@ -22,14 +30,17 @@ class Filiere
 
     #[ORM\ManyToOne(inversedBy: 'filieres')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:user:item'])]
     private ?TypeEnseignement $typeEnseignement = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
+    #[Groups(['read:user:item'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:user:item'])]
     private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'filiere', targetEntity: Specialite::class, orphanRemoval: true)]

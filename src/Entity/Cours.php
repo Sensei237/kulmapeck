@@ -2,59 +2,121 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CoursRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\CssSelector\XPath\Extension\FunctionExtension;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use App\Controller\Api\Controller\Course\DetailsController;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CoursRepository::class)]
+#[
+    ApiResource(
+        operations: [
+            new GetCollection(
+                normalizationContext: ['groups' => ['read:course:collection']],
+                options: ['isActivated' => true]
+            ),
+            new Get(
+                name: 'course_details',
+                uriTemplate: '/cours/{id}/details',
+                controller: DetailsController::class,
+                write: true,
+                normalizationContext: ['groups' => ['read:course:collection', 'read:course:item']]
+            ),
+        ],
+        normalizationContext: [
+            'groups' => ['read:course:collection']
+        ],
+        paginationMaximumItemsPerPage: 20,
+        paginationItemsPerPage: 10,
+        paginationClientItemsPerPage: true,
+    ),
+    ApiFilter(
+        SearchFilter::class, properties: [
+            'id' => 'exact',
+            'categorie' => 'exact',
+            'intitule' => 'partial',
+            'language' => 'exact',
+            'classe' => 'exact',
+            'classe.specialite' => 'exact',
+            'classe.specialite.filiere' => 'exact',
+            'classe.skillLevel' => 'exact'
+        ]
+    ),
+    ApiFilter(BooleanFilter::class, properties: ['isFree', 'isValidated']),
+    ApiFilter(OrderFilter::class, properties: ['id', 'intitule'], arguments: ['orderParameterName' => 'order']),
+    ApiFilter(DateFilter::class, properties: ['publishedAt']),
+
+]
 class Cours
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:course:collection'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Classe::class, inversedBy: 'cours')]
+    #[Groups(['read:course:collection'])]
     private Collection $classe;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
+    #[Groups(['read:course:collection'])]
     private ?string $intitule = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:course:collection'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
+    #[Groups(['read:course:item'])]
     private ?string $content = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
+    #[Groups(['read:course:collection'])]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Groups(['read:course:collection'])]
     private ?bool $isPublished = null;
 
     #[ORM\Column]
+    #[Groups(['read:course:collection'])]
     private ?bool $isFree = null;
 
     #[ORM\OneToMany(mappedBy: 'cours', cascade: ['persist', 'remove'], targetEntity: Chapitre::class, orphanRemoval: true)]
+    #[Groups(['read:course:item'])]
     private Collection $chapitres;
 
     #[ORM\ManyToOne(inversedBy: 'cours')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:course:collection'])]
     private ?Enseignant $enseignant = null;
 
     #[ORM\ManyToMany(targetEntity: Eleve::class, mappedBy: 'cours')]
+    
     private Collection $eleves;
+
+    #[Groups(['read:course:item'])]
+    private $numberOfStudents;
 
     #[ORM\ManyToMany(targetEntity: Formation::class, mappedBy: 'cours')]
     private Collection $formations;
@@ -62,74 +124,92 @@ class Cours
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
+    #[Groups(['read:course:collection'])]
     private ?string $niveauDifficulte = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
+    #[Groups(['read:course:collection'])]
     private ?string $dureeApprentissage = null;
 
     #[ORM\Column]
+    #[Groups(['read:course:collection'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
+    #[Groups(['read:course:collection', 'update:course:item'])]
     private ?int $vues = null;
 
     #[ORM\Column]
+    #[Groups(['read:course:collection'])]
     private ?bool $isValidated = null;
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Like::class, orphanRemoval: true)]
     private Collection $likes;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read:course:collection'])]
     private ?int $montantAbonnement = null;
 
     #[ORM\ManyToOne(inversedBy: 'cours')]
+    #[Groups(['read:course:collection'])]
     private ?Categorie $categorie = null;
 
     #[ORM\OneToOne(mappedBy: 'cours', cascade: ['persist', 'remove'])]
+    #[Groups(['read:course:collection'])]
     private ?Media $media = null;
 
     #[ORM\OneToOne(mappedBy: 'cours', cascade: ['persist', 'remove'])]
     private ?Forum $forum = null;
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: FAQ::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[Groups(['read:course:item'])]
     private Collection $fAQs;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['read:course:collection'])]
     private ?string $language = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Groups(['read:course:collection'])]
     private ?int $numberOfLessons = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:course:collection'])]
     private ?string $tags = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read:course:collection'])]
     private ?bool $isRejected = null;
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Review::class, orphanRemoval: true)]
     private Collection $reviews;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Groups(['read:course:collection'])]
     private ?int $review = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read:course:collection'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Payment::class)]
     private Collection $payments;
 
     #[ORM\ManyToMany(targetEntity: PaymentMethod::class, inversedBy: 'cours')]
+    #[Groups(['read:course:item'])]
     private Collection $paymentMethods;
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Lecture::class)]
     private Collection $lectures;
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Quiz::class)]
+    #[Groups(['read:course:item'])]
     private Collection $quizzes;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read:course:collection'])]
     private ?\DateTimeImmutable $publishedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: QuizLost::class)]
@@ -792,5 +872,10 @@ class Cours
         }
 
         return $this;
+    }
+
+    public function getNumberOfStudents(): int
+    {
+        return $this->getEleves()->count();
     }
 }

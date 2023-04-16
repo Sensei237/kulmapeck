@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EleveRepository::class)]
 class Eleve
@@ -14,9 +15,11 @@ class Eleve
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:course:item', 'read:user:item'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'eleves')]
+    #[Groups(['post:user:item'])]
     private ?Classe $classe = null;
 
     #[ORM\ManyToMany(targetEntity: Cours::class, inversedBy: 'eleves')]
@@ -30,25 +33,30 @@ class Eleve
 
     #[ORM\OneToOne(inversedBy: 'eleve', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:course:item'])]
     private ?User $utilisateur = null;
 
     #[ORM\ManyToOne(inversedBy: 'eleves')]
     #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['post:user:item'])]
     private ?Etablissement $etablissement = null;
 
     #[ORM\Column(length: 100, unique: true)]
+    #[Groups(['read:user:item'])]
     private ?string $reference = null;
 
     #[ORM\OneToMany(mappedBy: 'eleve', targetEntity: Review::class)]
     private Collection $reviews;
 
     #[ORM\Column]
+    #[Groups(['read:user:item'])]
     private ?\DateTimeImmutable $joinAt = null;
 
     #[ORM\OneToMany(mappedBy: 'eleve', targetEntity: Payment::class, orphanRemoval: true)]
     private Collection $payments;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read:user:item'])]
     private ?bool $isPremium = null;
 
     #[ORM\OneToMany(mappedBy: 'eleve', targetEntity: Lecture::class, orphanRemoval: true)]

@@ -6,6 +6,7 @@ use App\Repository\PaymentMethodRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PaymentMethodRepository::class)]
 class PaymentMethod
@@ -13,15 +14,19 @@ class PaymentMethod
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:course:item'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:course:item'])]
     private ?string $label = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['read:course:item'])]
     private ?string $code = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:course:item'])]
     private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'paymentMethod', targetEntity: Payment::class)]

@@ -2,30 +2,58 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
 use App\Repository\CategorieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategorieRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: [
+                'groups' => ['read:category:item', 'read:category:collection']
+            ]
+        ),
+        new GetCollection(
+            normalizationContext: [
+                'groups' => ['read:category:collection']
+            ],
+            paginationClientItemsPerPage: true,
+            paginationItemsPerPage: 10,
+            paginationMaximumItemsPerPage: 25,
+        ),
+    ],
+    normalizationContext: [
+        'groups' => ['read:category:collection']
+    ],
+)]
 class Categorie
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:course:collection', 'read:category:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:course:collection', 'read:category:collection'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:course:collection', 'read:category:collection'])]
     private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Cours::class)]
     private Collection $cours;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:category:collection'])]
     private ?string $imageFile = null;
 
     /**
@@ -34,6 +62,7 @@ class Categorie
     public $image;
 
     #[ORM\Column(nullable: false)]
+    #[Groups(['read:category:collection'])]
     private ?bool $isSubCategory = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'subCategories')]

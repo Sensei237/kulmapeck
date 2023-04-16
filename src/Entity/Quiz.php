@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuizRepository::class)]
@@ -16,6 +16,7 @@ class Quiz
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:course:item'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'quizzes')]
@@ -25,27 +26,34 @@ class Quiz
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
+    #[Groups(['read:course:item'])]
     private ?string $question = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:course:item'])]
     private ?string $reference = null;
 
     #[ORM\OneToMany(mappedBy: 'quiz', targetEntity: Proposition::class, orphanRemoval: true)]
     private Collection $propositions;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['read:course:item'])]
     private ?string $proposition1 = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['read:course:item'])]
     private ?string $proposition2 = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['read:course:item'])]
     private ?string $proposition3 = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['read:course:item'])]
     private ?string $proposition4 = null;
 
     #[ORM\Column]
+    #[Groups(['read:course:item'])]
     private array $propositionJuste = [];
 
     #[ORM\OneToMany(mappedBy: 'quiz', targetEntity: QuizResult::class, orphanRemoval: true)]

@@ -9,6 +9,10 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+        app_user_phone_provider:
+            entity:
+                class: App\Entity\User
+                property: telephone
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -16,6 +20,8 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            json_login:
+                check_path: api_login
             custom_authenticator: App\Security\AppAuthenticator
             logout:
                 path: app_logout

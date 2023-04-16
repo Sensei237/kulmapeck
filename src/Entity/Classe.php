@@ -2,30 +2,53 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\ClasseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ClasseRepository::class)]
+#[
+    ApiResource(
+        operations: [
+            new GetCollection(
+                normalizationContext: ['groups' => ['read:classe:collection']]
+            )
+        ]
+    ),
+    ApiFilter(SearchFilter::class, properties: [
+        'specialite' => 'exact',
+        'specialite.filiere' => 'exact',
+        'sousSysteme' => 'exact',
+
+    ])
+]
 class Classe
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:classe:collection', 'read:user:item'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'classes')]
+    #[Groups(['read:user:item'])]
     private ?Specialite $specialite = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom de classe ne peut être vide !")]
     #[Assert\NotNull(message: "Le nom de classe ne peut être nul !")]
+    #[Groups(['read:classe:collection', 'read:user:item'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:classe:collection', 'read:user:item'])]
     private ?string $slug = null;
 
     #[ORM\ManyToMany(targetEntity: Cours::class, mappedBy: 'classe')]
@@ -38,9 +61,11 @@ class Classe
     private Collection $exams;
 
     #[ORM\ManyToOne(inversedBy: 'classes')]
+    #[Groups(['read:classe:collection', 'read:user:item'])]
     private ?SkillLevel $skillLevel = null;
 
     #[ORM\ManyToOne(inversedBy: 'classes')]
+    #[Groups(['read:classe:collection', 'read:user:item'])]
     private ?SousSysteme $sousSysteme = null;
 
     public function __construct()

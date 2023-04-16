@@ -2,20 +2,30 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\LessonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LessonRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+    ]
+)]
 class Lesson
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:course:item'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'lessons')]
@@ -25,9 +35,11 @@ class Lesson
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
+    #[Groups(['read:course:item'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:course:item'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -42,6 +54,7 @@ class Lesson
     private Collection $lectures;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Groups(['read:course:item'])]
     private ?int $numero = null;
 
     #[ORM\Column(length: 255, nullable: true)]

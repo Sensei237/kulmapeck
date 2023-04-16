@@ -2,6 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Put;
+use App\Controller\Api\Controller\User\MeController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,36 +17,76 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Valid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`kulmapeck_user`')]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[ORM\EntityListeners(['App\EntityListener\UserListener'])]
+#[ORM\HasLifecycleCallbacks]
+#[ApiResource(
+    operations: [
+        new Post(
+            denormalizationContext: [
+                'groups' => ['post:user:item']
+            ],
+        ),
+        new Get(
+            normalizationContext: [
+                'groups' => ['post:user:item', 'read:user:item']
+            ],
+        ),
+        new Get(
+            paginationEnabled: false,
+            uriTemplate: '/me',
+            controller: MeController::class,
+            read: false,
+            normalizationContext: [
+                'groups' => ['read:user:item', 'post:user:item']
+            ]
+        ),
+        new Put(),
+        new Delete(),
+        new Patch()
+    ],
+    normalizationContext: [
+        'groups' => ['read:user:item']
+    ],
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:course:collection', 'read:exam:collection', 'read:user:item'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\Email(message: "L'email {{ value }} n'est pas une adresse e-mail valide !")]
+    #[Groups(['read:course:collection', 'post:user:item', 'post:user:item'])]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['read:user:item'])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Groups(['post:user:item'])]
     private ?string $password = null;
 
     #[ORM\OneToMany(mappedBy: 'destinataire', targetEntity: Notification::class, orphanRemoval: true)]
     private Collection $notifications;
 
     #[ORM\OneToOne(mappedBy: 'utilisateur', cascade: ['persist', 'remove'])]
+    #[
+        Groups(['read:course:collection', 'post:user:item']),
+        Valid()
+    ]
     private ?Eleve $eleve = null;
 
     #[ORM\OneToOne(mappedBy: 'utilisateur', cascade: ['persist', 'remove'])]
@@ -50,15 +98,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
-    public $parentCode = null;
+    #[Groups(['post:user:item'])]
+    public ?string $parentCode = null;
 
     #[ORM\OneToOne(mappedBy: "utilisateur", cascade: ['persist', 'remove'])]
+    #[
+        Groups(['read:course:collection', 'read:exam:collection', 'post:user:item']),
+        Valid()
+    ]
     private ?Personne $personne = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read:user:item'])]
     private ?bool $isBlocked = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read:user:item'])]
     private ?bool $isAdmin = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Exam::class)]

@@ -2,39 +2,65 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
 use App\Repository\AbonnementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AbonnementRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: ['groups' => ['read:abonnement:collection', 'read:abonnement:item']]
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => ['read:abonnement:collection']]
+        )
+    ],
+    paginationItemsPerPage: 50,
+    paginationMaximumItemsPerPage: 50,
+    normalizationContext: [
+        'groups' => ['read:abonnement:collection']
+    ],
+)]
 class Abonnement
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:abonnement:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:abonnement:collection'])]
     private ?string $label = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:abonnement:collection'])]
     private ?string $slug = null;
 
     #[ORM\Column]
+    #[Groups(['read:abonnement:collection'])]
     private ?float $montant = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Groups(['read:abonnement:collection'])]
     private ?int $duree = null;
 
     #[ORM\OneToMany(mappedBy: 'abonnement', targetEntity: Payment::class)]
     private Collection $payments;
 
     #[ORM\Column]
-    private ?bool $isRecommended = null;
+    #[Groups(['read:abonnement:collection'])]
+    private ?bool $isRecommended = false;
 
     #[ORM\ManyToMany(targetEntity: AbonnementItem::class, inversedBy: 'abonnements')]
+    #[Groups(['read:abonnement:collection'])]
     private Collection $items;
 
     #[ORM\ManyToMany(targetEntity: PaymentMethod::class, inversedBy: 'abonnements')]

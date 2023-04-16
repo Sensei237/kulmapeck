@@ -2,23 +2,34 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\SkillLevelRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SkillLevelRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection()
+    ]
+)]
 class SkillLevel
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:classe:collection', 'read:user:item'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:classe:collection', 'read:user:item'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:classe:collection', 'read:user:item'])]
     private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'skillLevel', targetEntity: Classe::class)]
