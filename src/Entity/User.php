@@ -45,6 +45,9 @@ use Symfony\Component\Validator\Constraints\Valid;
             read: false,
             normalizationContext: [
                 'groups' => ['read:user:item', 'post:user:item']
+            ],
+            openapiContext: [
+                'security' => [['bearerAuth' => []]]
             ]
         ),
         new Put(),

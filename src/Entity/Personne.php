@@ -2,6 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\RequestBody;
+use App\Controller\Api\Controller\User\ChangeAvatarController;
 use App\Repository\PersonneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,8 +17,41 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
+#[ApiResource(
+    operations: [
+        new Post(
+            uriTemplate: '/post/{id}/avatar',
+            controller: ChangeAvatarController::class,
+            deserialize: false,
+            validationContext: ['groups' => ['Default', 'media_object_create']],
+            openapi: new Operation(
+                requestBody: new RequestBody(
+                    content: new \ArrayObject([
+                        'multipart/form-data' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'file' => [
+                                        'type' => 'string',
+                                        'format' => 'binary'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ])
+                )
+            )
+        ),
+    ],
+    normalizationContext: [
+        'groups' => ['read:personne:item']
+    ],
+    types: ['https://schema.org/MediaObject'],
+)]
 class Personne
 {
     #[ORM\Id]
@@ -53,7 +93,8 @@ class Personne
     private ?string $sexe = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['read:course:collection', 'read:exam:collection'])]
+    #[Groups(['read:course:collection', 'read:exam:collection', 'read:personne:item'])]
+    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -84,13 +125,21 @@ class Personne
     #[Groups(['read:course:item', 'post:user:item'])]
     private ?Pays $pays = null;
 
-    /**
-     * @var File
-     */
-    private $imageFile;
+    private ?File $imageFile = null;
+
+    #[Vich\UploadableField(mapping: "personne_avatar", fileNameProperty: "avatar")]
+    #[Assert\NotNull(groups: ['media_object_create'])]
+    public ?File $file = null;
+
+    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
+    #[Groups(['read:course:item', 'read:personne:item'])]
+    public ?string $contentUrl = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $joinAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updateAt = null;
 
     public function __construct()
     {
@@ -180,7 +229,7 @@ class Personne
         return $this->avatar;
     }
 
-    public function setAvatar(string $avatar): self
+    public function setAvatar(?string $avatar): self
     {
         $this->avatar = $avatar;
 
@@ -343,6 +392,18 @@ class Personne
     public function setJoinAt(?\DateTimeImmutable $joinAt): self
     {
         $this->joinAt = $joinAt;
+
+        return $this;
+    }
+
+    public function getUpdateAt(): ?\DateTimeImmutable
+    {
+        return $this->updateAt;
+    }
+
+    public function setUpdateAt(?\DateTimeImmutable $updateAt): self
+    {
+        $this->updateAt = $updateAt;
 
         return $this;
     }

@@ -29,10 +29,17 @@ class OpenApiFactory implements OpenApiFactoryInterface
         }
         
         $schemas = $openApi->getComponents()->getSecuritySchemes();
-        $schemas['cookieAuth'] = new ArrayObject([
-            'type' => 'apiKey',
-            'in' => 'cookie',
-            'name' => 'PHPSESSID',
+        // $schemas['cookieAuth'] = new ArrayObject([
+        //     'type' => 'apiKey',
+        //     'in' => 'cookie',
+        //     'name' => 'PHPSESSID',
+
+        // ]);
+
+        $schemas['bearerAuth'] = new ArrayObject([
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'bearerFormat' => 'JWT',
 
         ]);
 
@@ -47,6 +54,16 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 'password' => [
                     'type' => 'string',
                     'example' => 'test1234'
+                ]
+            ]
+        ]);
+
+        $schemas['Token'] = new ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'Token' => [
+                    'type' => 'string',
+                    'readOnly' => true,
                 ]
             ]
         ]);
@@ -66,11 +83,11 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ),
                 responses: [
                     '200' => [
-                        'description' => 'Utilisateur connecté',
+                        'description' => 'Token JWT',
                         'content' => [
                             'application/json' => [
                                 'schema' => [
-                                    '$ref' => '#/components/schemas/User-post.user.item'
+                                    '$ref' => '#/components/schemas/Token'
                                 ]
                             ]
                         ]
