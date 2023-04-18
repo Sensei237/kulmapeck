@@ -27,7 +27,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             uriTemplate: '/post/{id}/avatar',
             controller: ChangeAvatarController::class,
             deserialize: false,
-            validationContext: ['groups' => ['Default', 'media_object_create']],
+            openapiContext: [
+                'security' => [['bearerAuth' => []]]
+            ],
             openapi: new Operation(
                 requestBody: new RequestBody(
                     content: new \ArrayObject([
@@ -57,18 +59,18 @@ class Personne
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:collection', 'read:exam:collection'])]
+    #[Groups(['read:course:collection', 'read:exam:collection', 'read:payment:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
     #[Assert\Length(min: 2, minMessage: "Le nom doit faire au moins 2 caractères !")]
-    #[Groups(['read:course:collection', 'read:exam:collection', 'post:user:item'])]
+    #[Groups(['read:course:collection', 'read:exam:collection', 'post:user:item', 'read:payment:collection'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['read:course:collection','read:exam:collection', 'post:user:item'])]
+    #[Groups(['read:course:collection','read:exam:collection', 'post:user:item', 'read:payment:collection'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]

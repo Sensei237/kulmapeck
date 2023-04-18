@@ -63,12 +63,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:collection', 'read:exam:collection', 'read:user:item'])]
+    #[Groups(['read:course:collection', 'read:exam:collection', 'read:user:item', 'read:payment:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\Email(message: "L'email {{ value }} n'est pas une adresse e-mail valide !")]
-    #[Groups(['read:course:collection', 'post:user:item', 'post:user:item'])]
+    #[Groups(['read:course:collection', 'post:user:item', 'post:user:item', 'read:payment:collection'])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -106,7 +106,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(mappedBy: "utilisateur", cascade: ['persist', 'remove'])]
     #[
-        Groups(['read:course:collection', 'read:exam:collection', 'post:user:item']),
+        Groups(['read:course:collection', 'read:exam:collection','post:user:item', 'read:payment:collection']),
         Valid()
     ]
     private ?Personne $personne = null;

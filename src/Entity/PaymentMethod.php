@@ -14,19 +14,19 @@ class PaymentMethod
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:payment:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:payment:collection'])]
     private ?string $label = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:payment:collection'])]
     private ?string $code = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:payment:collection'])]
     private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'paymentMethod', targetEntity: Payment::class)]

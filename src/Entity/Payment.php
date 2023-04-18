@@ -5,15 +5,28 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
+use App\Controller\Api\Controller\Payment\StudentPaymentController;
 use App\Repository\PaymentRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
 #[ApiResource(
     operations: [
         new Get(),
-        new GetCollection()
+        new GetCollection(),
+        new GetCollection(
+            uriTemplate: '/student/{id}/payments',
+            controller: StudentPaymentController::class,
+            read: false,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ),
+    ],
+    normalizationContext: [
+        'groups' => ['read:payment:collection']
     ]
 )]
 class Payment
@@ -21,6 +34,7 @@ class Payment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:payment:collection'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'payments')]
@@ -28,28 +42,36 @@ class Payment
     private ?Eleve $eleve = null;
 
     #[ORM\ManyToOne(inversedBy: 'payments')]
+    #[Groups(['read:payment:collection'])]
     private ?Abonnement $abonnement = null;
 
     #[ORM\ManyToOne(inversedBy: 'payments')]
+    #[Groups(['read:payment:collection'])]
     private ?Cours $cours = null;
 
     #[ORM\Column]
+    #[Groups(['read:payment:collection'])]
     private ?\DateTimeImmutable $paidAt = null;
 
     #[ORM\Column]
+    #[Groups(['read:payment:collection'])]
     private ?bool $isExpired = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read:payment:collection'])]
     private ?\DateTimeImmutable $expiredAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'payments')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:payment:collection'])]
     private ?PaymentMethod $paymentMethod = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['read:payment:collection'])]
     private ?string $reference = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read:payment:collection'])]
     private ?float $amount = null;
 
     public function __construct()

@@ -33,30 +33,30 @@ class Abonnement
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:abonnement:collection'])]
+    #[Groups(['read:abonnement:collection', 'read:payment:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:abonnement:collection'])]
+    #[Groups(['read:abonnement:collection', 'read:payment:collection'])]
     private ?string $label = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:abonnement:collection'])]
+    #[Groups(['read:abonnement:collection', 'read:payment:collection'])]
     private ?string $slug = null;
 
     #[ORM\Column]
-    #[Groups(['read:abonnement:collection'])]
+    #[Groups(['read:abonnement:collection', 'read:payment:collection'])]
     private ?float $montant = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    #[Groups(['read:abonnement:collection'])]
+    #[Groups(['read:abonnement:collection', 'read:payment:collection'])]
     private ?int $duree = null;
 
     #[ORM\OneToMany(mappedBy: 'abonnement', targetEntity: Payment::class)]
     private Collection $payments;
 
     #[ORM\Column]
-    #[Groups(['read:abonnement:collection'])]
+    #[Groups(['read:abonnement:collection', 'read:payment:collection'])]
     private ?bool $isRecommended = false;
 
     #[ORM\ManyToMany(targetEntity: AbonnementItem::class, inversedBy: 'abonnements')]
@@ -64,6 +64,7 @@ class Abonnement
     private Collection $items;
 
     #[ORM\ManyToMany(targetEntity: PaymentMethod::class, inversedBy: 'abonnements')]
+    #[Groups(['read:payment:collection'])]
     private Collection $paymentMethods;
 
     public function __construct()

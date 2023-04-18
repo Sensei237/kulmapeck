@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Controller\Api\Controller\Course\DetailsController;
+use App\Controller\Api\Controller\Course\StudentCourseController;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -34,6 +35,17 @@ use Symfony\Component\Validator\Constraints as Assert;
                 controller: DetailsController::class,
                 write: true,
                 normalizationContext: ['groups' => ['read:course:collection', 'read:course:item']]
+            ),
+            new GetCollection(
+                uriTemplate: '/student/{id}/courses',
+                controller: StudentCourseController::class,
+                read: false,
+                normalizationContext: [
+                    'groups' => ['read:course:collection']
+                ],
+                openapiContext: [
+                    'security' => [['bearerAuth' => []]]
+                ]
             ),
         ],
         normalizationContext: [
@@ -65,7 +77,7 @@ class Cours
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Classe::class, inversedBy: 'cours')]
@@ -75,7 +87,7 @@ class Cours
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
-    #[Groups(['read:course:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection'])]
     private ?string $intitule = null;
 
     #[ORM\Column(length: 255)]
@@ -99,7 +111,7 @@ class Cours
     private ?bool $isPublished = null;
 
     #[ORM\Column]
-    #[Groups(['read:course:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection'])]
     private ?bool $isFree = null;
 
     #[ORM\OneToMany(mappedBy: 'cours', cascade: ['persist', 'remove'], targetEntity: Chapitre::class, orphanRemoval: true)]
@@ -124,17 +136,17 @@ class Cours
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
-    #[Groups(['read:course:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection'])]
     private ?string $niveauDifficulte = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
-    #[Groups(['read:course:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection'])]
     private ?string $dureeApprentissage = null;
 
     #[ORM\Column]
-    #[Groups(['read:course:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
@@ -142,7 +154,7 @@ class Cours
     private ?int $vues = null;
 
     #[ORM\Column]
-    #[Groups(['read:course:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection'])]
     private ?bool $isValidated = null;
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Like::class, orphanRemoval: true)]
@@ -168,11 +180,11 @@ class Cours
     private Collection $fAQs;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['read:course:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection'])]
     private ?string $language = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    #[Groups(['read:course:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection'])]
     private ?int $numberOfLessons = null;
 
     #[ORM\Column(length: 255, nullable: true)]
