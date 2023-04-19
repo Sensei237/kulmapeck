@@ -41,7 +41,7 @@
                 <!-- Avatar -->
                 <div class="d-flex align-items-center">
                     <div class="avatar avatar-sm">
-                        <img class="avatar-img rounded-1" src="{{ asset(course.enseignant.avatar) }}" alt="avatar">
+                        <img class="avatar-img rounded-1" src="{{ asset(course.enseignant.utilisateur.personne.avatarPath) }}" alt="avatar">
                     </div>
                     <p class="mb-0 ms-2"><a href="#" class="h6 fw-light mb-0">{{ course.enseignant.utilisateur.personne.firstName }}</a></p>
                 </div>
