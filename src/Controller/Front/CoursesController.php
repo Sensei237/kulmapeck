@@ -425,7 +425,6 @@ class CoursesController extends AbstractController
     {
         $eleve = $eleveRepository->findOneBy(['utilisateur' => $this->getUser()]);
 
-
         if ($this->isGranted('ROLE_STUDENT')) {
             // Si le cours est gratuit on l'ajoute dans la liste des cours de l'élève dans le cas contraire on verifie s'il a 
             // un compte premium si c'est le cas on ajoute le cours dans sa liste de cours dans le cas contraire il doit soit payer 

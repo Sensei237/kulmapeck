@@ -2,6 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
 use App\Repository\QuizRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,12 +16,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuizRepository::class)]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read:quiz:collection']],
+    operations: [
+        new GetCollection(),
+        new Get(),
+    ]
+)]
+#[ApiFilter(
+    SearchFilter::class, properties: ['cours' => 'exact', 'chapitre' => 'exact']
+)]
 class Quiz
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:quizzes:collection', 'read:quiz:collection', 'read:quizresult:collection'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'quizzes')]
@@ -26,34 +41,34 @@ class Quiz
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:quizzes:collection','read:quiz:collection', 'read:quizresult:collection'])]
     private ?string $question = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:quizzes:collection','read:quiz:collection', 'read:quizresult:collection'])]
     private ?string $reference = null;
 
     #[ORM\OneToMany(mappedBy: 'quiz', targetEntity: Proposition::class, orphanRemoval: true)]
     private Collection $propositions;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:quizzes:collection', 'read:quiz:collection', 'read:quizresult:collection'])]
     private ?string $proposition1 = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:quizzes:collection', 'read:quiz:collection', 'read:quizresult:collection'])]
     private ?string $proposition2 = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:quizzes:collection', 'read:quiz:collection', 'read:quizresult:collection'])]
     private ?string $proposition3 = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:quizzes:collection', 'read:quiz:collection', 'read:quizresult:collection'])]
     private ?string $proposition4 = null;
 
     #[ORM\Column]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:quizzes:collection','read:quiz:collection', 'read:quizresult:collection'])]
     private array $propositionJuste = [];
 
     #[ORM\OneToMany(mappedBy: 'quiz', targetEntity: QuizResult::class, orphanRemoval: true)]

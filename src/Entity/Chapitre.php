@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use App\Controller\Api\Controller\Course\Chapter\ShowQuizzesController;
 use App\Repository\ChapitreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,6 +17,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new Get(),
+        new Get(
+            uriTemplate: '/chapitre/{id}/quizzes',
+            controller: ShowQuizzesController::class,
+            read: false,
+            normalizationContext: [
+                'groups' => ['read:quizzes:collection']
+            ],
+            openapiContext: [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ),
     ]
 )]
 class Chapitre
@@ -23,7 +35,7 @@ class Chapitre
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:lecture:collection'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'chapitres')]
@@ -33,11 +45,11 @@ class Chapitre
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le titre du chapitre ne peut être vide !")]
     #[Assert\Length(min: 10, minMessage: "Le titre du chapitre dois avoir au moins 10 caractères !")]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:lecture:collection'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:lecture:collection'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -46,13 +58,15 @@ class Chapitre
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'chapitre', cascade: ['persist', 'remove'], targetEntity: Lesson::class, orphanRemoval: true)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:lesson:item'])]
     private Collection $lessons;
 
     #[ORM\OneToMany(mappedBy: 'chapitre', targetEntity: Quiz::class, orphanRemoval: true)]
+    #[Groups(['read:quizzes:collection'])]
     private Collection $quizzes;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Groups(['read:course:item', 'read:lecture:collection'])]
     private ?int $numero = null;
 
     #[ORM\OneToMany(mappedBy: 'chapitre', targetEntity: Lecture::class)]

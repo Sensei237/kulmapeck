@@ -106,7 +106,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(mappedBy: "utilisateur", cascade: ['persist', 'remove'])]
     #[
-        Groups(['read:course:collection', 'read:exam:collection','post:user:item', 'read:payment:collection']),
+        Groups(['read:course:collection', 'read:exam:collection','post:user:item','read:payment:collection', 'read:quizresult:collection']),
         Valid()
     ]
     private ?Personne $personne = null;

@@ -25,7 +25,7 @@ class Lesson
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:lecture:collection', 'read:lesson:item'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'lessons')]
@@ -35,29 +35,32 @@ class Lesson
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:lecture:collection', 'read:lesson:item'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:lesson:item'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
+    #[Groups(['read:lesson:item'])]
     private ?string $content = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:lesson:item'])]
     private ?string $videoLink = null;
 
     #[ORM\OneToMany(mappedBy: 'lesson', targetEntity: Lecture::class, orphanRemoval: true)]
     private Collection $lectures;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:lecture:collection', 'read:lesson:item'])]
     private ?int $numero = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:lesson:item'])]
     private ?string $poster = null;
 
     public function __construct()

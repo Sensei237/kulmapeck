@@ -4,11 +4,12 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model\Operation;
 use ApiPlatform\OpenApi\Model\RequestBody;
 use App\Controller\Api\Controller\User\ChangeAvatarController;
+use App\Controller\Api\Controller\User\NetworkController;
 use App\Repository\PersonneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -48,6 +49,14 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                 )
             )
         ),
+        new GetCollection(
+            uriTemplate: '/personne/{id}/network',
+            controller: NetworkController::class,
+            read: false,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]]
+            ],
+        ),
     ],
     normalizationContext: [
         'groups' => ['read:personne:item']
@@ -59,52 +68,51 @@ class Personne
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:collection', 'read:exam:collection', 'read:payment:collection'])]
+    #[Groups(['read:course:collection', 'read:exam:collection', 'read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
     #[Assert\Length(min: 2, minMessage: "Le nom doit faire au moins 2 caractères !")]
-    #[Groups(['read:course:collection', 'read:exam:collection', 'post:user:item', 'read:payment:collection'])]
+    #[Groups(['read:course:collection', 'read:exam:collection', 'post:user:item','read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['read:course:collection','read:exam:collection', 'post:user:item', 'read:payment:collection'])]
+    #[Groups(['read:course:collection','read:exam:collection', 'post:user:item','read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
     #[Assert\Length(min: 5, max: 8, maxMessage: "Il faut 8 caractères maximun", minMessage: "Il faut 5 caractères minimum !")]
-    #[Groups(['read:course:collection','read:exam:collection', 'post:user:item'])]
+    #[Groups(['read:course:collection','read:exam:collection','post:user:item', 'read:personne:item'])]
     private ?string $pseudo = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['post:user:item'])]
+    #[Groups(['post:user:item', 'read:personne:item'])]
     private ?\DateTimeInterface $bornAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['post:user:item'])]
+    #[Groups(['post:user:item', 'read:personne:item'])]
     private ?string $lieuNaissance = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
-    #[Groups(['read:course:item', 'read:exam:collection', 'post:user:item'])]
+    #[Groups(['read:course:item', 'read:exam:collection','post:user:item', 'read:personne:item'])]
     private ?string $sexe = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['read:course:collection', 'read:exam:collection', 'read:personne:item'])]
-    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
+    #[Groups(['read:course:collection', 'read:exam:collection','read:personne:item', 'read:personne:item'])]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['read:course:item', 'post:user:item'])]
+    #[Groups(['read:course:item','post:user:item', 'read:personne:item'])]
     private ?string $adresse = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['read:course:item', 'post:user:item'])]
+    #[Groups(['read:course:item','post:user:item', 'read:personne:item'])]
     private ?string $telephone = null;
 
     #[ORM\OneToOne(mappedBy: "personne", cascade: ['persist', 'remove'])]

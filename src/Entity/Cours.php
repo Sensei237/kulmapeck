@@ -17,6 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Controller\Api\Controller\Course\DetailsController;
+use App\Controller\Api\Controller\Course\ShowQuizzesController;
+use App\Controller\Api\Controller\Course\StartCourseController;
 use App\Controller\Api\Controller\Course\StudentCourseController;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -42,6 +44,28 @@ use Symfony\Component\Validator\Constraints as Assert;
                 read: false,
                 normalizationContext: [
                     'groups' => ['read:course:collection']
+                ],
+                openapiContext: [
+                    'security' => [['bearerAuth' => []]]
+                ]
+            ),
+            new Get(
+                uriTemplate: '/cours/{id}/start',
+                controller: StartCourseController::class,
+                read: false,
+                normalizationContext: [
+                    'groups' => ['read:lesson:item']
+                ],
+                openapiContext: [
+                    'security' => [['bearerAuth' => []]]
+                ]
+            ),
+            new Get(
+                uriTemplate: '/cours/{id}/quizzes',
+                controller: ShowQuizzesController::class,
+                read: false,
+                normalizationContext: [
+                    'groups' => ['read:quizzes:collection']
                 ],
                 openapiContext: [
                     'security' => [['bearerAuth' => []]]
@@ -77,7 +101,7 @@ class Cours
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:collection', 'read:payment:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection', 'read:lecture:collection'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Classe::class, inversedBy: 'cours')]
@@ -87,7 +111,7 @@ class Cours
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
-    #[Groups(['read:course:collection', 'read:payment:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection', 'read:lecture:collection'])]
     private ?string $intitule = null;
 
     #[ORM\Column(length: 255)]
@@ -115,7 +139,7 @@ class Cours
     private ?bool $isFree = null;
 
     #[ORM\OneToMany(mappedBy: 'cours', cascade: ['persist', 'remove'], targetEntity: Chapitre::class, orphanRemoval: true)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:lesson:item'])]
     private Collection $chapitres;
 
     #[ORM\ManyToOne(inversedBy: 'cours')]
@@ -217,7 +241,7 @@ class Cours
     private Collection $lectures;
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Quiz::class)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:quizzes:collection'])]
     private Collection $quizzes;
 
     #[ORM\Column(nullable: true)]

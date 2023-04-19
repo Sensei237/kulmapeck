@@ -15,7 +15,7 @@ class Eleve
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:item', 'read:user:item'])]
+    #[Groups(['read:course:item', 'read:user:item', 'read:quizresult:collection'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'eleves')]
@@ -33,7 +33,7 @@ class Eleve
 
     #[ORM\OneToOne(inversedBy: 'eleve', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:quizresult:collection'])]
     private ?User $utilisateur = null;
 
     #[ORM\ManyToOne(inversedBy: 'eleves')]

@@ -2,15 +2,47 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use App\Controller\Api\Controller\Course\Lesson\FinishedController;
+use App\Controller\Api\Controller\Course\StudentLectureController;
 use App\Repository\LectureRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LectureRepository::class)]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read:lecture:collection']],
+    operations: [
+        new GetCollection(
+            uriTemplate: '/student/{id}/lectures',
+            controller: StudentLectureController::class,
+            read: false,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ),
+        new Get(),
+        new Get(
+            uriTemplate: '/lecture/{id}/finished',
+            controller: FinishedController::class,
+            read: false,
+            normalizationContext: [
+                'groups' => ['read:lesson:item']
+            ],
+            openapiContext: [
+                'security' => [['bearerAuth' => []]]
+            ]
+        )
+    ]
+)]
 class Lecture
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:lecture:collection'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'lectures')]
@@ -19,27 +51,35 @@ class Lecture
 
     #[ORM\ManyToOne(inversedBy: 'lectures')]
     #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['read:lecture:collection'])]
     private ?Lesson $lesson = null;
 
     #[ORM\Column]
+    #[Groups(['read:lecture:collection'])]
     private ?\DateTimeImmutable $startAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read:lecture:collection'])]
     private ?\DateTimeImmutable $endAt = null;
 
     #[ORM\Column]
+    #[Groups(['read:lecture:collection'])]
     private ?bool $isFinished = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:lecture:collection'])]
     private ?string $reference = null;
 
     #[ORM\ManyToOne(inversedBy: 'lectures')]
+    #[Groups(['read:lecture:collection'])]
     private ?Chapitre $chapitre = null;
 
     #[ORM\ManyToOne(inversedBy: 'lectures')]
+    #[Groups(['read:lecture:collection'])]
     private ?Cours $cours = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read:lecture:collection'])]
     private ?float $note = null;
 
     public function __construct()
