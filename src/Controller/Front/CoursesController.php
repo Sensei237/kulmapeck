@@ -400,6 +400,7 @@ class CoursesController extends AbstractController
             'membre' => $membre,
             'isCoursePage' => true,
             'eleve' => $eleve,
+            'finishedLectures' => $lectureRepository->findBy(['eleve' => $eleve, 'isFinished' => true]),
         ]);
     }
 

@@ -31,27 +31,28 @@ class KernelSubscriber implements EventSubscriberInterface
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        $session = $this->requestStack->getSession();
-        $personne = $session->get('personne');
+        if (!in_array('application/json', $event->getRequest()->getAcceptableContentTypes())) {
+            $session = $this->requestStack->getSession();
+            $personne = $session->get('personne');
 
-        $siteSettings = $session->get('siteSettings', $this->siteSettingRepository->findOneBy([]));
+            $siteSettings = $session->get('siteSettings', $this->siteSettingRepository->findOneBy([]));
 
-        $session->set('siteSettings', $siteSettings);
+            $session->set('siteSettings', $siteSettings);
 
-        // dd($personne);
-        if ($personne) {
-            $personne = $this->personneRepo->findOneBy(['id' => $personne->getId()]);
-            $user = $personne->getUtilisateur();
-            if ($user->isIsBlocked() || !$user->isVerified()) {
-                $session->remove('personne');
-                $event->setResponse(new RedirectResponse($this->urlGeneratorInterface->generate('app_logout')));
+            // dd($personne);
+            if ($personne) {
+                $personne = $this->personneRepo->findOneBy(['id' => $personne->getId()]);
+                $user = $personne->getUtilisateur();
+                if ($user->isIsBlocked() || !$user->isVerified()) {
+                    $session->remove('personne');
+                    $event->setResponse(new RedirectResponse($this->urlGeneratorInterface->generate('app_logout')));
+                }
             }
+
+            // On verifie si le site est en mode maintenance
+
+            $session->set('siteSettings', $siteSettings);
         }
-
-        // On verifie si le site est en mode maintenance
-
-        $session->set('siteSettings', $siteSettings);
-        
     }
 
     public static function getSubscribedEvents(): array

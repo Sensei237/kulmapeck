@@ -16,418 +16,342 @@
     <script src="{{ asset('assets/vendor/stepper/js/bs-stepper.min.js') }}"></script>
 
     <script>
-        {% if isEditionMode %}
-            $('#cours_media_imageFileUpload').attr('required', false)
-        {% endif %}
+        $(function() {
+            {% if isEditionMode %}
+                $('#cours_media_imageFileUpload').attr('required', false)
+            {% endif %}
 
-        let faq_question = document.getElementById('faq_question');
-        let faq_answer = document.getElementById('faq_answer')
+            let faq_question = document.getElementById('faq_question');
+            let faq_answer = document.getElementById('faq_answer')
 
-        const removeLesson = (e) => {
-            const chapIndex = e.currentTarget.dataset.chapIndex;
-            const lessonIndex = e.currentTarget.dataset.index;
-            const container = $('#cours_chapitres_0_lessons_'+lessonIndex+'_');
-            const elt = $(e.currentTarget)
-            if (e.currentTarget.dataset.id == '') {
-                container.parent().remove()
-                elt.parent().parent().parent().remove();
-            } else {
-                $.ajax({
-                    url: e.currentTarget.dataset.deleteUrl,
-                    success: function(response) {
-                        if (response.hasDone) {
-                            container.parent().remove()
-                            elt.parent().parent().parent().remove();
-                        }
-                        else {
-                            alert("Action impossible")
-                        }
-                    },
-                    error: function() {
-                        alert("Action impossible")
+            const removeLesson = (e) => {
+                const chapIndex = e.currentTarget.dataset.chapIndex;
+                const lessonIndex = e.currentTarget.dataset.index;
+                const container = $('#cours_chapitres_0_lessons_'+lessonIndex+'_');
+                const elt = $(e.currentTarget)
+                if (confirm("Are you sure you want to delete this lesson?")) {
+                    if (e.currentTarget.dataset.id == '') {
+                        container.parent().remove()
+                        elt.parent().parent().parent().remove();
                     }
-                })
-            }
-            
-        }
-
-        const showEditChapModal = (e) => {
-            const chapIndex = e.currentTarget.dataset.chapiter;
-            document.getElementById('chapiter_title').value = document.getElementById('cours_chapitres_'+chapIndex+'_title').value
-            document.getElementById('description_chapitre').value = document.getElementById('cours_chapitres_'+chapIndex+'_description').value
-            document.getElementById('chapiter_number').value = document.getElementById('cours_chapitres_'+chapIndex+'_numero').value
-            $('#updateChap').prev().fadeOut();
-            $('#updateChap').fadeIn();
-            $('#updateChap').attr('data-chap-index', chapIndex);
-        }
-
-        const updateChap = (e) => {
-            const chapIndex = e.currentTarget.dataset.chapIndex;
-            document.getElementById('cours_chapitres_'+chapIndex+'_title').value = document.getElementById('chapiter_title').value
-            document.getElementById('cours_chapitres_'+chapIndex+'_description').value = document.getElementById('description_chapitre').value
-            document.getElementById('cours_chapitres_'+chapIndex+'_numero').value = document.getElementById('chapiter_number').value
-            
-            $('#heading-'+chapIndex+' button').text('Chapter ' + document.getElementById('chapiter_number').value + ' : ' + document.getElementById('chapiter_title').value)
-            $('#collapse-'+chapIndex+' .description').text(document.getElementById('description_chapitre').value)
-
-            $('#addLecture').modal('hide');
-            $('#updateChap').prev().fadeIn();
-            $('#updateChap').fadeOut();
-            document.getElementById('chapiter_title').value = ''
-            document.getElementById('description_chapitre').value = ''
-            document.getElementById('chapiter_number').value = ''
-            
-        }
-
-        const showEditLessonModal = (e) => {
-            const chapIndex = e.currentTarget.dataset.chapIndex;
-            const lessonIndex = e.currentTarget.dataset.index;
-            
-            const lesson_form_title = document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_title').value;
-            const lesson_form_numero = document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_numero').value;
-            const lesson_form_content = document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_content').value;
-            const lesson_form_videoLink = document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_videoLink').value;
-            const isPremium = document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_isPremium').value;
-          
-            document.getElementById('lesson_form_title').value = lesson_form_title;
-            document.getElementById('lesson_form_numero').value = lesson_form_numero;
-            document.getElementById('lesson_form_videoLink').value = lesson_form_videoLink;
-            $('#cke_lesson_form_content iframe').contents().find("body").html(lesson_form_content);
-            document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_isPremium').value = isPremium;
-
-            $('#editLessonBtn').attr('data-index', lessonIndex);
-            $('#editLessonBtn').attr('data-chapiter', chapIndex);
-            $('#editLessonBtn').attr('data-title-reference', e.currentTarget.dataset.titleReference)
-            $('#editLessonBtn').fadeIn();
-            $('#saveLessonBtn').fadeOut()
-
-            $('#addTopic').modal('show')
-        }
-
-        const editLesson = (e) => {
-            e.preventDefault();
-            const chapIndex = e.currentTarget.dataset.chapiter;
-            const lessonIndex = e.currentTarget.dataset.index;
-            const lesson_form_title = document.getElementById('lesson_form_title').value;
-            const lesson_form_videoLink = document.getElementById('lesson_form_videoLink').value;
-            const lesson_form_content = $('#cke_lesson_form_content iframe').contents().find("body").html();
-            const isPremium = $('#isPremium1').is(':checked') ? 0 : 1;
-            const lesson_form_numero = document.getElementById('lesson_form_numero').value;
-            document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_title').value = lesson_form_title;
-            document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_numero').value = lesson_form_numero;
-            document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_content').value = lesson_form_content;
-            document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_videoLink').value = lesson_form_videoLink;
-            document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_isPremium').value = isPremium;
-
-            
-            $('#' + e.currentTarget.dataset.titleReference).text(lesson_form_title)
-
-            document.getElementById('lesson_form_title').value = '';
-            document.getElementById('lesson_form_numero').value = '';
-            document.getElementById('lesson_form_videoLink').value = ''
-            $('#cke_lesson_form_content iframe').contents().find("body").html('');
-            $('#isPremium1').attr('checked', true);
-            $('#isPremium1').attr('checked', false);
-
-            $('#addTopic').modal('hide')
-            $('#editLessonBtn').fadeOut();
-            $('#saveLessonBtn').fadeIn()
-        }
-
-        const addLesson = (e) => {
-            const lessonCollectionHolder = document.getElementById(e.currentTarget.dataset.prototypeContainer)
-            if (lessonCollectionHolder.dataset.index == undefined) {
-                lessonCollectionHolder.setAttribute('data-index', e.currentTarget.dataset.index);
-            }
-
-            const chapIndex = e.currentTarget.dataset.chapiter;
-            const lessonIndex = lessonCollectionHolder.dataset.index;
-
-            const lesson = document.createElement('div');
-            lesson.style = 'display: none';
-            lesson.innerHTML = lessonCollectionHolder
-                .dataset
-                .prototype
-                .replace(
-                    /__name__/g,
-                    lessonIndex
-                );
-            
-            lessonCollectionHolder.appendChild(lesson);
-
-            const lesson_form_title = document.getElementById('lesson_form_title').value;
-            const lesson_form_numero = document.getElementById('lesson_form_numero').value;
-            const lesson_form_videoLink = document.getElementById('lesson_form_videoLink').value
-            const lesson_form_content = $('#cke_lesson_form_content iframe').contents().find("body").html();
-
-            const isPremium = $('#isPremium1').is(':checked') ? 0 : 1;
-
-            document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_title').value = lesson_form_title;
-            document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_numero').value = lesson_form_numero;
-            document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_content').value = lesson_form_content;
-            document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_videoLink').value = lesson_form_videoLink;
-            document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_isPremium').value = isPremium;
-
-            $.ajax({
-                url: '{{ path("app_instructor_add_lesson") }}',
-                type: 'POST', 
-                data: {'title': lesson_form_title, 'numero': lesson_form_numero, 'chapIndex': chapIndex, 'videoLink': lesson_form_videoLink, 'description': lesson_form_content, 'index': lessonIndex}, 
-                success: function(response) {
-                    $('#lessons-container-'+chapIndex).append('<div>' + response + '</div>');
-                    document.querySelectorAll('.delete-lesson-btn').forEach(btn => { btn.addEventListener("click", removeLesson) });
-                    document.querySelectorAll('.edit-lesson-btn').forEach(btn => { btn.addEventListener("click", showEditLessonModal) });
-                }
-            })
-            
-            lessonCollectionHolder.dataset.index++;
-
-            $('#addTopic').modal('hide');
-
-            document.getElementById('lesson_form_title').value = '';
-            document.getElementById('lesson_form_numero').value = '';
-            document.getElementById('lesson_form_videoLink').value = ''
-            $('#cke_lesson_form_content iframe').contents().find("body").html('');
-            $('#isPremium1').attr('checked', true);
-            $('#isPremium1').attr('checked', false);
-        }
-
-        const addChapiter = (e) => {
-            const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
-
-            const item = document.createElement('div');
-            item.style = 'display: none'
-            // item.style = 'display: none';
-            item.innerHTML = collectionHolder
-                .dataset
-                .prototype
-                .replace(
-                    /__name__/g,
-                    collectionHolder.dataset.index
-                );
-
-            const chapiter_title = document.getElementById('chapiter_title').value;
-            const chapiter_description = document.getElementById('description_chapitre').value;
-            const chapterNumber = document.getElementById('chapiter_number').value
-
-            collectionHolder.appendChild(item);
-            var index = collectionHolder.dataset.index;
-
-            document.getElementById('cours_chapitres_' + index + '_title').value = chapiter_title
-            document.getElementById('cours_chapitres_' + index + '_description').value = chapiter_description
-            document.getElementById('cours_chapitres_' + index + '_numero').value = chapterNumber
-
-            const lessonHolder = document.getElementById('cours_chapitres_' + index + '_lessons')
-            $('#cours_chapitres_' + index + '_lessons').attr('data-prototype', lessonHolder.dataset.prototype.replaceAll(
-                '[lessons]['+index+']', 
-                '[lessons][__name__]').replaceAll(
-                    '_lessons_'+index+'_', 
-                    '_lessons___name___'
-                ).replace('lessons_'+index, 'lessons___name___')
-            )
-
-            collectionHolder.dataset.index++;
-
-            $.ajax({
-                url: '{{ path("app_instructor_add_chap") }}',
-                type: 'POST',
-                data: {'title': chapiter_title, 'description': chapiter_description, 'index': index, 'numero': chapterNumber},
-                success: function(response) {
-                    $('#accordionExample2').append(response)
-                    document.querySelectorAll('.add-lesson-btn').forEach(btn => {
-                        btn.addEventListener("click", updateSaveBtnAtr)
-                    });
-                    document
-                    .querySelectorAll('.edit-chapitre-btn').forEach(btn => {
-                        btn.addEventListener("click", showEditChapModal)
-                    });
-                    
-                    document.querySelectorAll('.delete-chapitre-btn').forEach(btn => {
-                        btn.addEventListener('click', (e) => {
-                            document.getElementById(e.currentTarget.dataset.container).remove();
-                            $(e.currentTarget).parent().parent().parent().remove()
-                            return false;
+                    else {
+                        $.ajax({
+                            url: e.currentTarget.dataset.deleteUrl,
+                            success: function(response) {
+                                if (response.hasDone) {
+                                    container.parent().remove()
+                                    elt.parent().parent().parent().remove();
+                                }
+                                else {
+                                    alert("Action impossible")
+                                }
+                            },
+                            error: function() {
+                                alert("Action impossible")
+                            }
                         })
-                    })
-                }, 
-                error: function() {
-                    alert('Error')
-                }
-            })
-
-            document.getElementById('chapiter_title').value = '';
-            document.getElementById('chapiter_number').value = '';
-            document.getElementById('description_chapitre').value = '';
-
-            $('#addLecture').modal('hide');
-
-        };
-
-        const updateSaveBtnAtr = (e) => {
-            const btn = document.getElementById('saveLessonBtn')
-            btn.setAttribute('data-index', e.currentTarget.dataset.index);
-            btn.setAttribute('data-chapiter', e.currentTarget.dataset.chapiter);
-            btn.setAttribute('data-prototype-container', e.currentTarget.dataset.prototypeContainer)
-            $('#editLessonBtn').fadeOut();
-            $('#saveLessonBtn').fadeIn();
-            document.getElementById('lesson_form_title').value = '';
-            document.getElementById('lesson_form_numero').value = '';
-            document.getElementById('lesson_form_videoLink').value = ''
-            $('#cke_lesson_form_content iframe').contents().find("body").html('');
-            $('#isPremium1').attr('checked', true);
-            $('#isPremium1').attr('checked', false);
-        }
-
-        const showaddFAQForm = (e) => {
-            $('.edit_faq_btn').fadeOut();
-            $('.add_faq_btn').fadeIn();
-            faq_question.value = '';
-            faq_answer.value = '';
-        }
-
-        const addFAQ = (e) => {
-            const collectionHolder = document.getElementById(e.currentTarget.dataset.collectionHolderId);
-
-            const item = document.createElement('div');
-            item.style = 'display: none'
-            item.innerHTML = collectionHolder
-                .dataset
-                .prototype
-                .replace(
-                    /__name__/g,
-                    collectionHolder.dataset.index
-                );
-            collectionHolder.appendChild(item);
-
-            const index = collectionHolder.dataset.index
-            collectionHolder.dataset.index++;
-
-            document.getElementById('cours_fAQs_'+index+'_question').value = faq_question.value;
-            document.getElementById('cours_fAQs_'+index+'_answer').value = faq_answer.value;
-
-            $.ajax({
-                url: '{{ path("app_instructor_add_faq") }}',
-                type: "POST", 
-                data: {'index': index, 'question': faq_question.value, 'answer': faq_answer.value},
-                success: function(response) {
-                    $('#faqs').append(response);
-                    document.querySelectorAll('.delete-faq').forEach(btn => {btn.addEventListener("click", deleteFAQ)});
-                    document.querySelectorAll('.edit-faq').forEach(btn => {btn.addEventListener("click", showEditFAQForm)});
-                    
-                }
-            })
-
-            faq_answer.value = ''
-            faq_question.value = ''
-            $('#addQuestion').modal('hide');
-        }
-
-        const showEditFAQForm = (e) => {
-            $('.edit_faq_btn').fadeIn();
-            $('.add_faq_btn').fadeOut();
-
-            faq_question.value = document.getElementById('cours_fAQs_'+e.currentTarget.dataset.index+'_question').value
-            faq_answer.value = document.getElementById('cours_fAQs_'+e.currentTarget.dataset.index+'_answer').value
-            $('#edit_faq_btn').attr('data-index', e.currentTarget.dataset.index)
-        }
-
-        const deleteFAQ = (e) => {
-            const container = $('#cours_fAQs_'+e.currentTarget.dataset.index)
-            const elt = $('#faq-'+e.currentTarget.dataset.index)
-            if (e.currentTarget.dataset.id == '') {
-                container.parent().remove()
-                elt.remove();
-            } else {
-                $.ajax({
-                    url: e.currentTarget.dataset.deleteUrl,
-                    success: function(response) {
-                        if (response.hasDone) {
-                            container.parent().remove()
-                            elt.remove();
-                        }
-                        else {
-                            alert("Action impossible")
-                        }
-                    },
-                    error: function() {
-                        alert("Action impossible")
                     }
-                })
+                }
+
             }
-        }
 
-        const editFAQ = (e) => {
-            const index = e.currentTarget.dataset.index
-            document.getElementById('cours_fAQs_'+index+'_question').value = faq_question.value;
-            document.getElementById('cours_fAQs_'+index+'_answer').value = faq_answer.value;
-
-            $('#faq-'+index+' .question').text(faq_question.value)
-            $('#faq-'+index+' .answer').text(faq_answer.value)
-
-            faq_answer.value = ''
-            faq_question.value = ''
-            $('#addQuestion').modal('hide');
-        }
-
-        document.querySelectorAll('.add_chapiter_btn').forEach(btn => {
-            btn.addEventListener("click", addChapiter)
-        });
-
-        document.querySelectorAll('.edit_chapiter_btn').forEach(btn => {
-            btn.addEventListener("click", updateChap)
-        });
-
-        document.querySelectorAll('.add_lesson_btn').forEach(btn => {
-            btn.addEventListener("click", addLesson)
-        });
-
-        document.querySelectorAll('.edit_lesson_btn').forEach(btn => {
-                btn.addEventListener("click", editLesson)
+            const showEditChapModal = (e) => {
+                const chapIndex = e.currentTarget.dataset.chapiter;
+                document.getElementById('chapiter_title').value = document.getElementById('cours_chapitres_'+chapIndex+'_title').value
+                document.getElementById('description_chapitre').value = document.getElementById('cours_chapitres_'+chapIndex+'_description').value
+                document.getElementById('chapiter_number').value = document.getElementById('cours_chapitres_'+chapIndex+'_numero').value
+                $('#updateChap').prev().fadeOut();
+                $('#updateChap').fadeIn();
+                $('#updateChap').attr('data-chap-index', chapIndex);
             }
-        );
 
-        document.querySelectorAll('.add_faq_btn').forEach(btn => {
-                btn.addEventListener("click", addFAQ)
-            }
-        );
+            const updateChap = (e) => {
+                const chapIndex = e.currentTarget.dataset.chapIndex;
+                document.getElementById('cours_chapitres_'+chapIndex+'_title').value = document.getElementById('chapiter_title').value
+                document.getElementById('cours_chapitres_'+chapIndex+'_description').value = document.getElementById('description_chapitre').value
+                document.getElementById('cours_chapitres_'+chapIndex+'_numero').value = document.getElementById('chapiter_number').value
 
-        document.querySelectorAll('.edit_faq_btn').forEach(btn => {
-                btn.addEventListener("click", editFAQ)
-            }
-        );
+                $('#heading-'+chapIndex+' button').text('Chapter ' + document.getElementById('chapiter_number').value + ' : ' + document.getElementById('chapiter_title').value)
+                $('#collapse-'+chapIndex+' .description').text(document.getElementById('description_chapitre').value)
 
-        document.querySelectorAll('.new-chapitre').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+                $('#addLecture').modal('hide');
                 $('#updateChap').prev().fadeIn();
                 $('#updateChap').fadeOut();
-                $('#chapiter_title').val('');
-                $('#description_chapitre').val('')
-            })
-        })
+                document.getElementById('chapiter_title').value = ''
+                document.getElementById('description_chapitre').value = ''
+                document.getElementById('chapiter_number').value = ''
 
-        document.querySelectorAll('.delete-faq').forEach(btn => {btn.addEventListener("click", deleteFAQ)});
-        document.querySelectorAll('.edit-faq').forEach(btn => {btn.addEventListener("click", showEditFAQForm)});
+            }
 
-        document.querySelectorAll('.add-lesson-btn').forEach(btn => {
-            btn.addEventListener("click", updateSaveBtnAtr)
-        });
-        document.querySelectorAll('.edit-chapitre-btn').forEach(btn => {
-            btn.addEventListener("click", showEditChapModal)
-        });
-        
-        document.querySelectorAll('.delete-chapitre-btn').forEach(btn => {
-            const elt = $(e.currentTarget);
-            const container = document.getElementById(e.currentTarget.dataset.container)
-            btn.addEventListener('click', (e) => {
+            const showEditLessonModal = (e) => {
+                e.preventDefault()
+                $('#uploadFilesDiv').removeClass('d-none').addClass('d-block')
+                const chapIndex = e.currentTarget.dataset.chapIndex;
+                const lessonIndex = e.currentTarget.dataset.index;
+
+                const lesson_form_title = document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_title').value;
+                const lesson_form_numero = document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_numero').value;
+                const lesson_form_content = document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_content').value;
+                const lesson_form_videoLink = document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_videoLink').value;
+                const isPremium = document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_isPremium').value;
+                $("#addLessonVideoFileLabel").attr('for', 'cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_videoFile')
+                $("#addLessonPosterFileLabel").attr('for', 'cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_posterFile')
+
+                document.getElementById('lesson_form_title').value = lesson_form_title;
+                document.getElementById('lesson_form_numero').value = lesson_form_numero;
+                document.getElementById('lesson_form_videoLink').value = lesson_form_videoLink;
+                $('#cke_lesson_form_content iframe').contents().find("body").html(lesson_form_content);
+                document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_isPremium').value = isPremium;
+
+                $('#editLessonBtn').attr('data-index', lessonIndex);
+                $('#editLessonBtn').attr('data-chapiter', chapIndex);
+                $('#editLessonBtn').attr('data-title-reference', e.currentTarget.dataset.titleReference)
+                $('#editLessonBtn').fadeIn();
+                $('#saveLessonBtn').fadeOut()
+
+                $('#addTopic').modal('show')
+            }
+
+            const editLesson = (e) => {
+                e.preventDefault();
+                const chapIndex = e.currentTarget.dataset.chapiter;
+                const lessonIndex = e.currentTarget.dataset.index;
+                const lesson_form_title = document.getElementById('lesson_form_title').value;
+                const lesson_form_videoLink = document.getElementById('lesson_form_videoLink').value;
+                const lesson_form_content = $('#cke_lesson_form_content iframe').contents().find("body").html();
+                const isPremium = $('#isPremium1').is(':checked') ? 0 : 1;
+                const lesson_form_numero = document.getElementById('lesson_form_numero').value;
+                document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_title').value = lesson_form_title;
+                document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_numero').value = lesson_form_numero;
+                document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_content').value = lesson_form_content;
+                document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_videoLink').value = lesson_form_videoLink;
+                document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_isPremium').value = isPremium;
+
+
+                $('#' + e.currentTarget.dataset.titleReference).text(lesson_form_title)
+
+                document.getElementById('lesson_form_title').value = '';
+                document.getElementById('lesson_form_numero').value = '';
+                document.getElementById('lesson_form_videoLink').value = ''
+                $('#cke_lesson_form_content iframe').contents().find("body").html('');
+                $('#isPremium1').attr('checked', true);
+                $('#isPremium1').attr('checked', false);
+
+                $('#addTopic').modal('hide')
+                $('#editLessonBtn').fadeOut();
+                $('#saveLessonBtn').fadeIn()
+            }
+
+            const addLesson = (e) => {
+                const lessonCollectionHolder = document.getElementById(e.currentTarget.dataset.prototypeContainer)
+                if (lessonCollectionHolder.dataset.index == undefined) {
+                    lessonCollectionHolder.setAttribute('data-index', e.currentTarget.dataset.index);
+                }
+
+                const chapIndex = e.currentTarget.dataset.chapiter;
+                const lessonIndex = lessonCollectionHolder.dataset.index;
+
+                const lesson = document.createElement('div');
+                lesson.style = 'display: none';
+                lesson.innerHTML = lessonCollectionHolder
+                    .dataset
+                    .prototype
+                    .replace(
+                        /__name__/g,
+                        lessonIndex
+                    );
+
+                lessonCollectionHolder.appendChild(lesson);
+
+                const lesson_form_title = document.getElementById('lesson_form_title').value;
+                const lesson_form_numero = document.getElementById('lesson_form_numero').value;
+                const lesson_form_videoLink = document.getElementById('lesson_form_videoLink').value
+                const lesson_form_content = $('#cke_lesson_form_content iframe').contents().find("body").html();
+
+                const isPremium = $('#isPremium1').is(':checked') ? 0 : 1;
+
+                document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_title').value = lesson_form_title;
+                document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_numero').value = lesson_form_numero;
+                document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_content').value = lesson_form_content;
+                document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_videoLink').value = lesson_form_videoLink;
+                document.getElementById('cours_chapitres_'+chapIndex+'_lessons_'+lessonIndex+'_isPremium').value = isPremium;
+
+                $.ajax({
+                    url: '{{ path("app_instructor_add_lesson") }}',
+                    type: 'POST',
+                    data: {'title': lesson_form_title, 'numero': lesson_form_numero, 'chapIndex': chapIndex, 'videoLink': lesson_form_videoLink, 'description': lesson_form_content, 'index': lessonIndex},
+                    success: function(response) {
+                        $('#lessons-container-'+chapIndex).append('<div>' + response + '</div>');
+                        document.querySelectorAll('.delete-lesson-btn').forEach(btn => { btn.addEventListener("click", removeLesson) });
+                        document.querySelectorAll('.edit-lesson-btn').forEach(btn => { btn.addEventListener("click", showEditLessonModal) });
+                    }
+                })
+
+                lessonCollectionHolder.dataset.index++;
+
+                $('#addTopic').modal('hide');
+
+                document.getElementById('lesson_form_title').value = '';
+                document.getElementById('lesson_form_numero').value = '';
+                document.getElementById('lesson_form_videoLink').value = ''
+                $('#cke_lesson_form_content iframe').contents().find("body").html('');
+                $('#isPremium1').attr('checked', true);
+                $('#isPremium1').attr('checked', false);
+            }
+
+            const addChapiter = (e) => {
+                const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+
+                const item = document.createElement('div');
+                item.style = 'display: none'
+                // item.style = 'display: none';
+                item.innerHTML = collectionHolder
+                    .dataset
+                    .prototype
+                    .replace(
+                        /__name__/g,
+                        collectionHolder.dataset.index
+                    );
+
+                const chapiter_title = document.getElementById('chapiter_title').value;
+                const chapiter_description = document.getElementById('description_chapitre').value;
+                const chapterNumber = document.getElementById('chapiter_number').value
+
+                collectionHolder.appendChild(item);
+                var index = collectionHolder.dataset.index;
+
+                document.getElementById('cours_chapitres_' + index + '_title').value = chapiter_title
+                document.getElementById('cours_chapitres_' + index + '_description').value = chapiter_description
+                document.getElementById('cours_chapitres_' + index + '_numero').value = chapterNumber
+
+                const lessonHolder = document.getElementById('cours_chapitres_' + index + '_lessons')
+                $('#cours_chapitres_' + index + '_lessons').attr('data-prototype', lessonHolder.dataset.prototype.replaceAll(
+                    '[lessons]['+index+']',
+                    '[lessons][__name__]').replaceAll(
+                        '_lessons_'+index+'_',
+                        '_lessons___name___'
+                    ).replace('lessons_'+index, 'lessons___name___')
+                )
+
+                collectionHolder.dataset.index++;
+
+                $.ajax({
+                    url: '{{ path("app_instructor_add_chap") }}',
+                    type: 'POST',
+                    data: {'title': chapiter_title, 'description': chapiter_description, 'index': index, 'numero': chapterNumber},
+                    success: function(response) {
+                        $('#accordionExample2').append(response)
+                        document.querySelectorAll('.add-lesson-btn').forEach(btn => {
+                            btn.addEventListener("click", updateSaveBtnAtr)
+                        });
+                        document
+                        .querySelectorAll('.edit-chapitre-btn').forEach(btn => {
+                            btn.addEventListener("click", showEditChapModal)
+                        });
+
+                        document.querySelectorAll('.delete-chapitre-btn').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                document.getElementById(e.currentTarget.dataset.container).remove();
+                                $(e.currentTarget).parent().parent().parent().remove()
+                                return false;
+                            })
+                        })
+                    },
+                    error: function() {
+                        alert('Error')
+                    }
+                })
+
+                document.getElementById('chapiter_title').value = '';
+                document.getElementById('chapiter_number').value = '';
+                document.getElementById('description_chapitre').value = '';
+
+                $('#addLecture').modal('hide');
+
+            };
+
+            const updateSaveBtnAtr = (e) => {
+                $('#uploadFilesDiv').addClass('d-none').removeClass('d-block')
+                const btn = document.getElementById('saveLessonBtn')
+                btn.setAttribute('data-index', e.currentTarget.dataset.index);
+                btn.setAttribute('data-chapiter', e.currentTarget.dataset.chapiter);
+                btn.setAttribute('data-prototype-container', e.currentTarget.dataset.prototypeContainer)
+                $('#editLessonBtn').fadeOut();
+                $('#saveLessonBtn').fadeIn();
+                document.getElementById('lesson_form_title').value = '';
+                document.getElementById('lesson_form_numero').value = '';
+                document.getElementById('lesson_form_videoLink').value = ''
+                $('#cke_lesson_form_content iframe').contents().find("body").html('');
+                $('#isPremium1').attr('checked', true);
+                $('#isPremium1').attr('checked', false);
+            }
+
+            const showaddFAQForm = (e) => {
+                $('.edit_faq_btn').fadeOut();
+                $('.add_faq_btn').fadeIn();
+                faq_question.value = '';
+                faq_answer.value = '';
+            }
+
+            const addFAQ = (e) => {
+                const collectionHolder = document.getElementById(e.currentTarget.dataset.collectionHolderId);
+
+                const item = document.createElement('div');
+                item.style = 'display: none'
+                item.innerHTML = collectionHolder
+                    .dataset
+                    .prototype
+                    .replace(
+                        /__name__/g,
+                        collectionHolder.dataset.index
+                    );
+                collectionHolder.appendChild(item);
+
+                const index = collectionHolder.dataset.index
+                collectionHolder.dataset.index++;
+
+                document.getElementById('cours_fAQs_'+index+'_question').value = faq_question.value;
+                document.getElementById('cours_fAQs_'+index+'_answer').value = faq_answer.value;
+
+                $.ajax({
+                    url: '{{ path("app_instructor_add_faq") }}',
+                    type: "POST",
+                    data: {'index': index, 'question': faq_question.value, 'answer': faq_answer.value},
+                    success: function(response) {
+                        $('#faqs').append(response);
+                        document.querySelectorAll('.delete-faq').forEach(btn => {btn.addEventListener("click", deleteFAQ)});
+                        document.querySelectorAll('.edit-faq').forEach(btn => {btn.addEventListener("click", showEditFAQForm)});
+
+                    }
+                })
+
+                faq_answer.value = ''
+                faq_question.value = ''
+                $('#addQuestion').modal('hide');
+            }
+
+            const showEditFAQForm = (e) => {
+                $('.edit_faq_btn').fadeIn();
+                $('.add_faq_btn').fadeOut();
+
+                faq_question.value = document.getElementById('cours_fAQs_'+e.currentTarget.dataset.index+'_question').value
+                faq_answer.value = document.getElementById('cours_fAQs_'+e.currentTarget.dataset.index+'_answer').value
+                $('#edit_faq_btn').attr('data-index', e.currentTarget.dataset.index)
+            }
+
+            const deleteFAQ = (e) => {
+                const container = $('#cours_fAQs_'+e.currentTarget.dataset.index)
+                const elt = $('#faq-'+e.currentTarget.dataset.index)
                 if (e.currentTarget.dataset.id == '') {
-                    container.remove();
-                    elt.parent().parent().parent().remove()
+                    container.parent().remove()
+                    elt.remove();
                 } else {
                     $.ajax({
                         url: e.currentTarget.dataset.deleteUrl,
                         success: function(response) {
                             if (response.hasDone) {
-                                container.remove();
-                                elt.parent().parent().parent().remove()
+                                container.parent().remove()
+                                elt.remove();
                             }
                             else {
                                 alert("Action impossible")
@@ -438,13 +362,104 @@
                         }
                     })
                 }
-                
-                return false;
-            })
-        })
+            }
 
-        document.querySelectorAll('.delete-lesson-btn').forEach(btn => { btn.addEventListener("click", removeLesson) });
-        document.querySelectorAll('.edit-lesson-btn').forEach(btn => { btn.addEventListener("click", showEditLessonModal) });
+            const editFAQ = (e) => {
+                const index = e.currentTarget.dataset.index
+                document.getElementById('cours_fAQs_'+index+'_question').value = faq_question.value;
+                document.getElementById('cours_fAQs_'+index+'_answer').value = faq_answer.value;
+
+                $('#faq-'+index+' .question').text(faq_question.value)
+                $('#faq-'+index+' .answer').text(faq_answer.value)
+
+                faq_answer.value = ''
+                faq_question.value = ''
+                $('#addQuestion').modal('hide');
+            }
+
+            document.querySelectorAll('.add_chapiter_btn').forEach(btn => {
+                btn.addEventListener("click", addChapiter)
+            });
+
+            document.querySelectorAll('.edit_chapiter_btn').forEach(btn => {
+                btn.addEventListener("click", updateChap)
+            });
+
+            document.querySelectorAll('.add_lesson_btn').forEach(btn => {
+                btn.addEventListener("click", addLesson)
+            });
+
+            document.querySelectorAll('.edit_lesson_btn').forEach(btn => {
+                    btn.addEventListener("click", editLesson)
+                }
+            );
+
+            document.querySelectorAll('.add_faq_btn').forEach(btn => {
+                    btn.addEventListener("click", addFAQ)
+                }
+            );
+
+            document.querySelectorAll('.edit_faq_btn').forEach(btn => {
+                    btn.addEventListener("click", editFAQ)
+                }
+            );
+
+            document.querySelectorAll('.new-chapitre').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    $('#updateChap').prev().fadeIn();
+                    $('#updateChap').fadeOut();
+                    $('#chapiter_title').val('');
+                    $('#description_chapitre').val('')
+                })
+            })
+
+            document.querySelectorAll('.delete-faq').forEach(btn => {btn.addEventListener("click", deleteFAQ)});
+            document.querySelectorAll('.edit-faq').forEach(btn => {btn.addEventListener("click", showEditFAQForm)});
+
+            document.querySelectorAll('.add-lesson-btn').forEach(btn => {
+                btn.addEventListener("click", updateSaveBtnAtr)
+            });
+            document.querySelectorAll('.edit-chapitre-btn').forEach(btn => {
+                btn.addEventListener("click", showEditChapModal)
+            });
+        
+
+            document.querySelectorAll('.delete-chapitre-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const elt = $(e.currentTarget);
+                    const container = document.getElementById(e.currentTarget.dataset.container)
+                    if (confirm("Are sure you want to delete this chapter?")) {
+                        if (e.currentTarget.dataset.id == '') {
+                            container.remove();
+                            elt.parent().parent().parent().remove()
+                        }
+                        else {
+                            $.ajax({
+                                url: e.currentTarget.dataset.deleteUrl,
+                                success: function(response) {
+                                    if (response.hasDone) {
+                                        container.remove();
+                                        elt.parent().parent().parent().remove()
+                                    }
+                                    else {
+                                        alert("Action impossible")
+                                    }
+                                },
+                                error: function() {
+                                    alert("Action impossible")
+                                }
+                            })
+                        }
+                    }
+
+                    return false;
+                })
+            })
+
+            document.querySelectorAll('.delete-lesson-btn').forEach(btn => { btn.addEventListener("click", removeLesson) });
+            document.querySelectorAll('.edit-lesson-btn').forEach(btn => { btn.addEventListener("click", showEditLessonModal) });
+    })
+
                 
     </script>
 {% endblock %}
@@ -577,8 +592,13 @@
                                             {{ form_row(form.niveauDifficulte) }}
                                         </div>
 
-                                        <!-- Course category -->
-                                        <div class="col-md-12">
+                                        <!-- Course skill level -->
+                                        <div class="col-md-5">
+                                            {{ form_row(form.skillLevel) }}
+                                        </div>
+
+                                        <!-- Course classes -->
+                                        <div class="col-md-7">
                                             {{ form_row(form.classe) }}
                                         </div>
 
@@ -856,8 +876,41 @@
                             {{ form_row(lessonForm.numero) }}
                         </div>
                         <!-- Video link -->
-                        <div class="col-md-12">
+                        <div class="col-md-12 d-none">
                             {{ form_row(lessonForm.videoLink) }}
+                        </div>
+
+                        <div class="col-md-12">
+                            <div id="uploadFilesDiv" class="d-none">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Video File</label>
+                                        <div style="position: relative">
+                                            <label style="cursor:pointer;" for="" id="addLessonVideoFileLabel" class="d-block">
+                                            <span>
+                                                <div class="custom-file">
+                                                    <div class="form-control stretched-link custom-file-input">
+                                                    <label class="custom-file-label">Upload video file</label></div>
+                                                </div>
+                                            </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Poster File</label>
+                                        <div style="position: relative">
+                                            <label style="cursor:pointer;" for="" id="addLessonPosterFileLabel" class="d-block">
+                                            <span>
+                                                <div class="custom-file">
+                                                    <div class="form-control stretched-link custom-file-input">
+                                                    <label class="custom-file-label">Upload poster file</label></div>
+                                                </div>
+                                            </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!-- Description -->
                         <div class="col-12 mt-3">
@@ -896,17 +949,17 @@
             </div>
             <div class="modal-body">
                 <form class="row text-start g-3">
-                            <!-- Question -->
-                            <div class="col-12">
-                                <label class="form-label">Question</label>
-                                <input class="form-control" id="faq_question" type="text" placeholder="Write a question">
-                            </div>
-                            <!-- Answer -->
-                            <div class="col-12 mt-3">
-                                <label class="form-label">Answer</label>
-                                <textarea class="form-control" id="faq_answer" rows="4" placeholder="Write a answer" spellcheck="false"></textarea>
-                            </div>
-                        </form>
+                    <!-- Question -->
+                    <div class="col-12">
+                        <label class="form-label">Question</label>
+                        <input class="form-control" id="faq_question" type="text" placeholder="Write a question">
+                    </div>
+                    <!-- Answer -->
+                    <div class="col-12 mt-3">
+                        <label class="form-label">Answer</label>
+                        <textarea class="form-control" id="faq_answer" rows="4" placeholder="Write a answer" spellcheck="false"></textarea>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>

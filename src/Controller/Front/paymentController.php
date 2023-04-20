@@ -27,7 +27,7 @@ class paymentController extends AbstractController
     }
 
     #[Route('/course/{slug}/buy', name: 'app_front_payment_buy_course', methods: ['GET', 'POST'])]
-    public function devenirPremiumOrByCourse(Cours $course, Request $request, PaymentMethodRepository $paymentMethodRepository, EleveRepository $eleveRepository)
+    public function devenirPremiumOrByCourse(Cours $course, Request $request, PaymentMethodRepository $paymentMethodRepository, PaymentRepository $paymentRepository, EleveRepository $eleveRepository)
     {
         // La fonction nécessite que l'on soit connecté et surtout qu'on soit élève
         $this->denyAccessUnlessGranted('ROLE_STUDENT');
@@ -43,7 +43,15 @@ class paymentController extends AbstractController
                 $paymentMethod = $paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
                 if ($this->initierPayment($course, $paymentMethod)) {
                     $eleve->addCour($course);
-                    $eleveRepository->save($eleve, true);
+                    $payment = new Payment();
+                    $payment->setEleve($eleve)
+                        ->setPaymentMethod($paymentMethod)
+                        ->setCours($course)->setPaidAt(new \DateTimeImmutable())
+                        ->setIsExpired(false)
+                        ->setAmount($course
+                        ->getMontantAbonnement())
+                        ->setReference('PAI-' . time() + rand(10000, 100000000000) + $payment->getId());
+                    $paymentRepository->save($payment, true);
                     $this->addFlash('success', "Votre paiement a été effectué !");
 
                     return $this->redirectToRoute('app_front_course_details', ['slug' => $course->getSlug()]);

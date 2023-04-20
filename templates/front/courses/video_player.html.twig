@@ -101,8 +101,8 @@
 			<div class="overflow-hidden fullscreen-video w-100">
 				<!-- Full screen video START -->
 				<div class="video-player rounded-3">
-					<video controls crossorigin="anonymous" autoplay playsinline poster="{{asset('uploads/media/courses/' ~ lesson.poster)}}">
-						<source src="{{ lesson.videoLink }}" type="video/mp4">
+					<video controls crossorigin="anonymous" autoplay playsinline poster="{{asset(lesson.poster)}}">
+						<source src="{{ asset('uploads/media/courses/lessons/videos/' ~ lesson.videoLink) }}" type="video/mp4">
 						<!-- Caption files -->
 						<track kind="captions" label="English" srclang="en" src="assets/images/videos/en.vtt" default>
 						<track kind="captions" label="French" srclang="fr" src="assets/images/videos/fr.vtt">
@@ -156,7 +156,7 @@
                                                     <div id="collapse{{ loop.index }}" class="accordion-collapse collapse show" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#accordionExample">
                                                         <div class="accordion-body px-3">
                                                             <div class="vstack gap-3">
-                                                                {% for less in chap.lessons|sort((c, d) => c.numero <=> b.numero) %}
+                                                                {% for less in chap.lessons|sort((c, d) => c.numero <=> d.numero) %}
                                                                     <div class="d-flex justify-content-between align-items-center">
                                                                         <div class="position-relative d-flex align-items-center">
                                                                             <a href="#" class="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">

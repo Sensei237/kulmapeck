@@ -35,9 +35,13 @@ class SkillLevel
     #[ORM\OneToMany(mappedBy: 'skillLevel', targetEntity: Classe::class)]
     private Collection $classes;
 
+    #[ORM\OneToMany(mappedBy: 'skillLevel', targetEntity: Cours::class)]
+    private Collection $cours;
+
     public function __construct()
     {
         $this->classes = new ArrayCollection();
+        $this->cours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,6 +97,36 @@ class SkillLevel
             // set the owning side to null (unless already changed)
             if ($class->getSkillLevel() === $this) {
                 $class->setSkillLevel(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Cours>
+     */
+    public function getCours(): Collection
+    {
+        return $this->cours;
+    }
+
+    public function addCour(Cours $cour): self
+    {
+        if (!$this->cours->contains($cour)) {
+            $this->cours->add($cour);
+            $cour->setSkillLevel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCour(Cours $cour): self
+    {
+        if ($this->cours->removeElement($cour)) {
+            // set the owning side to null (unless already changed)
+            if ($cour->getSkillLevel() === $this) {
+                $cour->setSkillLevel(null);
             }
         }
 

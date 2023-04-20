@@ -23,11 +23,11 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
 #[ApiResource(
+    types: ['https://schema.org/MediaObject'],
     operations: [
         new Post(
             uriTemplate: '/post/{id}/avatar',
             controller: ChangeAvatarController::class,
-            deserialize: false,
             openapiContext: [
                 'security' => [['bearerAuth' => []]]
             ],
@@ -47,46 +47,46 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                         ]
                     ])
                 )
-            )
+            ),
+            deserialize: false
         ),
         new GetCollection(
             uriTemplate: '/personne/{id}/network',
             controller: NetworkController::class,
-            read: false,
             openapiContext: [
                 'security' => [['bearerAuth' => []]]
             ],
+            read: false,
         ),
     ],
     normalizationContext: [
         'groups' => ['read:personne:item']
     ],
-    types: ['https://schema.org/MediaObject'],
 )]
 class Personne
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:collection', 'read:exam:collection', 'read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
+    #[Groups(['read:course:collection', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection', 'read:exam:collection', 'read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
     #[Assert\Length(min: 2, minMessage: "Le nom doit faire au moins 2 caractères !")]
-    #[Groups(['read:course:collection', 'read:exam:collection', 'post:user:item','read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
+    #[Groups(['read:course:collection', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection', 'read:exam:collection', 'post:user:item','read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['read:course:collection','read:exam:collection', 'post:user:item','read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
+    #[Groups(['read:course:collection', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection','read:exam:collection', 'post:user:item','read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
-    #[Assert\Length(min: 5, max: 8, maxMessage: "Il faut 8 caractères maximun", minMessage: "Il faut 5 caractères minimum !")]
-    #[Groups(['read:course:collection','read:exam:collection','post:user:item', 'read:personne:item'])]
+    #[Assert\Length(min: 5, max: 8, minMessage: "Il faut 5 caractères minimum !", maxMessage: "Il faut 8 caractères maximun")]
+    #[Groups(['read:course:collection', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection','read:exam:collection','post:user:item', 'read:personne:item'])]
     private ?string $pseudo = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -100,11 +100,11 @@ class Personne
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
-    #[Groups(['read:course:item', 'read:exam:collection','post:user:item', 'read:personne:item'])]
+    #[Groups(['read:course:item', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection', 'read:exam:collection','post:user:item', 'read:personne:item'])]
     private ?string $sexe = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['read:course:collection', 'read:exam:collection','read:personne:item', 'read:personne:item'])]
+    #[Groups(['read:course:collection', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection', 'read:exam:collection','read:personne:item', 'read:personne:item'])]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -142,7 +142,7 @@ class Personne
     public ?File $file = null;
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'])]
-    #[Groups(['read:course:item', 'read:personne:item'])]
+    #[Groups(['read:course:item', 'read:review:collection', 'read:personne:item'])]
     public ?string $contentUrl = null;
 
     #[ORM\Column(nullable: true)]

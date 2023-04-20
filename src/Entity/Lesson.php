@@ -10,10 +10,13 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: LessonRepository::class)]
+#[Vich\Uploadable]
 #[ApiResource(
     operations: [
         new Get(),
@@ -62,6 +65,15 @@ class Lesson
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['read:lesson:item'])]
     private ?string $poster = null;
+
+    #[Vich\UploadableField(mapping: "lesson_poster", fileNameProperty: "poster")]
+    public ?File $posterFile = null;
+
+    #[Vich\UploadableField(mapping: "lesson_poster", fileNameProperty: "videoLink")]
+    public ?File $videoFile = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     public function __construct()
     {
@@ -178,15 +190,27 @@ class Lesson
     public function getPoster(): ?string
     {
         if ($this->poster == null) {
-            return $this->getChapitre()->getCours()->getMedia()->getImageFile();
+            return 'uploads/media/course/' . $this->getChapitre()->getCours()->getMedia()->getImageFile();
         }
 
-        return $this->poster;
+        return 'uploads/media/courses/lessons/posters/' . $this->poster;
     }
 
     public function setPoster(?string $poster): self
     {
         $this->poster = $poster;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

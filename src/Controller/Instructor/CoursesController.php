@@ -119,14 +119,13 @@ class CoursesController extends AbstractController
                     if ($lesson->getSlug() === null) {
                         $lesson->setSlug($slugger->slug($lesson->getTitle() . ' ' . time()));
                     }
+                    $lesson->setUpdatedAt(new \DateTimeImmutable());
                     $lesson->setChapitre($chapitre);
                 }
             }
 
+            $cours->setUpdatedAt(new \DateTimeImmutable());
             $coursRepository->save($cours, true);
-
-            
-            
 
             return $this->redirectToRoute('app_instructor_courses', [], Response::HTTP_SEE_OTHER);
         }

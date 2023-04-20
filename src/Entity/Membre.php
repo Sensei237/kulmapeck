@@ -6,6 +6,7 @@ use App\Repository\MembreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MembreRepository::class)]
 class Membre
@@ -13,6 +14,7 @@ class Membre
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:sujet:collection', 'read:sujet:item', 'read:forum:messsage:collection'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Forum::class, inversedBy: 'membres')]
@@ -26,6 +28,7 @@ class Membre
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:sujet:collection', 'read:sujet:item', 'read:forum:messsage:collection'])]
     private ?User $utilisateur = null;
 
     public function __construct()

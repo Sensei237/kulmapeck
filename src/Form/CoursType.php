@@ -6,6 +6,7 @@ use App\Entity\Categorie;
 use App\Entity\Classe;
 use App\Entity\Cours;
 use App\Entity\PaymentMethod;
+use App\Entity\SkillLevel;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -42,6 +43,7 @@ class CoursType extends AbstractType
                 'class' => Classe::class,
                 'choice_label' => 'name',
                 'multiple' => true,
+                'required' => false,
                 'attr' => [
                     'class' => 'form-select js-choice border-0 z-index-9 bg-transparent',
                     'aria-label' => ".form-select-sm",
@@ -190,6 +192,20 @@ class CoursType extends AbstractType
                     'data-search-enabled' => "true"
                 ],
                 'label' => 'Payments methods',
+                'label_attr' => [
+                    'class' => 'form-label'
+                ],
+            ])
+            ->add('skillLevel', EntityType::class, [
+                'class' => SkillLevel::class,
+                'choice_label' => 'name',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-select js-choice border-0 z-index-9 bg-transparent',
+                    'aria-label' => ".form-select-sm",
+                    'data-search-enabled' => "true"
+                ],
+                'label' => 'Skill Level',
                 'label_attr' => [
                     'class' => 'form-label'
                 ],

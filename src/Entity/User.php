@@ -63,12 +63,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:collection', 'read:exam:collection', 'read:user:item', 'read:payment:collection'])]
+    #[Groups(['read:course:collection', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:exam:collection', 'read:user:item', 'read:payment:collection', 'read:review:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\Email(message: "L'email {{ value }} n'est pas une adresse e-mail valide !")]
-    #[Groups(['read:course:collection', 'post:user:item', 'post:user:item', 'read:payment:collection'])]
+    #[Groups(['read:course:collection', 'read:sujet:collection', 'post:user:item', 'post:user:item', 'read:payment:collection', 'read:review:collection'])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -106,17 +106,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(mappedBy: "utilisateur", cascade: ['persist', 'remove'])]
     #[
-        Groups(['read:course:collection', 'read:exam:collection','post:user:item','read:payment:collection', 'read:quizresult:collection']),
+        Groups(['read:course:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection', 'read:exam:collection','post:user:item','read:payment:collection', 'read:quizresult:collection']),
         Valid()
     ]
     private ?Personne $personne = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['read:user:item'])]
+    #[Groups(['read:user:item', 'read:review:collection'])]
     private ?bool $isBlocked = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['read:user:item'])]
+    #[Groups(['read:user:item', 'read:review:collection'])]
     private ?bool $isAdmin = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Exam::class)]

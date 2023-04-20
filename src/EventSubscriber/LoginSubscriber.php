@@ -25,10 +25,12 @@ class LoginSubscriber implements EventSubscriberInterface
 
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event): void
     {
-        $personne = $this->personneRepository->findOneBy(['utilisateur' => $event->getAuthenticationToken()->getUser()]);
+        if (!in_array('application/json', $this->requestStack->getCurrentRequest()->getAcceptableContentTypes())) {
+            $personne = $this->personneRepository->findOneBy(['utilisateur' => $event->getAuthenticationToken()->getUser()]);
 
-        if ($personne) {
-            $this->requestStack->getSession()->set('personne', $personne);
+            if ($personne) {
+                $this->requestStack->getSession()->set('personne', $personne);
+            }
         }
 
     }

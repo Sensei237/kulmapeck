@@ -4,6 +4,10 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use App\Controller\Api\Controller\Course\Review\CourseReviewController;
+use App\Controller\Api\Controller\Course\Review\PostReviewController;
+use App\Controller\Api\Controller\Course\ShowQuizzesController;
 use App\Repository\ReviewRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,15 +16,31 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection()
-    ]
+        new GetCollection(),
+        new GetCollection(
+            uriTemplate: 'review/{id}/course',
+            controller: CourseReviewController::class,
+            read: false,
+        ),
+        new Post(
+            uriTemplate: 'review/{id}/new',
+            controller: PostReviewController::class,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]],
+                'description' => "Cette route permet de poster une review, l'élève doit être connecté et l'id attendu sur l'url represente le cours <br>Rating represente la note et message est le commetaire redigé par l'élève"
+            ]
+        ),
+
+    ],
+    normalizationContext: ['groups' => ['read:review:collection']],
+    denormalizationContext: ['groups' => ['post:review:item']],
 )]
 class Review
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:review:collection'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'reviews')]
@@ -28,19 +48,18 @@ class Review
     private ?Cours $cours = null;
 
     #[ORM\ManyToOne(inversedBy: 'reviews')]
-    #[Groups(['read:course:item'])]
     private ?Eleve $eleve = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:review:collection', 'post:review:item'])]
     private ?int $rating = null;
 
     #[ORM\Column]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:review:collection'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['read:course:item'])]
+    #[Groups(['read:course:item', 'read:review:collection', 'post:review:item'])]
     private ?string $message = null;
 
     public function __construct()

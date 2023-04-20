@@ -20,7 +20,24 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        
+
+        main:
+            lazy: true
+            provider: app_user_provider
+            custom_authenticator: App\Security\AppAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
+            remember_me:
+                secret: '%kernel.secret%' # required
+                lifetime: 31536000 # 1 an en seconde
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#the-firewall
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
         login:
             pattern: ^/api/login
             stateless: true
@@ -39,24 +56,6 @@ security:
             refresh_jwt:
                 check_path: /api/token/refresh
 
-        main:
-            lazy: true
-            provider: app_user_provider
-            json_login:
-                check_path: api_login
-            custom_authenticator: App\Security\AppAuthenticator
-            logout:
-                path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
-            remember_me:
-                secret:   '%kernel.secret%' # required
-                lifetime: 31536000 # 1 an en seconde
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
@@ -65,6 +64,7 @@ security:
         - { path: ^/instructor, roles: ROLE_INSTRUCTOR }
         - { path: ^/student, roles: ROLE_STUDENT}
         - { path: ^/course/, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/payment/, roles: IS_AUTHENTICATED_FULLY}
         - { path: ^/api/(login|token/refresh), roles: PUBLIC_ACCESS }
         # - { path: ^/api/login, roles: PUBLIC_ACCESS }
         # - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

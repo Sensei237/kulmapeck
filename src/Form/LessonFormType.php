@@ -4,6 +4,7 @@ namespace App\Form;
 
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -45,6 +46,7 @@ class LessonFormType extends AbstractType
                 ],
                 'required' => false,
             ])
+
         ;
     }
 

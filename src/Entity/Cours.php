@@ -28,56 +28,56 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(
         operations: [
             new GetCollection(
-                normalizationContext: ['groups' => ['read:course:collection']],
-                options: ['isActivated' => true]
+                options: ['isActivated' => true],
+                normalizationContext: ['groups' => ['read:course:collection']]
             ),
             new Get(
-                name: 'course_details',
                 uriTemplate: '/cours/{id}/details',
                 controller: DetailsController::class,
+                normalizationContext: ['groups' => ['read:course:collection', 'read:course:item']],
                 write: true,
-                normalizationContext: ['groups' => ['read:course:collection', 'read:course:item']]
+                name: 'course_details'
             ),
             new GetCollection(
                 uriTemplate: '/student/{id}/courses',
                 controller: StudentCourseController::class,
-                read: false,
+                openapiContext: [
+                    'security' => [['bearerAuth' => []]]
+                ],
                 normalizationContext: [
                     'groups' => ['read:course:collection']
                 ],
-                openapiContext: [
-                    'security' => [['bearerAuth' => []]]
-                ]
+                read: false
             ),
             new Get(
                 uriTemplate: '/cours/{id}/start',
                 controller: StartCourseController::class,
-                read: false,
+                openapiContext: [
+                    'security' => [['bearerAuth' => []]]
+                ],
                 normalizationContext: [
                     'groups' => ['read:lesson:item']
                 ],
-                openapiContext: [
-                    'security' => [['bearerAuth' => []]]
-                ]
+                read: false
             ),
             new Get(
                 uriTemplate: '/cours/{id}/quizzes',
                 controller: ShowQuizzesController::class,
-                read: false,
+                openapiContext: [
+                    'security' => [['bearerAuth' => []]]
+                ],
                 normalizationContext: [
                     'groups' => ['read:quizzes:collection']
                 ],
-                openapiContext: [
-                    'security' => [['bearerAuth' => []]]
-                ]
+                read: false
             ),
         ],
         normalizationContext: [
             'groups' => ['read:course:collection']
         ],
-        paginationMaximumItemsPerPage: 20,
-        paginationItemsPerPage: 10,
         paginationClientItemsPerPage: true,
+        paginationItemsPerPage: 10,
+        paginationMaximumItemsPerPage: 20,
     ),
     ApiFilter(
         SearchFilter::class, properties: [
@@ -199,7 +199,7 @@ class Cours
     #[ORM\OneToOne(mappedBy: 'cours', cascade: ['persist', 'remove'])]
     private ?Forum $forum = null;
 
-    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: FAQ::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: FAQ::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[Groups(['read:course:item'])]
     private Collection $fAQs;
 
@@ -250,6 +250,9 @@ class Cours
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: QuizLost::class)]
     private Collection $quizLosts;
+
+    #[ORM\ManyToOne(inversedBy: 'cours')]
+    private ?SkillLevel $skillLevel = null;
 
     public function __construct()
     {
@@ -913,5 +916,17 @@ class Cours
     public function getNumberOfStudents(): int
     {
         return $this->getEleves()->count();
+    }
+
+    public function getSkillLevel(): ?SkillLevel
+    {
+        return $this->skillLevel;
+    }
+
+    public function setSkillLevel(?SkillLevel $skillLevel): self
+    {
+        $this->skillLevel = $skillLevel;
+
+        return $this;
     }
 }
