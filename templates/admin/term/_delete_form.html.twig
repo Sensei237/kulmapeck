@@ -1,0 +1,4 @@
+<form method="post" class="d-inline" action="{{ path('app_admin_term_delete', {'id': term.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ term.id) }}">
+    <button class="btn btn-danger-soft">Delete</button>
+</form>

@@ -1,0 +1,21 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Terms and | Edit{% endblock %}
+
+{% block actionBtn %}
+    {{ include('admin/term/_delete_form.html.twig') }}
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
+
+{% block mainContent %}
+    <div class="card bg-transparent border">
+        <!-- Card body START -->
+        <div class="card-body">
+            {{ include('admin/term/_form.html.twig', {'button_label': 'Update'}) }}
+        </div>
+    </div>
+{% endblock %}
+

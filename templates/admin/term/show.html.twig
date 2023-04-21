@@ -1,0 +1,24 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Terms and | Show{% endblock %}
+
+{% block actionBtn %}
+    {{ include('admin/term/_delete_form.html.twig') }}
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
+
+{% block mainContent %}
+    <div class="card bg-transparent border">
+        <div class="card-header bg-light border-bottom">
+            <h3 class="card-header-pills">{{ {{ term.title }} }}</h3>
+            <b class="badge badge-{{ term.isOnline ? 'success' : 'danger' }}">{{ term.isOnline ? 'Online' : 'Not Online' }}</b>
+        </div>
+        <!-- Card body START -->
+        <div class="card-body">
+            <div>{{ term.content|raw }}</div>
+        </div>
+    </div>
+{% endblock %}

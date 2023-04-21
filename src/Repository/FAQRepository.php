@@ -39,6 +39,17 @@ class FAQRepository extends ServiceEntityRepository
         }
     }
 
+    public function findFAQs(bool $isValidated = true): array
+    {
+        return $this->createQueryBuilder('f')
+            ->join('f.cours', 'c')
+            ->andWhere('c.isValidated = :isValidated')
+            ->setParameter('isValidated', $isValidated)
+            ->orderBy('f.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return FAQ[] Returns an array of FAQ objects
 //     */

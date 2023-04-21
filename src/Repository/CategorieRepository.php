@@ -57,6 +57,21 @@ class CategorieRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findBCategoriesForum(int $maxResult = null): array
+    {
+        return $this->createQueryBuilder('c')
+            ->join('c.cours', 'co')
+            ->join('co.forum', 'f')
+            ->join('f.sujets', 's')
+            ->andWhere('co.isValidated = :isValidated')
+            ->setParameter('isValidated', true)
+            ->orderBy('c.name', 'ASC')
+            ->setMaxResults($maxResult)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     public function findCats(bool $isSub = false) 
     {
         return $this->createQueryBuilder('c')

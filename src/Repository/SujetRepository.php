@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Categorie;
 use App\Entity\Sujet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -37,6 +38,30 @@ class SujetRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function searchSubjects(string $text): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.content LIKE :val')
+            ->setParameter('val', '%' . $text . '%')
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findByCourseCategory(Categorie $categorie): array
+    {
+        return $this->createQueryBuilder('s')
+            ->join('s.forum', 'f')
+            ->join('f.cours', 'c')
+            ->andWhere('c.categorie = :category')
+            ->setParameter('category', $categorie)
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
     }
 
 //    /**

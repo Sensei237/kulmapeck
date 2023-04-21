@@ -102,6 +102,18 @@ class CoursRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findCoursesSubject(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->join('c.forum', 'f')
+            ->join('f.subject', 's')
+            ->andWhere('c.isActivated = :isActivated')
+            ->setParameter('isActivated', true)
+            ->setMaxResults(15)
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @return Cours[] Returns an array of Cours objects
      */

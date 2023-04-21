@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Review;
+use App\Entity\SiteSetting;
+use App\Form\ContactType;
 use App\Repository\AbonnementItemRepository;
 use App\Repository\AbonnementRepository;
 use App\Repository\CategorieRepository;
@@ -10,9 +12,13 @@ use App\Repository\CoursRepository;
 use App\Repository\EleveRepository;
 use App\Repository\FormationRepository;
 use App\Repository\ReviewRepository;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -51,10 +57,34 @@ class FrontController extends AbstractController
     }
 
     #[Route('/contact-us', name: 'app_front_contact')]
-    public function contact(): Response
+    public function contact(Request $request, MailerInterface $mailer, SessionInterface $session): Response
     {
+        $contactForm = $this->createForm(ContactType::class);
+        $contactForm->handleRequest($request);
+        if ($contactForm->isSubmitted() && $contactForm->isValid()) {
+            $siteSettings = $session->get('siteSettings');
+            $supportEmail = 'support@mail.com';
+            if ($siteSettings instanceof SiteSetting) {
+                $supportEmail = $siteSettings->getSupportEmail();
+            }
+            $email = (new TemplatedEmail())
+                ->from(new Address($contactForm->get('email')->getData(), $contactForm->get('name')->getData()))
+                ->to($supportEmail)
+                ->subject("Kulmapeck contact message")
+                ->htmlTemplate('front/contact/email.html.twig')
+                ->context([
+                    'message' => $contactForm->get('message')->getData()
+                ])
+            ;
+            $mailer->send($email);
+
+            $this->addFlash("messageSend", "Your message has been send");
+            return $this->redirectToRoute('app_front_contact');
+        }
+
         return $this->render('front/contact/index.html.twig', [
             'isContactPage' => true,
+            'contactForm' => $contactForm->createView()
         ]);
     }
 
@@ -75,7 +105,7 @@ class FrontController extends AbstractController
         ]);
     }
 
-    #[Route('/plans', name: 'app_plan')]
+    #[Route('/subscriptions-plans', name: 'app_plan')]
     public function plan(Request $request, AbonnementItemRepository $abonnementItemRepository, EleveRepository $eleveRepository, AbonnementRepository $abonnementRepository) {
 
         $eleve = $eleveRepository->findOneBy(['utilisateur' => $this->getUser()]);
@@ -91,4 +121,35 @@ class FrontController extends AbstractController
         ]);
     }
 
+    #[Route('/become-teacher', name: 'app_become_teacher')]
+    public function becomeTeacher(Request $request, MailerInterface $mailer): Response
+    {
+        $contactForm = $this->createForm(ContactType::class);
+        $contactForm->handleRequest($request);
+        if ($contactForm->isSubmitted() && $contactForm->isValid()) {
+            $session = $request->getSession();
+            $siteSettings = $session->get('siteSettings');
+            $supportEmail = 'support@mail.com';
+            if ($siteSettings instanceof SiteSetting) {
+                $supportEmail = $siteSettings->getSupportEmail();
+            }
+            $email = (new TemplatedEmail())
+                ->from(new Address($contactForm->get('email')->getData(), $contactForm->get('name')->getData()))
+                ->to($supportEmail)
+                ->subject("Kulmapeck contact message")
+                ->htmlTemplate('front/contact/email.html.twig')
+                ->context([
+                    'message' => $contactForm->get('message')->getData()
+                ])
+            ;
+            $mailer->send($email);
+
+            $this->addFlash("messageSend", "Your message has been send");
+            return $this->redirectToRoute('app_front_contact');
+        }
+        return $this->render('front/about/become_teacher.html.twig', [
+            'isAboutPage' => true,
+            'contactForm' => $contactForm->createView(),
+        ]);
+    }
 }

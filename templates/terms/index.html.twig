@@ -1,0 +1,61 @@
+{% extends "front/base.html.twig" %}
+
+{% block title %} - Terms and Condition{% endblock %}
+
+{% block mainBarnner %}
+
+{% endblock %}
+
+{% block mainContent %}
+
+    <section class="bg-dark align-items-center d-flex" style="background:url({{ asset('assets/images/pattern/04.png') }}) no-repeat center center; background-size:cover;">
+        <!-- Main banner background image -->
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Title -->
+                    <h1 class="text-white">Terms and conditions</h1>
+                    <!-- Breadcrumb -->
+                    <div class="d-flex">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb breadcrumb-dark breadcrumb-dots mb-0">
+                                <li class="breadcrumb-item"><a href="{{ url("app_front") }}">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Terms & conditions</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page content START -->
+    <section class="pb-0 py-sm-5">
+        <div class="container">
+            {% if (terms is empty) %}
+                <h1 class="text-center mt-5 mb-5">Coming Soon... <i class="fas fa-sync fa-spin"></i></h1>
+            {% else %}
+
+                <div class="accordion accordion-icon accordion-bg-light" id="accordionExample2">
+                    {% for term in terms %}
+                        <div class="accordion-item mb-3">
+                            <h6 class="accordion-header font-base" id="heading-{{ term.id }}">
+                                <a class="accordion-button fw-bold rounded d-block" href="#collapse-{{ term.id }}" data-bs-toggle="collapse" data-bs-target="#collapse-{{ term.id }}" aria-expanded="{{ loop.first ? 'true' : 'false' }}" aria-controls="collapse-{{ term.id }}">
+                                    <span class="mb-0">{{ term.title }}</span>
+                                </a>
+                            </h6>
+                            <div id="collapse-{{ term.id }}" class="accordion-collapse collapse {{ loop.first ? 'show' : '' }}" aria-labelledby="heading-{{ term.id }}" data-bs-parent="#accordionExample2" style="">
+                                <div class="accordion-body mt-3">
+                                    {{ term.content|raw }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+        </div>
+    </section>
+
+{% endblock %}
