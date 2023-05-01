@@ -14,11 +14,13 @@ class NotificationTemplate
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $template = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $notificationType = null;
+    #[ORM\OneToOne(inversedBy: 'notificationTemplate', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?NotificationType $type = null;
+
 
     public function getId(): ?int
     {
@@ -37,15 +39,16 @@ class NotificationTemplate
         return $this;
     }
 
-    public function getNotificationType(): ?int
+    public function getType(): ?NotificationType
     {
-        return $this->notificationType;
+        return $this->type;
     }
 
-    public function setNotificationType(int $notificationType): self
+    public function setType(NotificationType $type): self
     {
-        $this->notificationType = $notificationType;
+        $this->type = $type;
 
         return $this;
     }
+    
 }

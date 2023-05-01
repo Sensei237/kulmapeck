@@ -24,6 +24,9 @@ class NotificationType
     #[ORM\Column(length: 50)]
     private ?string $type = null;
 
+    #[ORM\OneToOne(mappedBy: 'type', cascade: ['persist', 'remove'])]
+    private ?NotificationTemplate $notificationTemplate = null;
+
     public function __construct()
     {
         $this->notificationSettings = new ArrayCollection();
@@ -84,6 +87,23 @@ class NotificationType
     public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getNotificationTemplate(): ?NotificationTemplate
+    {
+        return $this->notificationTemplate;
+    }
+
+    public function setNotificationTemplate(NotificationTemplate $notificationTemplate): self
+    {
+        // set the owning side of the relation if necessary
+        if ($notificationTemplate->getType() !== $this) {
+            $notificationTemplate->setType($this);
+        }
+
+        $this->notificationTemplate = $notificationTemplate;
 
         return $this;
     }

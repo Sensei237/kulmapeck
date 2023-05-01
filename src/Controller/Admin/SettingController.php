@@ -2,12 +2,16 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\NotificationTemplate;
 use App\Entity\SiteSetting;
 use App\Entity\SocialSetting;
 use App\Form\EditSocialSettingType;
 use App\Form\GeneralSettingsType;
+use App\Form\NotificationTemplateType;
 use App\Form\SocialSettingsType;
 use App\Form\WebSiteSettingsType;
+use App\Repository\NotificationTemplateRepository;
+use App\Repository\NotificationTypeRepository;
 use App\Repository\SiteSettingRepository;
 use App\Repository\SocialSettingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SettingController extends AbstractController
 {
     #[Route('', name: 'app_admin_setting')]
-    public function index(HttpFoundationRequest $request, SocialSettingRepository $socialSettingRepository, SiteSettingRepository $siteSettingRepository): Response
+    public function index(HttpFoundationRequest $request, NotificationTemplateRepository $notificationTemplateRepository, NotificationTypeRepository $notificationTypeRepository, SocialSettingRepository $socialSettingRepository, SiteSettingRepository $siteSettingRepository): Response
     {
         $siteSetting = $siteSettingRepository->findOneBy([]);
         if ($siteSetting === null) {
@@ -66,12 +70,32 @@ class SettingController extends AbstractController
 
         }
 
+        $notificationTypes = $notificationTypeRepository->findAll();
+        $notificationTypeForms = [];
+        foreach ($notificationTypes as $notificationType) {
+            $notificationTemplate = $notificationType->getNotificationTemplate();
+            if ($notificationTemplate === null) {
+                $notificationTemplate = new NotificationTemplate();
+            }
+            $notificationTemplate->setType($notificationType);
+            $form = $this->createForm(NotificationTemplateType::class, $notificationTemplate);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $notificationTemplateRepository->save($notificationTemplate, true);
+                $this->addFlash('success', "Template is updated or created");
+                return $this->redirectToRoute('app_admin_setting');
+            }
+            $notificationTypeForms[] = $form->createView();
+        }
+
         return $this->render('admin/setting/index.html.twig', [
             'isSettingController' => true,
             'generalSettingForm' => $generalSettingForm->createView(),
             'siteSettingForm' => $siteSettingForm->createView(), 
             'socials' => $socials,
             'socialSettingForm' => $socialSettingForm->createView(),
+            'notificationTypes' => $notificationTypes,
+            'notificationTypeForms' => $notificationTypeForms
 
         ]);
     }

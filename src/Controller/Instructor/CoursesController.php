@@ -7,6 +7,8 @@ use App\Entity\Cours;
 use App\Entity\FAQ;
 use App\Entity\Forum;
 use App\Entity\Lesson;
+use App\Entity\Notification;
+use App\Entity\NotificationType;
 use App\Entity\Quiz;
 use App\Entity\User;
 use App\Form\CoursType;
@@ -19,8 +21,11 @@ use App\Repository\EnseignantRepository;
 use App\Repository\FAQRepository;
 use App\Repository\ForumRepository;
 use App\Repository\LessonRepository;
+use App\Repository\NotificationTypeRepository;
 use App\Repository\QuizRepository;
+use App\Repository\UserRepository;
 use App\Service\FileUploader;
+use App\Utils\NotificationCodes;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -84,7 +89,7 @@ class CoursesController extends AbstractController
 
     #[Route('/{slug}/edit', name: 'app_instructor_courses_edit')]
     #[Route('/new', name: 'app_instructor_courses_new')]
-    public function edit(Cours $cours = null, Request $request, SluggerInterface $slugger, ForumRepository $forumRepository, CoursRepository $coursRepository, EnseignantRepository $enseignantRepository, FileUploader $fileUploader): Response
+    public function edit(Cours $cours = null, NotificationTypeRepository $notificationTypeRepository, UserRepository $userRepository, Request $request, SluggerInterface $slugger, ForumRepository $forumRepository, CoursRepository $coursRepository, EnseignantRepository $enseignantRepository, FileUploader $fileUploader): Response
     {
         $enseignant = $enseignantRepository->findOneBy(['utilisateur' => $this->getUser()]);
         if ($enseignant === null || ($cours !== null && $enseignant->getId() !== $cours->getEnseignant()->getId())) {
@@ -126,6 +131,25 @@ class CoursesController extends AbstractController
 
             $cours->setUpdatedAt(new \DateTimeImmutable());
             $coursRepository->save($cours, true);
+            $admins = $userRepository->findBy(['isAdmin' => true, 'isBlocked' => false, 'isVerified' => true]);
+            $notificationType = $notificationTypeRepository->findOneBy(['type' => NotificationCodes::COURSE_IS_CREATED]);
+            if ($notificationType && $notificationType->getNotificationTemplate()) {
+                $content = $notificationType->getNotificationTemplate()->getTemplate();
+                if ($content !== null) {
+                    foreach ($admins as $admin) {
+                        if (in_array(['ROLE_COURSES_MANAGER', 'ROLE_SUPER_USER'], $admin->getRoles())) {
+                            if ($content) {
+                                $notification = new Notification();
+                                $notification->setDestinataire($admin)
+                                    ->setType(NotificationCodes::COURSE_IS_CREATED)
+                                    ->setContent($content)
+                                    ->setTitle($notificationType->getLabel())
+                                ;
+                            }
+                        }
+                    }
+                }
+            }
 
             return $this->redirectToRoute('app_instructor_courses', [], Response::HTTP_SEE_OTHER);
         }
