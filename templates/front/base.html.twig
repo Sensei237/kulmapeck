@@ -218,11 +218,16 @@
 
                 <div class="dropdown mt-0 text-center text-sm-end">
                     <a class="dropdown-toggle nav-link" style="padding-right: 15px" href="#" role="button" id="languageSwitcher" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-globe me-2"></i>{% trans %}ENGLISH_KEY{% endtrans %}
+                        <i class="fas fa-globe me-2"></i>
+                        {% if app.session.get('_locale') == 'en'  %}
+                            {% trans %}ENGLISH_KEY{% endtrans %}
+                        {% else %}
+                            {% trans %}FRENCH_KEY{% endtrans %}
+                        {% endif %}
                     </a>
                     <ul class="dropdown-menu min-w-auto" aria-labelledby="languageSwitcher">
-                        <li><a class="dropdown-item me-4 active" href="#"><img class="fa-fw me-2" src="{{ asset('assets/images/flags/uk.svg') }}" alt="">{% trans %}ENGLISH_KEY{% endtrans %}</a></li>
-                        <li><a class="dropdown-item me-4" href="#"><img class="fa-fw me-2" src="{{ asset('assets/images/flags/sp.svg') }}" alt="">{% trans %}FRENCH_KEY{% endtrans %}</a></li>
+                        <li><a class="dropdown-item me-4 {{ app.session.get('_locale') == 'en' ? 'active' : '' }}" href="{{ url('app_security_change_language', {lang: 'en'}) }}"><img class="fa-fw me-2" src="{{ asset('assets/images/flags/uk.svg') }}" alt="">{% trans %}ENGLISH_KEY{% endtrans %}</a></li>
+                        <li><a class="dropdown-item me-4 {{ app.session.get('_locale') == 'fr' ? 'active' : '' }}" href="{{ url('app_security_change_language', {lang: 'en'}) }}"><img class="fa-fw me-2" src="{{ asset('assets/images/flags/sp.svg') }}" alt="">{% trans %}FRENCH_KEY{% endtrans %}</a></li>
                     </ul>
                 </div>
 

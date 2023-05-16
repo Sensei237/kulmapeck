@@ -61,6 +61,14 @@ class KernelSubscriber implements EventSubscriberInterface
 
             $session->set('siteSettings', $siteSettings);
             $session->set('socialsSettings', $socialsSettings);
+
+            $request = $event->getRequest();
+            if ($locale = $request->attributes->get('_locale')) {
+                $request->getSession()->set('_locale', $locale);
+            }
+            else {
+                $request->setLocale($request->getSession()->get('_locale', 'fr'));
+            }
         }
     }
 

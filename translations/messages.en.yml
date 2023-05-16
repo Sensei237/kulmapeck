@@ -5,10 +5,10 @@ HOME_KEY: Home
 COURSESFORMATION_KEY: Courses & formations
 EXAM_KEY: Exam
 FORUM_KEY: Forum
-BECOME_PREMIUM_KEY: Devenir Premium
+BECOME_PREMIUM_KEY: Become Premium
 SEARCH_KEY: Search
 ENGLISH_KEY: English
-FRENCH_KEY: Français
+FRENCH_KEY: French
 DASHBOARD_KEY: Dashboard
 EDIT_PROFILE_KEY: Edit Profile 
 SIGNOUT_KEY: Sign Out
@@ -32,7 +32,7 @@ CONTACT_KEY: Contact
 TOLLFREE_KEY: Toll free 
 EMAIL_KEY: Email
 LANGUAGE_KEY: Language
-APPARANCE_KEY: Apparance
+APPARANCE_KEY: Appearance
 TERMSOFUSE_KEY: Terms of use
 PRIVACYPOLICY_KEY: Privacy Policy 
 GOTOFORUM_KEY: Go to forum 
@@ -54,7 +54,7 @@ DOWNLOADKULMAPECK_KEY: Download Kulmapeck
 MAINMESSAGE_KEY: Limitless learning at your
 FINGERSTIPS_KEY: fingertips
 MAINMESSAGEDESCRIPTION_KEY: Online learning and teaching marketplace with 5K+ courses & 10M students. Taught by experts to help you acquire new skills.
-LEARNEXPERT_KEY: Learn with expert
+LEARNEXPERT_KEY: Learn with experts
 GETCERTIFICATE_KEY: Get certificate
 GETMEMBERSHIP_KEY: Get membership
 GETSTARTED_KEY: Get started
@@ -228,3 +228,4 @@ RELATEDTOPIC_KEY: Related Topic
 SUBMIT_KEY: Submit
 HELLOHELP_KEY: Hello, how can we help?
 CATEGORYDESCRIPTION_KEY: Perceived end knowledge certainly day sweetness why cordially
+PERSONNE_NAME_KEY: Last name

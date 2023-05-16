@@ -1,143 +1,143 @@
 # FRONT BASE TEMPLATE
 NUMERO_REGISTRE_COMMERCE_KEY: composer require symfony/translation
 LOCALISATION_KEY: Localisation
-HOME_KEY: Home
-COURSESFORMATION_KEY: Courses & formations
-EXAM_KEY: Exam
+HOME_KEY: Accueil
+COURSESFORMATION_KEY: Cours & formations
+EXAM_KEY: Examens
 FORUM_KEY: Forum
 BECOME_PREMIUM_KEY: Devenir Premium
-SEARCH_KEY: Search
-ENGLISH_KEY: English
+SEARCH_KEY: Rechercher
+ENGLISH_KEY: Anglais
 FRENCH_KEY: Français
-DASHBOARD_KEY: Dashboard
-EDIT_PROFILE_KEY: Edit Profile 
-SIGNOUT_KEY: Sign Out
-HELP_KEY: Help 
-LIGHT_KEY: Light 
-DARK_KEY: Dark
+DASHBOARD_KEY: Tableau de bord
+EDIT_PROFILE_KEY: Modifier le profil 
+SIGNOUT_KEY: Se déconnecter
+HELP_KEY: Aide 
+LIGHT_KEY: Clair 
+DARK_KEY: Sombre
 AUTO_KEY: Auto
-SIGNIN_KEY: Sign In
-COMPANY_KEY: Company 
-COURSES_KEY: Courses 
-ABOUTUS_KEY: About Us
-CONTACTUS_KEY: Contact Us
-COMMUNITY_KEY: Community 
+SIGNIN_KEY: Se connecter
+COMPANY_KEY: Compagnie 
+COURSES_KEY: Cours 
+ABOUTUS_KEY: Apropos de nous
+CONTACTUS_KEY: Nous contacter
+COMMUNITY_KEY: Communauté 
 FAQ_KEY: Faq 
 SITEMAP_KEY: Sitemap 
-TEACHING_KEY: Teaching 
-BECOMEATEACKER_KEY: Become a teacher
-HOWTOGUIDE_KEY: How to Guide
-TERMSANDCONDITIONS_KEY: Terms &amp; Conditions
+TEACHING_KEY: Enseignement 
+BECOMEATEACKER_KEY: Devenir enseignant
+HOWTOGUIDE_KEY: Comment guider
+TERMSANDCONDITIONS_KEY: Termes &amp; Conditions
 CONTACT_KEY: Contact 
-TOLLFREE_KEY: Toll free 
+TOLLFREE_KEY: Parler librement 
 EMAIL_KEY: Email
-LANGUAGE_KEY: Language
+LANGUAGE_KEY: Langue
 APPARANCE_KEY: Apparance
-TERMSOFUSE_KEY: Terms of use
-PRIVACYPOLICY_KEY: Privacy Policy 
-GOTOFORUM_KEY: Go to forum 
-BACKTOCOURSEDETAILS_KEY: Back to course details
-ADDCOMMENT_KEY: Add a comment...
-CHOOSETYPEUSERACCOUNT_KEY: 'Choose a type of <span class="text-success">user account</span>'
+TERMSOFUSE_KEY: Termes d'utilisation
+PRIVACYPOLICY_KEY: politique de confidentialité 
+GOTOFORUM_KEY: Consulter le forum 
+BACKTOCOURSEDETAILS_KEY: Revenir sur le cours
+ADDCOMMENT_KEY: Ajouter un commentaire...
+CHOOSETYPEUSERACCOUNT_KEY: 'Choisir le type de <span class="text-success">compte</span>'
 ACCOUNTMODALDESCRIPTION_KEY: Prosperous understood Middletons in conviction an uncommonly do. Supposing so be resolving breakfast am or perfectly.
-TEACHER_KEY: Teacher & Trainer
-STUDENT_KEY: Student
+TEACHER_KEY: Enseigant & Formateur
+STUDENT_KEY: Elève & Apprenant
 
 # FICHIER templates/front/home/header/courses.html.twig
-COURSESCATEGORY_KEY: Courses categories
-VIEWALLCATEGORIES_KEY: View all categories
-LASTCOURSES_KEY: Last courses
-VIEWMORECOURSES_KEY: View more courses
-DOWNLOADKULMAPECK_KEY: Download Kulmapeck
+COURSESCATEGORY_KEY: Catégories de cours
+VIEWALLCATEGORIES_KEY: Toutes les catégories
+LASTCOURSES_KEY: Derniers cours
+VIEWMORECOURSES_KEY: Voir plus de cours
+DOWNLOADKULMAPECK_KEY: Télécharger Kulmapeck
 
 #  FICHIER template/front/home/_main_barner.html.twig
-MAINMESSAGE_KEY: Limitless learning at your
-FINGERSTIPS_KEY: fingertips
-MAINMESSAGEDESCRIPTION_KEY: Online learning and teaching marketplace with 5K+ courses & 10M students. Taught by experts to help you acquire new skills.
-LEARNEXPERT_KEY: Learn with expert
-GETCERTIFICATE_KEY: Get certificate
+MAINMESSAGE_KEY: Apprentissage illimité à portée
+FINGERSTIPS_KEY: de main
+MAINMESSAGEDESCRIPTION_KEY: Marché d'apprentissage et d'enseignement en ligne avec plus de 5 000 cours et 10 millions d'étudiants. Enseigné par des experts pour vous aider à acquérir de nouvelles compétences.
+LEARNEXPERT_KEY: Apprenez avec des experts
+GETCERTIFICATE_KEY: Obtenir un certificat
 GETMEMBERSHIP_KEY: Get membership
-GETSTARTED_KEY: Get started
-CREATEACCOUNT_KEY: Create account
-CONGRATULATION_KEY: Congratulations
-ADMISSIONCOMPLETE_KEY: Your admission completed
-DAILYSTUDENT_KEY: Our daily new students
+GETSTARTED_KEY: Obtenir l'adhésion
+CREATEACCOUNT_KEY: Créer un compte
+CONGRATULATION_KEY: Félicitations
+ADMISSIONCOMPLETE_KEY: Votre admission terminée
+DAILYSTUDENT_KEY: Nos nouveaux étudiants quotidiens
 
 
 OONLINECOURSES_KEY: Online Courses
-EXPERTSTUTORS_KEY: Expert Tutors
-ONLINESTUDENTS_KEY: Online Students
-CERTIFIEDCOURSES_KEY: Certified Courses
-MOSTPOPULAR_KEY: Most Popular Courses
-MOSTPOPULARDESCRIPTION_KEY: Choose from hundreds of courses from specialist organizations
-LESSONS_KEY: Lessons
-ALLCOURSES_KEY: All courses
-BECOMEINSTRUCTOR_KEY: Become an Instructor!
+EXPERTSTUTORS_KEY: Cours en ligne
+ONLINESTUDENTS_KEY: Étudiants en ligne
+CERTIFIEDCOURSES_KEY: Cours certifiés
+MOSTPOPULAR_KEY: Cours les plus populaires
+MOSTPOPULARDESCRIPTION_KEY: Choisissez parmi des centaines de cours d'organisations spécialisées
+LESSONS_KEY: Leçons
+ALLCOURSES_KEY: Tous les cours
+BECOMEINSTRUCTOR_KEY: Devenir formateur!
 BECOMEINSTRUCTORDESCRIPTION_KEY: Speedily say has suitable disposal add boy. On forth doubt miles of child. Exercise joy man children rejoiced. Yet uncommonly his ten who diminution astonished
-STARTTEACHINGTODAY_KEY: Start Teaching Today
-TRENDINGCOURSES_KEY: Our Trending Courses
-TRENDINGCOURSESDESCRIPTION_KEY: Check out most 🔥 courses in the market
-VERIFIEDMENTOR_KEY: Verified Mentors
-FEEDBACK_KEY: Some valuable feedback from our students
+STARTTEACHINGTODAY_KEY: Commencez à enseigner aujourd'hui
+TRENDINGCOURSES_KEY: Nos cours tendances
+TRENDINGCOURSESDESCRIPTION_KEY: Découvrez la plupart des cours 🔥 sur le marché
+VERIFIEDMENTOR_KEY: Mentors vérifiés
+FEEDBACK_KEY: Quelques précieux retours de nos étudiants
 FEEDBACKDESCRIPTION_KEY: Supposing so be resolving breakfast am or perfectly. It drew a hill from me. Valley by oh twenty direct me so. Departure defective arranging rapturous did believe him all had supported. Family months lasted simple set nature vulgar him. Picture for attempt joy excited ten carried manners talking how.
-CREATEANACCOUNT_KEY: Create an account
+CREATEANACCOUNT_KEY: Créer un compte
 
-WHATDOYOUWATTOLEARN_KEY: What do you want to learn?
-WHATDOYOUWATTOLEARNDESCRIPTION_KEY: Grow your skill with the most reliable online courses and certifications
-SEARCHCOURSES_KEY: Search courses
-CHOOSECATEGORY_KEY: Choose a Categories
+WHATDOYOUWATTOLEARN_KEY: Que voulez-vous apprendre?
+WHATDOYOUWATTOLEARNDESCRIPTION_KEY: Développez vos compétences avec les cours et certifications en ligne les plus fiables
+SEARCHCOURSES_KEY: Rechercher des cours
+CHOOSECATEGORY_KEY: Choisissez une catégorie
 CHOOSECATEGORYDESCRIPTION_KEY: Perceived end knowledge certainly day sweetness why cordially
-EARNCERTIFICATE_KEY: Earn a Certificate
-EARNCERTIFICATEDESCRIPTION_KEY: Get the right professional certificate program for you.
-VIEWPROGRAMS_KEY: View Programs
-BESTRATEDCOURSES_KEY: Best Rated Courses
-BESTRATEDCOURSESDESCRIPTION_KEY: Enroll now in the most popular and best rated courses.
-BESTRATEDCOURSESBTN_KEY: View Courses
-SECTORS_KEY: Sectors
-SPECIALTIES_KEY: Specialties
+EARNCERTIFICATE_KEY: Gagnez un certificat
+EARNCERTIFICATEDESCRIPTION_KEY: Obtenez le bon programme de certificat professionnel pour vous.
+VIEWPROGRAMS_KEY: Voir les programmes
+BESTRATEDCOURSES_KEY: Cours les mieux notés
+BESTRATEDCOURSESDESCRIPTION_KEY: Inscrivez-vous maintenant aux cours les plus populaires et les mieux notés.
+BESTRATEDCOURSESBTN_KEY: Voir les cours
+SECTORS_KEY: Filières
+SPECIALTIES_KEY: Spécialités
 CLASSES_KEY: Classes
-CATEGORIES_KEY: Categories
-ALL_KEY: All
-ALLLEVEL_KEY: All level
-EASY_KEY: Easy
-INTERMEDIATE_KEY: Intermediate
-DIFFICULT_KEY: Difficult
-VERYDIFFICULT_KEY: Very difficult
-FREE_KEY: Free
-PAID_KEY: Paid
-NORESULTS_KEY: No result
-AREYOUREADYFORCONVERSATION_KEY: Are you ready for a more great Conversation?
-SUBSCRIBE_KEY: Subscribe
-TYPEEMAILHERE_KEY: Type your email here
-DETAILS_KEY: Details
-VIEWMORE_KEY: View more
-EXAMS_KEY: Exams
-SHOWFILTER_KEY: Show filter
-EMPTY_KEY: Empty
-ADVANCEFILTER_KEY: Advance Filter
-CATEGORY_KEY: Category
-SKILLLEVEL_KEY: Skill Level
-FILTERRESULTS_KEY: Filter Results
-SHOWANSWER_KEY: Show answer
-BACKTOSUBJECT_KEY: Back to Subjet
+CATEGORIES_KEY: Catégories
+ALL_KEY: Tous
+ALLLEVEL_KEY: Tous les niveaux
+EASY_KEY: Facile
+INTERMEDIATE_KEY: Intermédiaire
+DIFFICULT_KEY: Difficile
+VERYDIFFICULT_KEY: Très difficiles
+FREE_KEY: Gratuit
+PAID_KEY: Payant
+NORESULTS_KEY: Auccun Résultat
+AREYOUREADYFORCONVERSATION_KEY: Êtes-vous prêt pour une plus grande conversation ?
+SUBSCRIBE_KEY: S'abonner
+TYPEEMAILHERE_KEY: Tapez votre e-mail ici
+DETAILS_KEY: Détails
+VIEWMORE_KEY: Voir plus
+EXAMS_KEY: Examens
+SHOWFILTER_KEY: Afficher le filtre
+EMPTY_KEY: Liste Vide
+ADVANCEFILTER_KEY: Filtre avancé
+CATEGORY_KEY: Catégorie
+SKILLLEVEL_KEY: Niveau de compétence
+FILTERRESULTS_KEY: Filtrer les résultats
+SHOWANSWER_KEY: Montrer la réponse
+BACKTOSUBJECT_KEY: Retour au sujet
 
-APPLYASINSTRUCTOR_KEY: Apply as Instructor
+APPLYASINSTRUCTOR_KEY: Postuler en tant qu'instructeur
 APPLYASINSTRUCTORDESCRIPTION_KEY: Satisfied conveying a dependent contented he gentleman agreeable do be. Delivered dejection necessary objection do Mr prevailed. Mr feeling does chiefly cordial in do.
 STARTITLE_KEY: You can be your guiding star with our help
 STARTITLEDESCRIPTION_KEY: As it so contrasted oh estimating instrument. Size like body someone had. Are conduct viewing boy minutes warrant the expense? Tolerably behavior may admit daughters offending her ask own. Praise effect wishes change way and any wanted.
 STARCREATEACCOUNTDESCRIPTION_KEY: Satisfied conveying a dependent contented he gentleman agreeable do be. Delivered dejection necessary objection do Mr prevailed. Mr feeling does chiefly cordial in do
-STARADDYOURCOURSE_KEY: Add your Course
+STARADDYOURCOURSE_KEY: Ajoutez votre cours
 STARADDYOURCOURSEDESCRIPTION_KEY: Proceed how any engaged visitor. Explained propriety off out perpetual his you. Feel sold off felt nay rose met you. We so entreaties cultivated astonished is. Was sister for a few longer Mrs sudden talent become. Done may bore quit evil old mile. If likely am of beauty tastes.
-STAREARINGMONEY_KEY: Start Earning Money
+STAREARINGMONEY_KEY: Commencez à gagner de l'argent
 STAREARINGMONEYDESCRIPTITON_KEY: Insipidity the sufficient discretion imprudence resolution sir him decisively.  Delivered dejection necessary objection do Mr prevailed. Mr feeling does chiefly cordial in do
-TOTALSTUDENTS_KEY: Total Students
-TOTALINSTRUCTORS_KEY: Total Instructors
-TOTALCOURSES_KEY: Total Courses
-LANGUAGES_KEY: Languages
-HOWTOBECOMEANINSTRUCTOR_KEY: How to become an Instructor?
-BECOMEANINSTRUCTOR_KEY: Become an Instructor
-INSTRUCTORROLE_KEY: Instructor Role
-STARTWITHCOURSE_KEY: Start with Course
+TOTALSTUDENTS_KEY: Nombre total d'étudiants
+TOTALINSTRUCTORS_KEY: Nombre total d'instructeurs
+TOTALCOURSES_KEY: Total des cours
+LANGUAGES_KEY: Langues
+HOWTOBECOMEANINSTRUCTOR_KEY: Comment devenir Instructeur ?
+BECOMEANINSTRUCTOR_KEY: Devenir instructeur
+INSTRUCTORROLE_KEY: Rôle d'instructeur
+STARTWITHCOURSE_KEY: Commencez par le cours
 BECOMEANINSTRUCTORDETAIL_KEY: "<p>As it so contrasted oh estimating instrument. Size like body someone had. Are conduct viewing boy minutes warrant the expense? Tolerably behavior may admit daughters offending her ask own. Praise effect wishes change way and any wanted. Lively use looked latter regard had. Do he it part more last in. Merits ye if Mr narrow points. Melancholy particular Devonshire alteration it favorable appearance up.</p>
                             <p>Size like body someone had. Are conduct viewing boy minutes warrant the expense? Tolerably behavior may admit daughters offending her ask own. Praise effect wishes change way and any wanted. Lively use looked latter regard had. Do he it part more last in. Merits ye if Mr narrow points. Melancholy particular Devonshire alteration it favorable appearance up.</p>
                             <p>Are conduct viewing boy minutes warrant the expense? Tolerably behavior may admit daughters offending her ask own. Praise effect wishes change way and any wanted. Lively use looked latter regard had. Do he it part more last in. Merits ye if Mr narrow points. Melancholy particular Devonshire alteration it favorable appearance up.</p>"
@@ -153,11 +153,11 @@ BECOMEANINSTRUCTORLOGINDESCRIPTION_KEY: Speedily say has suitable disposal add b
 
 # ABAOUT US
 ABOUTUSMAINTITLE_KEY: Kulmapeck education theme, built specifically for the education centers which is dedicated to teaching and involve learners.
-ABOUTUSPAGE_OURGOALTITLE_KEY: Our goal
-ABOUTUSPAGE_OURGOAL_KEY: Be open to new ideas and approaches. Develop your problem-solving skills.
-ABOUTUSPAGE_ABOUTKULMAPECKTILE_KEY: About Eduport Portal
+ABOUTUSPAGE_OURGOALTITLE_KEY: Notre objectif
+ABOUTUSPAGE_OURGOAL_KEY: Soyez ouvert aux nouvelles idées et approches. Développez vos compétences en résolution de problèmes.
+ABOUTUSPAGE_ABOUTKULMAPECKTILE_KEY: À propos du portail Kulmapeck
 ABOUTUSPAGE_ABOUTKULMAPECKDESCRIPTION1_KEY: How promotion excellent curiosity yet attempted happiness Gay prosperous impression had conviction For every delay death ask to style Me mean able my by in they Extremity now strangers contained.
-ABOUTUSPAGE_H4STUDENTS_KEY: 35,000+ happy students joined with us to achieve their goals
+ABOUTUSPAGE_H4STUDENTS_KEY: Plus de 35 000 étudiants heureux se sont joints à nous pour atteindre leurs objectifs
 ABOUTUSPAGE_H4STUDENTS1_KEY: How promotion excellent curiosity yet attempted happiness Gay prosperous impression had conviction For every delay death ask to style Me mean able  my by in they Extremity now strangers contained breakfast him discourse additions Sincerity collected contented led now perpetual extremely forfeited
 ABOUTUSPAGE_H4STUDENTS2_KEY: Happiness prosperous impression had conviction For every delay in they Extremity now strangers contained breakfast him discourse additions Sincerity collected contented led now perpetual extremely forfeited
 ABOUTUSPAGE_SETUPTIME_KEY: Setup and installation takes less time
@@ -166,6 +166,66 @@ ABOUTUSPAGE_PERFECT_KEY: Perfect for any device with pixel-perfect design
 ABOUTUSPAGE_SETUPFAST_KEY: Setup and installation too fast
 ABOUTUSPAGE_ENTERPRISECUSTOMER_KEY: Enterprise customer
 ABOUTUSPAGE_ACCURATECOURSE_KEY: Accurate Course
-ABOUTUSPAGE_INSTRUCTOR_KEY: Instructors
+ABOUTUSPAGE_INSTRUCTOR_KEY: Instructeurs
+ABOUTUSPAGE_TEAM_KEY: Rencontrez notre équipe
+ABOUTUSPAGE_JOINTEAM_KEY: Rejoins notre équipe
 
+# CONTACT US
+CONTACTPAGE_HELP_KEY: Nous sommes là pour vous aider !
+CONTACTPAGE_WHATSAPP_KEY: Assistance WhatsApp
+CONTACTPAGE_ORANGE_KEY: Assistance Orange
+CONTACTPAGE_MTN_KEY: Assistance MTN
+CONTACTPAGE_FOLLOWUS_KEY: Suivez-nous sur
+CONTACTPAGE_LETSTALK_KEY: Parlons
+CONTACTPAGE_LETSTALKDESCRIPTION_KEY: To request a quote or want to meet up for coffee, contact us directly or fill out the form and we will get back to you promptly
+CONTACTPAGE_SENDMESSAGEBTN_KEY: Envoyer le message
 
+NOANSWERFOUND_KEY: Aucune réponse trouvée
+REPLY_KEY: Répondre
+RESOLVEDBY_KEY: Résolu par ce post
+REMOVE_KEY: Retirer 
+RESOLVED_KEY: Résolu
+UNRESOLVED_KEY: Non résolu
+RESOLVEDCONFIRM_KEY: Êtes-vous sûr de vouloir définir ces réponses comme la meilleure réponse ayant résolu votre problème ?
+QUESTIONSASKED_KEY: Questions posées
+COMMENTS_KEY: commentaires
+SHOWCOMMENT_KEY: Afficher le commentaire
+NOTOPICSFOUND_KEY: Aucun sujet trouvé ! Soyez le premier à poser un problème
+ASKQUESTION_KEY: Pose ta question
+POST_KEY: Poster
+OTHERSTOPICS_KEY: Autres sujets
+
+TOPLISTED_KEY: Cours les plus cotés
+STARTREADING_KEY: Commencez à lire
+CONTINUE_KEY: Continuer
+ALLCHAPTERS_KEY: Description des chapitres
+CHAPTER_KEY: Chapitre
+CHAPTERS_KEY: Chapitres
+COURSEDESCRIPTION_KEY: Matériel de cours
+YOURPROGRESS_KEY: Votre progression
+COMPLETED_KEY: Complété
+NOTCOMPLETED_KEY: Pas achevé
+CONTINUE_READING_KEY: Continuer la lecture
+ENROLLANDSTART_KEY: S'inscrire au cours et commencer
+ALLREADYENROLLED_KEY: déjà inscrit
+BY_KEY: Par
+PLAYLIST_KEY: Playlist
+TRAINER_KEY: Enseignant de Kulmapeck
+SHARE_KEY: Partager
+COURSEOVERVIEW_KEY: Description
+COURSE_REVIEWS_KEY: Commentaires
+LESSON_KEY: Leçon
+COURSE_CONTENT_KEY: Le contenu des cours
+BACKTOCOURSE_KEY: Retour aux cours
+
+GETINGSTARTED_KEY: Commencer
+GENERAL_GUIDE_KEY: Guide général
+ASSISTANCE_KEY: Assistance
+CHOOSECATEGORYHELP_KEY: Choisissez une catégorie pour trouver rapidement l'aide dont vous avez besoin
+TOPICSLIST_KEY: Liste des questions fréquentes
+NOTOPICFOUND_KEY: Aucune question trouvée
+RELATEDTOPIC_KEY: Rubrique connexe
+SUBMIT_KEY: Soumettre
+HELLOHELP_KEY: Bonjour, comment pouvons-nous vous aider ?
+CATEGORYDESCRIPTION_KEY: Perceived end knowledge certainly day sweetness why cordially
+PERSONNE_NAME_KEY: Nom de famille
