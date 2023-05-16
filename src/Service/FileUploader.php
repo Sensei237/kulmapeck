@@ -10,11 +10,13 @@ class FileUploader
 {
     private $targetDirectory;
     private $slugger;
+    private  $publicDirectory;
 
-    public function __construct($targetDirectory, SluggerInterface $slugger)
+    public function __construct($targetDirectory, $publicDirectory, SluggerInterface $slugger)
     {
         $this->targetDirectory = $targetDirectory;
         $this->slugger = $slugger;
+        $this->publicDirectory = $publicDirectory;
     }
 
     public function upload(UploadedFile $file, string $path=null)

@@ -11,6 +11,7 @@ use ApiPlatform\OpenApi\Model\RequestBody;
 use App\Controller\Api\Controller\User\ChangeAvatarController;
 use App\Controller\Api\Controller\User\NetworkController;
 use App\Repository\PersonneRepository;
+use App\Service\FileUploader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -65,6 +66,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class Personne
 {
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -156,6 +158,8 @@ class Personne
         $this->invites = new ArrayCollection();
         $this->joinAt = new \DateTimeImmutable();
     }
+
+
 
     public function getId(): ?int
     {
@@ -389,6 +393,10 @@ class Personne
             $avatarPath = 'uploads/images/eleves/' . $this->getAvatar();
         }elseif ($this->getUtilisateur()->getEnseignant() !== null) {
             $avatarPath = 'uploads/images/enseignants/kyc/' . $this->getAvatar();
+        }
+
+        if (!$this->getAvatar()) {
+            $avatarPath = "assets/images/avatar/avatar.png";
         }
 
         return $avatarPath;

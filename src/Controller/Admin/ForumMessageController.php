@@ -6,12 +6,14 @@ use App\Entity\ForumMessage;
 use App\Entity\Sujet;
 use App\Form\ForumMessageType;
 use App\Repository\ForumMessageRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/admin/forum/{reference}/messages')]
+#[Security("is_granted('ROLE_ADMIN')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
 class ForumMessageController extends AbstractController
 {
     #[Route('/', name: 'app_forum_message_index', methods: ['GET'])]
@@ -28,6 +30,7 @@ class ForumMessageController extends AbstractController
     }
 
     #[Route('/new', name: 'app_forum_message_new', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_FORUM_MANAGER')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
     public function new(Request $request, ForumMessageRepository $forumMessageRepository): Response
     {
         throw $this->createNotFoundException();
@@ -58,6 +61,7 @@ class ForumMessageController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_forum_message_edit', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_FORUM_MANAGER')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
     public function edit(Request $request, ForumMessage $forumMessage, ForumMessageRepository $forumMessageRepository): Response
     {
         throw $this->createNotFoundException();
@@ -71,13 +75,14 @@ class ForumMessageController extends AbstractController
             return $this->redirectToRoute('app_forum_message_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('forum_message/edit.html.twig', [
+        return $this->render('forum_message/edit.html.twig', [
             'forum_message' => $forumMessage,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/{id}', name: 'app_forum_message_delete', methods: ['POST'])]
+    #[Security("is_granted('ROLE_SUPER_USER')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
     public function delete(Request $request, ForumMessage $forumMessage, ForumMessageRepository $forumMessageRepository): Response
     {
         throw $this->createNotFoundException();

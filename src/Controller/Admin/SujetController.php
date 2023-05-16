@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Sujet;
 use App\Form\SujetType;
 use App\Repository\SujetRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,6 +23,7 @@ class SujetController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_sujet_new', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_FORUM_MANAGER')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
     public function new(Request $request, SujetRepository $sujetRepository): Response
     {
         $sujet = new Sujet();
@@ -49,6 +51,7 @@ class SujetController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_sujet_edit', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_FORUM_MANAGER')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
     public function edit(Request $request, Sujet $sujet, SujetRepository $sujetRepository): Response
     {
         $form = $this->createForm(SujetType::class, $sujet);
@@ -67,6 +70,7 @@ class SujetController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_sujet_delete', methods: ['POST'])]
+    #[Security("is_granted('ROLE_FORUM_MANAGER')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
     public function delete(Request $request, Sujet $sujet, SujetRepository $sujetRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$sujet->getId(), $request->request->get('_token'))) {

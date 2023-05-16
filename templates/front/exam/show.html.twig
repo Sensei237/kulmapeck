@@ -26,15 +26,15 @@
                                         <img class="avatar-img rounded-circle" src="{{ asset(exam.user.personne.avatarPath) }}" alt="avatar">
                                     </div>
                                     <a href="#" class="h5 stretched-link mt-2 mb-0 d-block">{{ exam.user.personne.nomComplet }}</a>
-                                    <p class="mb-2">Editor at Eduport</p>
+                                    <p class="mb-2">Editor at kulmapeck</p>
                                 </div>
                                 <!-- Info -->
                                 <ul class="list-inline list-unstyled">
                                     <li class="list-inline-item d-lg-block my-lg-2">{{ exam.publishedAt|date("d/m/Y - H:i:s") }}</li>
                                     {% if display is not same as 'correction' %}
-                                        <li class="list-inline-item d-lg-block my-lg-2"><a href="{{ url("app_front_exam_show", {reference: exam.reference, display: 'correction'}) }}" class="btn btn-success-soft">Show answer</a></li>
+                                        <li class="list-inline-item d-lg-block my-lg-2"><a href="{{ url("app_front_exam_show", {reference: exam.reference, display: 'correction'}) }}" class="btn btn-success-soft">{% trans %}SHOWANSWER_KEY{% endtrans %}</a></li>
                                     {% else %}
-                                        <li class="list-inline-item d-lg-block my-lg-2"><a href="{{ url("app_front_exam_show", {reference: exam.reference, display: 'subject'}) }}" class="btn btn-primary-soft">Back to Subjet</a></li>
+                                        <li class="list-inline-item d-lg-block my-lg-2"><a href="{{ url("app_front_exam_show", {reference: exam.reference, display: 'subject'}) }}" class="btn btn-primary-soft">{% trans %}BACKTOSUBJECT_KEY{% endtrans %}</a></li>
                                     {% endif %}
                                 </ul>
                             </div>
@@ -88,7 +88,7 @@
             <!-- Title -->
                 <div class="row mb-4">
                     <div class="col-12">
-                    <h2 class="mb-0">Most Popular courses</h2>
+                    <h2 class="mb-0">{% trans %}MOSTPOPULAR_KEY{% endtrans %}</h2>
                     </div>
                 </div>
                 

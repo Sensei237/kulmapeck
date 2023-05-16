@@ -45,14 +45,14 @@
 
 
 							<!-- Title -->
-							<h1 class="mb-3">What do you want to learn?</h1>
-							<p class="mb-3">Grow your skill with the most reliable online courses and certifications</p>
+							<h1 class="mb-3">{% trans %}WHATDOYOUWATTOLEARN_KEY{% endtrans %}</h1>
+							<p class="mb-3">{% trans %}WHATDOYOUWATTOLEARNDESCRIPTION_KEY{% endtrans %}</p>
 
 							<!-- Search -->
 							<form class="bg-body rounded p-2" action="{{ url("app_front_courses") }}">
 								<div class="input-group">
-									<input required class="form-control border-0 me-1" name="search" type="search" placeholder="Search course ">
-									<button type="submit" class="btn btn-dark mb-0 rounded">Search</button>
+									<input required class="form-control border-0 me-1" name="search" type="search" placeholder="{% trans %}SEARCHCOURSES_KEY{% endtrans %}">
+									<button type="submit" class="btn btn-dark mb-0 rounded">{% trans %}SEARCH_KEY{% endtrans %}</button>
 								</div>
 							</form>
 						</div>
@@ -77,8 +77,8 @@
 			<!-- Title -->
 			<div class="row mb-4">
 				<div class="col-lg-8 mx-auto text-center">
-					<h2>Choose a Categories</h2>
-					<p class="mb-0">Perceived end knowledge certainly day sweetness why cordially</p>
+					<h2>{% trans %}CHOOSECATEGORY_KEY{% endtrans %}</h2>
+					<p class="mb-0">{% trans %}CATEGORYDESCRIPTION_KEY{% endtrans %}</p>
 				</div>
 			</div>
 
@@ -110,9 +110,9 @@
 						<!-- Content -->
 						<div class="row">
 							<div class="col-sm-8 position-relative">
-								<h3 class="mb-1">Earn a Certificate</h3>
-								<p class="mb-3 h5 fw-light lead">Get the right professional certificate program for you.</p>
-								<a href="#" class="btn btn-primary mb-0">View Programs</a>
+								<h3 class="mb-1">{% trans %}EARNCERTIFICATE_KEY{% endtrans %}</h3>
+								<p class="mb-3 h5 fw-light lead">{% trans %}EARNCERTIFICATEDESCRIPTION_KEY{% endtrans %}</p>
+								{# <a href="#" class="btn btn-primary mb-0">{% trans %}VIEWPROGRAMS_KEY{% endtrans %}</a> #}
 							</div>
 						</div>
 					</div>
@@ -128,9 +128,9 @@
 						<!-- Content -->
 						<div class="row">
 							<div class="col-sm-8 position-relative">
-								<h3 class="mb-1">Best Rated Courses</h3>
-								<p class="mb-3 h5 fw-light lead">Enroll now in the most popular and best rated courses.</p>
-								<a href="#" class="btn btn-warning mb-0">View Courses</a>
+								<h3 class="mb-1">{% trans %}BESTRATEDCOURSES_KEY{% endtrans %}</h3>
+								<p class="mb-3 h5 fw-light lead">{% trans %}BESTRATEDCOURSESDESCRIPTION_KEY{% endtrans %}</p>
+								{# <a href="#" class="btn btn-warning mb-0">{% trans %}BESTRATEDCOURSESBTN_KEY{% endtrans %}</a> #}
 							</div>
 						</div>
 					</div>

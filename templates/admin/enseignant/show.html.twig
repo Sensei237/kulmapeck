@@ -11,12 +11,12 @@
 {% endblock %}
 
 {% block actionBtn %}
-	<p>
+	<p class="text-right">
         {% if not enseignant.isValidated %}
-            <a href="{{ path('app_admin_enseignant_accept_request', {reference: enseignant.reference}) }}" class="btn btn-success-soft mb-0 delete-item">Accept</a>
+            {{ include("admin/enseignant/_accept.html.twig", {e: enseignant}) }}
         {% endif %}
         {% if not enseignant.isRejected %}
-            <a href="{{ path('app_admin_enseignant_reject_request', {reference: enseignant.reference}) }}" class="btn btn-secondary-soft mb-0 delete-item">Reject</a>
+            <a href="{{ path('app_admin_enseignant_reject_request', {reference: enseignant.reference}) }}" class="btn btn-secondary-soft btn-sm me-1 mb-1 mb-lg-0" data-bs-toggle="modal" data-bs-target="#modal-reject-request-{{ enseignant.id }}">Reject</a>
         {% endif %}
     </p>
 {% endblock %}
@@ -218,34 +218,39 @@
 
 					<!-- Card body START -->
 					<div class="card-body pb-0">
-                        <div class="row g-4">
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <img  style="height: 550px;width: 100%;" src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.diplome) }}" alt="">
-                                    <caption>Diplome</caption>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-12 mb-3">
-                                        <img  style="height: 350px;width: 100%;" style="width: 100%;" class="avatar-img shadow" src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.selfieCNI) }}" alt="">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <img style="width: 100%;height: 200px;" class="avatar-img shadow" src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.rectoCNI) }}" alt="">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <img style="width: 100%;height: 200px;" class="avatar-img shadow" src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.versoCNI) }}" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="mb-3">
-                                    <img style="height: 550px;width: 100%;" src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.emploiDuTemps) }}" alt="">
-                                    <caption>Emploi de temps</caption>
-                                </div>
-                            </div>
-                            
-                        </div>
+                        <!-- Image START -->
+						<div class="row g-4 mt-4">
+							<div class="col-sm-6 col-md-6">
+								<a href="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.diplome) }}" data-glightbox data-gallery="image-popup">
+									<img src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.diplome) }}" class="rounded-3" alt="">
+								</a>
+							</div>
+
+							<div class="col-sm-6 col-md-6">
+								<a href="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.emploiDuTemps) }}" data-glightbox data-gallery="image-popup">
+									<img src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.emploiDuTemps) }}" class="rounded-3" alt="">
+								</a>
+							</div>
+
+							<div class="col-sm-6 col-md-4">
+								<a href="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.selfieCNI) }}" data-glightbox data-gallery="image-popup">
+									<img src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.selfieCNI) }}" class="rounded-3" alt="">
+								</a>
+							</div>
+
+							<div class="col-sm-6 col-md-4">
+								<a href="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.rectoCNI) }}" data-glightbox data-gallery="image-popup">
+									<img src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.rectoCNI) }}" class="rounded-3" alt="">
+								</a>
+							</div>
+
+							<div class="col-sm-6 col-md-4">
+								<a href="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.versoCNI) }}" data-glightbox data-gallery="image-popup">
+									<img src="{{ asset('uploads/images/enseignants/kyc/' ~ enseignant.versoCNI) }}" class="rounded-3" alt="">
+								</a>
+							</div>
+						</div>	
+						<!-- Image END -->
                     </div>
                 </div>
             </div>
@@ -474,5 +479,6 @@
         <!-- Popup modal for reviwe END -->
     {% endfor %}
     
+	{{ include("admin/enseignant/_reject_modal.html.twig", {e: enseignant}) }}
 
 {% endblock %}

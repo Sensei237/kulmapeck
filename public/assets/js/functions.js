@@ -576,62 +576,72 @@ var e = {
 
     // START: 13 Dashboard Chart
     dashboardChart: function () {
-        var ac = e.select('#ChartPayout');
-        if (e.isVariableDefined(ac)) {
-        var options = {
-          series: [{
-            name: 'Payout',
-            data: [2909, 1259, 950, 1563, 1825, 2526, 2010, 3260, 3005, 3860, 4039]
-          }],
-          chart: {
-            height: 300,
-            type: 'area',
-            toolbar: {
-              show: false
-            },
-          },
-          
-          dataLabels: {
-            enabled: true
-          },
-          stroke: {
-            curve: 'smooth'
-          },
-          colors: [ThemeColor.getCssVariableValue('--bs-primary')],
-          xaxis: {
-            type: 'Payout',
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct ', 'Nov', 'Dec'],
-            axisBorder: {
-               show: false
-            },
-            axisTicks: {
-                show: false
-            },
-          },
-          yaxis: [{
-              axisTicks: {
-                show: false
+      var ac = e.select('#ChartPayout');
+      console.log($('#chartPayout').attr('data-earnings-uri'))
+      if (e.isVariableDefined(ac)) {
+        $.ajax({
+          url: baseUrl + "/dashboardEarningsData",
+          type: "GET",
+          success: function(response) {
+            console.table(response.data)
+            let data = response.data
+            let jours = response.jours
+            var options = {
+              series: [{
+                name: 'Payout',
+                data: data
+              }],
+              chart: {
+                height: 300,
+                type: 'area',
+                toolbar: {
+                  show: false
+                },
               },
-              axisBorder: {
-                show: false
+              
+              dataLabels: {
+                enabled: true
               },
-            }],
-          tooltip: {
-            y: {
-              title: {
-                formatter: function (e) {
-                  return "" + "$";
+              stroke: {
+                curve: 'smooth'
+              },
+              colors: [ThemeColor.getCssVariableValue('--bs-primary')],
+              xaxis: {
+                type: 'Payout',
+                categories: jours,
+                axisBorder: {
+                  show: false
+                },
+                axisTicks: {
+                    show: false
+                },
+              },
+              yaxis: [{
+                  axisTicks: {
+                    show: false
+                  },
+                  axisBorder: {
+                    show: false
+                  },
+                }],
+              tooltip: {
+                y: {
+                  title: {
+                    formatter: function (e) {
+                      return "XAF" + "";
+                    }
+                  }
+                },
+                marker: {
+                  show: !1
                 }
               }
-            },
-            marker: {
-              show: !1
+            };
+            var chart = new ApexCharts(document.querySelector("#ChartPayout"), options);
+            chart.render();
             }
-          }
-        };
-        var chart = new ApexCharts(document.querySelector("#ChartPayout"), options);
-        chart.render();
-        }
+        })
+      }
     },
     // END: Dashboard Chart
 
@@ -735,42 +745,47 @@ var e = {
       var cpv = e.select('#ChartTrafficViews');
       if (e.isVariableDefined(cpv)) {
         // CHART: Page Views
-        var options = {
-          series: [70, 15, 10, 5],
-          labels: ['Course-1', 'Course-2', 'Course-3', 'Course-4'],
-          chart: {
-            height: 200,
-            width: 200,
-            offsetX: 0,
-            type: 'donut',
-            sparkline: {
-              enabled: !0
-            }
-          },
-          colors: [
-            ThemeColor.getCssVariableValue('--bs-primary'),
-            ThemeColor.getCssVariableValue('--bs-success'),
-            ThemeColor.getCssVariableValue('--bs-warning'),
-            ThemeColor.getCssVariableValue('--bs-danger')
-          ],
-          tooltip: {
-            theme: "dark"
-          },
-          responsive: [{
-            breakpoint: 480,
-            options: {
+        $.ajax({
+          url: baseUrl + '/traficSource',
+          success: function(response) {
+            var options = {
+              series: response.data,
+              labels: response.labels,
               chart: {
-                width: 200,
                 height: 200,
+                width: 200,
+                offsetX: 0,
+                type: 'donut',
+                sparkline: {
+                  enabled: !0
+                }
               },
-              legend: {
-                position: 'bottom'
-              }
-            }
-          }]
-        };
-        var chart = new ApexCharts(document.querySelector("#ChartTrafficViews"), options);
-        chart.render();
+              colors: [
+                ThemeColor.getCssVariableValue('--bs-primary'),
+                ThemeColor.getCssVariableValue('--bs-success'),
+                ThemeColor.getCssVariableValue('--bs-warning'),
+                ThemeColor.getCssVariableValue('--bs-danger')
+              ],
+              tooltip: {
+                theme: "dark"
+              },
+              responsive: [{
+                breakpoint: 480,
+                options: {
+                  chart: {
+                    width: 200,
+                    height: 200,
+                  },
+                  legend: {
+                    position: 'bottom'
+                  }
+                }
+              }]
+            };
+            var chart = new ApexCharts(document.querySelector("#ChartTrafficViews"), options);
+            chart.render(); 
+          }
+        })
       }
     },
     // END: Traffic Chart

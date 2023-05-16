@@ -20,7 +20,7 @@
 
                         <!-- Tab contents START -->
                         <div class="card-body p-4">
-                            <h3>Others topics</h3>
+                            <h3>{% trans %}OTHERSTOPICS_KEY{% endtrans %}</h3>
                             <hr>
 
                             <div>
@@ -37,10 +37,10 @@
                                                         <p>
                                                             {{ subject.content|raw }}
                                                             <br>
-                                                            <span class="badge {{ subject.isSolved ? "btn-success-soft" : 'btn-danger-soft' }}">{{ subject.isSolved ? "Resolved" : "Unresolved" }}</span> |
+                                                            <span class="badge {{ subject.isSolved ? "btn-success-soft" : 'btn-danger-soft' }}">{{ subject.isSolved ? "{% trans %}RESOLVED_KEY{% endtrans %}" : "{% trans %}UNRESOLVED_KEY{% endtrans %}" }}</span> |
                                                             <i class="badge btn-info-soft">{{ subject.createdAt|date('d/m/Y - H:i:s') }}</i>
-                                                            | <span class="badge btn-warning-soft">{{ subject.forumMessages|length }} comments</span>
-                                                            | <a href="{{ url("app_front_course_forum_subject_message", {slug: subject.forum.cours.slug, reference: subject.reference}, "http", false) }}" class="btn btn-primary-soft">Show comment</a>
+                                                            | <span class="badge btn-warning-soft">{{ subject.forumMessages|length }} {% trans %}COMMENTS_KEY{% endtrans %}</span>
+                                                            | <a href="{{ url("app_front_course_forum_subject_message", {slug: subject.forum.cours.slug, reference: subject.reference}, "http", false) }}" class="btn btn-primary-soft">{% trans %}SHOWCOMMENT_KEY{% endtrans %}</a>
                                                         </p>
                                                     </div>
                                                 </div>

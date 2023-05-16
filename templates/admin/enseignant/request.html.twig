@@ -99,15 +99,22 @@
                                 <!-- Table data -->
                                 <td>
                                     {% if e.isValidated %}
-                                        <a href="#" class="btn btn-success me-1 mb-1 mb-md-0 disabled">Accepted</a>
+                                        <a href="#" class="btn btn-success me-1 mb-1 mb-md-0 disabled">{{e.isCertified ? "Certifié" : "Junior"}}</a>
+                                        {% if e.isCertified %}
+                                            <a title="Définir comme enseignant junior" href="{{ path('app_admin_enseignant_accept_request', {reference: e.reference, type: 'junior'}) }}" class="btn btn-success me-1 mb-1 mb-md-0 btn-sm">Changer</a>
+                                        {% else %}
+                                            <a title="Définir comme enseignant certifié" href="{{ path('app_admin_enseignant_accept_request', {reference: e.reference, type: 'confirmed'}) }}" class="btn btn-success me-1 mb-1 mb-md-0 btn-sm">Changer</a>
+                                        {% endif %}
                                     {% elseif e.isRejected %}
-                                        <a href="{{ path('app_admin_enseignant_accept_request', {reference: e.reference}) }}" class="btn btn-success-soft btn-sm me-1 mb-1 mb-lg-0">Accept</a>
-                                        <a href="#" class="btn btn-secondary me-1 mb-1 mb-md-0 disabled">Rejected</a>
+                                        
+                                        {{ include("admin/enseignant/_accept.html.twig") }}
+                                        
+                                        <a href="#" class="btn btn-secondary btn-sm me-1 mb-1 mb-md-0 disabled">Rejected</a>
                                     {% else %}
-                                        <a href="{{ path('app_admin_enseignant_accept_request', {reference: e.reference}) }}" class="btn btn-success-soft btn-sm me-1 mb-1 mb-lg-0">Accept</a>
-                                        <a href="{{ path('app_admin_enseignant_reject_request', {reference: e.reference}) }}" class="btn btn-secondary-soft btn-sm me-1 mb-1 mb-lg-0">Reject</a>
+                                        {{ include("admin/enseignant/_accept.html.twig") }}
+                                        <a href="{{ path('app_admin_enseignant_reject_request', {reference: e.reference}) }}" class="btn btn-secondary-soft btn-sm me-1 mb-1 mb-lg-0" data-bs-toggle="modal" data-bs-target="#modal-reject-request-{{ e.id }}">Reject</a>
                                     {% endif %}
-                                    <a href="#" class="btn btn-primary-soft btn-sm me-1 mb-0" data-bs-toggle="modal" data-bs-target="#appDetail">View App</a>
+                                    <a href="{{ path('app_admin_enseignant_show', {reference: e.reference}) }}" class="btn btn-primary-soft btn-sm me-1 mb-0">View App</a>
                                 </td>
                             </tr>
                         {% else %}
@@ -136,43 +143,8 @@
     <!-- Card END -->  
     
     
-    <!-- Modal START -->
-    <div class="modal fade" id="appDetail" tabindex="-1" aria-labelledby="appDetaillabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                
-                <!-- Modal header -->
-                <div class="modal-header bg-dark">
-                    <h5 class="modal-title text-white" id="appDetaillabel">Applicant details</h5>
-                    <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body p-5">
-                    <!-- Name -->
-                    <span class="small">Applicant Name:</span>
-                    <h6 class="mb-3 applicant-name">Jacqueline Miller</h6>
-
-                    <!-- Email -->
-                    <span class="small">Applicant Email id:</span>
-                    <h6 class="mb-3 applicant-email">example@gmail.com</h6>
-
-                    <!-- Phone number -->
-                    <span class="small">Applicant Phone number:</span>
-                    <h6 class="mb-3 applicant-phone">+123 456 789 10</h6>
-
-                    <!-- Summary -->
-                    <span class="small">Summary:</span>
-                    <div class="applicant-detail"></div>    
-                </div>
-
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>   
-    <!-- Modal END -->
+    {% for e in enseignants %}
+        {{ include("admin/enseignant/_reject_modal.html.twig") }}
+    {% endfor %}
 
 {% endblock %}

@@ -9,6 +9,7 @@ use App\Entity\Eleve;
 use App\Entity\Enseignant;
 use App\Entity\Filiere;
 use App\Entity\Specialite;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -183,6 +184,21 @@ class CoursRepository extends ServiceEntityRepository
   
         $query->andWhere('c.isValidated = :isValidated')->setParameter('isValidated', true);
 
+        return $query->getQuery()
+            ->getResult();
+    }
+
+    public function findForChefDepartement(User $user): array
+    {
+        $query = $this->createQueryBuilder('c')
+            ->join('c.classe', 'cl')
+            ->join("cl.specialite", 'sp');
+
+        foreach ($user->getFilieres() as $key => $filiere) {
+            $query->orWhere('sp.filiere = :filiere' . $key)
+                ->setParameter('filiere' . $key, $filiere);
+        }
+        
         return $query->getQuery()
             ->getResult();
     }

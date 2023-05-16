@@ -46,10 +46,14 @@ class Filiere
     #[ORM\OneToMany(mappedBy: 'filiere', targetEntity: Specialite::class, orphanRemoval: true)]
     private Collection $specialites;
 
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'filiere')]
+    private Collection $users;
+
     public function __construct()
     {
         $this->sousSystemes = new ArrayCollection();
         $this->specialites = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -142,6 +146,33 @@ class Filiere
             if ($specialite->getFiliere() === $this) {
                 $specialite->setFiliere(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addFiliere($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeFiliere($this);
         }
 
         return $this;

@@ -96,6 +96,9 @@ class Enseignant
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $aboutMe = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isCertified = null;
+
 
     public function __construct()
     {
@@ -320,6 +323,18 @@ class Enseignant
     public function setAboutMe(?string $aboutMe): self
     {
         $this->aboutMe = $aboutMe;
+
+        return $this;
+    }
+
+    public function isIsCertified(): ?bool
+    {
+        return $this->isCertified;
+    }
+
+    public function setIsCertified(?bool $isCertified): self
+    {
+        $this->isCertified = $isCertified;
 
         return $this;
     }

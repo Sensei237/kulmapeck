@@ -13,7 +13,7 @@
                     <!-- Badge -->
                     <h6 class="mb-3 font-base bg-primary text-white py-2 px-4 rounded-2 d-inline-block">{{ lesson.chapitre.cours.intitule }}</h6>
                     <!-- Title -->
-                    <h1>Chapter {{ lesson.chapitre.numero }} - {{ lesson.chapitre.title }}</h1>
+                    <h1>{% trans %}CHAPTER_KEY{% endtrans %} {{ lesson.chapitre.numero }} - {{ lesson.chapitre.title }}</h1>
                     <p>{{ lesson.chapitre.description }}</p>
                     <!-- Content -->
                     <ul class="list-inline mb-0">
@@ -62,13 +62,13 @@
                                             <!-- Playlist responsive toggler START -->
                                             <div class="col-12 d-lg-none">
                                                 <button class="btn btn-primary mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
-                                                    <i class="bi bi-camera-video me-1"></i> Playlist
+                                                    <i class="bi bi-camera-video me-1"></i> {% trans %}PLAYLIST_KEY{% endtrans %}
                                                 </button>
                                             </div>
                                             <!-- Playlist responsive toggler END -->
                                         </div>
                                     {% endif %}
-                                    <h3>Lesson {{ lesson.numero }} : {{ lesson.title }}</h3>
+                                    <h3>{% trans %}LESSON_KEY{% trans %} {{ lesson.numero }} : {{ lesson.title }}</h3>
                                     <hr>
                                     <!-- Course detail START -->
                                     {{ lesson.content|raw }}
@@ -132,7 +132,7 @@
                                                                     <!-- Progress bar -->
                                                                     <div class="overflow-hidden">
                                                                         <div class="d-flex justify-content-between">
-                                                                            <p class="mb-1 h6">{{ finishedLessons }}/{{ chapter.lessons|length }} Completed</p>
+                                                                            <p class="mb-1 h6">{{ finishedLessons }}/{{ chapter.lessons|length }} {% trans %}COMPLETED_KEY{% endtrans %}</p>
                                                                             {% set percent = finishedLessons * 100 / chapter.lessons|length %}
                                                                             <h6 class="mb-1 text-end">{{ percent|number_format(0) }}</h6>
                                                                         </div>

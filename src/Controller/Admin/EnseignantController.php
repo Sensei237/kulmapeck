@@ -10,12 +10,16 @@ use App\Repository\NotificationRepository;
 use App\Repository\NotificationTemplateRepository;
 use App\Repository\ReviewRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/admin/instructors')]
+#[Security("is_granted('ROLE_TRAINERS_MANAGER')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
 class EnseignantController extends AbstractController
 {
     #[Route('/', name: 'app_admin_enseignant_index', methods: ['GET'])]
@@ -58,10 +62,12 @@ class EnseignantController extends AbstractController
     }
 
     #[Route('/request/{reference}/accept', name: 'app_admin_enseignant_accept_request', methods: ['GET'])]
-    public function accepted(Enseignant $enseignant, NotificationTemplateRepository $ntr, NotificationRepository $notificationRepository, EnseignantRepository $enseignantRepository)
+    public function accepted(Enseignant $enseignant, Request $request, NotificationTemplateRepository $ntr, NotificationRepository $notificationRepository, EnseignantRepository $enseignantRepository)
     {
+        $isCertified = strtolower($request->query->get('type')) === 'junior';
         $enseignant->getUtilisateur()->setIsBlocked(false);
-        $enseignantRepository->save($enseignant->setIsValidated(true)->setIsRejected(false), true);
+        $enseignant->getUtilisateur()->setIsVerified(true);
+        $enseignantRepository->save($enseignant->setIsValidated(true)->setIsRejected(false)->setIsCertified(!$isCertified), true);
 
         $notification = new Notification();
         $template = $ntr->findOneBy(['type' => 7]);
@@ -80,13 +86,33 @@ class EnseignantController extends AbstractController
         return $this->redirectToRoute('app_admin_enseignant_request');
     }
 
-    #[Route('/request/{reference}/reject', name: 'app_admin_enseignant_reject_request', methods: ['GET'])]
-    public function rejected(Enseignant $enseignant, NotificationTemplateRepository $ntr, NotificationRepository $notificationRepository, EnseignantRepository $enseignantRepository)
+    #[Route('/request/{reference}/reject', name: 'app_admin_enseignant_reject_request', methods: ['POST'])]
+    public function rejected(Enseignant $enseignant, Request $request, MailerInterface $mailer, NotificationTemplateRepository $ntr, NotificationRepository $notificationRepository, EnseignantRepository $enseignantRepository)
     {
-        $enseignant->getUtilisateur()->setIsBlocked(true);
+        if (!$this->isCsrfTokenValid('reject'.$enseignant->getId(), $request->request->get('_token'))) {
+            $this->addFlash("danger", "Impossible de traiter ce formulaire");
+            return $this->redirectToRoute('app_admin_enseignant_request');
+        }
+
+        $motif = $request->request->get('motif');
+
+        if (!$motif || strlen(trim($motif)) < 10) {
+            $this->addFlash("info", "Vous devez saisir un motif valide pour rejeter cette demande");
+            return $this->redirectToRoute('app_admin_enseignant_request');
+        }
+
+        $enseignant->getUtilisateur()->setIsBlocked(false);
         $enseignant->setIsValidated(false)
             ->setIsRejected(true);
         $enseignantRepository->save($enseignant, true);
+
+        $email = (new Email())
+                    ->from('kulmapeck@mail.com')
+                    ->to($enseignant->getUtilisateur()->getEmail())
+                    ->subject("Demande rejeter")
+                    ->text($motif)
+                    ->html("<p>" . $motif ."</p>");
+        $mailer->send($email);
         
         $notification = new Notification();
         $template = $ntr->findOneBy(['type' => 6]);
@@ -106,6 +132,7 @@ class EnseignantController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_enseignant_new', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_UNAUTHORIZE')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
     public function new(Request $request, EnseignantRepository $enseignantRepository): Response
     {
         throw $this->createAccessDeniedException();
@@ -139,6 +166,7 @@ class EnseignantController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_enseignant_edit', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_UNAUTHORIZE')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
     public function edit(Request $request, Enseignant $enseignant, EnseignantRepository $enseignantRepository): Response
     {
         throw $this->createAccessDeniedException();

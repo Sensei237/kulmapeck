@@ -25,7 +25,8 @@ class SocialSettingsType extends AbstractType
                     'Facebook Icon' => 'fa-facebook-f',
                     'Instagram Icon' => 'fa-instagram',
                     'Twitter Icon' => 'fa-twitter',
-                    'LinkedIn Icon' => 'fa-linkedin-in'
+                    'LinkedIn Icon' => 'fa-linkedin-in',
+                    'Youtube Icon' => 'fa-youtube'
                 ],
                 'attr' => ['class' => 'js-choice'],
                 'label_attr' => ['class' => 'form-label']

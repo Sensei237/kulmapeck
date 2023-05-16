@@ -56,6 +56,12 @@ security:
             refresh_jwt:
                 check_path: /api/token/refresh
 
+    role_hierarchy:
+        ROLE_COURSE_MANAGER: ROLE_ADMIN
+        ROLE_STUDENTS_MANAGER: ROLE_ADMIN
+        ROLE_TRAINERS_MANAGER: ROLE_ADMIN
+        ROLE_CHEF_DEPARTEMENT: ROLE_COURSE_MANAGER
+        ROLE_SUPER_USER: [ROLE_COURSE_MANAGER, ROLE_STUDENTS_MANAGER, ROLE_TRAINERS_MANAGER]
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used

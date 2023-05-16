@@ -3,7 +3,7 @@
 
 <!-- Mirrored from eduport.webestica.com/course-video-player.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 12 Mar 2023 00:44:17 GMT -->
 <head>
-	<title>Eduport - LMS, Education and Course Theme</title>
+	<title>Kulmapeck | Lecture</title>
 
 	<!-- Meta Tags -->
 	<meta charset="utf-8">
@@ -131,7 +131,7 @@
 						<!-- Title -->
 						<div class="card-header bg-light rounded-0">
 							<h1 class="mt-2 fs-5">{{ lesson.chapitre.cours.intitule }}</h1>
-							<h6 class="mb-0 fw-normal"><a href="#">By {{ lesson.chapitre.cours.enseignant.utilisateur.personne.nomComplet }}</a></h6>
+							<h6 class="mb-0 fw-normal"><a href="#">{% trans %}BY_KEY{% trans %} {{ lesson.chapitre.cours.enseignant.utilisateur.personne.nomComplet }}</a></h6>
 						</div>
 
 						<!-- Course content START -->
@@ -174,7 +174,7 @@
                                                                                 {% endfor %}
                                                                             {% endif %}
                                                                             <!-- Actions Mark button -->
-                                                                            <span class="p-2 mb-0 {{ isReaded ? 'text-success' : 'text-secondary' }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ isReaded ? 'Completed' : 'Not Completed' }}">
+                                                                            <span class="p-2 mb-0 {{ isReaded ? 'text-success' : 'text-secondary' }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ isReaded ? '{% trans %}COMPLETED_KEY{% endtrans %}' : '{% trans %}NOTCOMPLETED_KEY{% endtrans %}' }}">
                                                                                 <i class="bi bi-check-circle-fill"></i>
                                                                             </span>
                                                                         </p>
@@ -196,7 +196,7 @@
 
 						<div class="card-footer">
 							<div class="d-grid">
-								<a href="{{ url("app_front_read_lesson", {slug: lesson.slug, view: 'normal'}) }}" class="btn btn-primary-soft mb-0">Back to course</a>
+								<a href="{{ url("app_front_read_lesson", {slug: lesson.slug, view: 'normal'}) }}" class="btn btn-primary-soft mb-0">{% trans %}BACKTOCOURSE_KEY{% endtrans %}</a>
 							</div>
 						</div>
 					</div>

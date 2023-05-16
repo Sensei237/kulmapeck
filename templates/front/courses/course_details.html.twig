@@ -35,7 +35,7 @@
                 <!-- Playlist responsive toggler START -->
                 <div class="col-12 d-lg-none">
                     <button class="btn btn-primary mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
-                        <i class="bi bi-camera-video me-1"></i> Playlist
+                        <i class="bi bi-camera-video me-1"></i> {% trans %}PLAYLIST_KEY{% endtrans %}
                     </button>
                 </div>
                 <!-- Playlist responsive toggler END -->
@@ -74,8 +74,8 @@
                                         <img class="avatar-img rounded-circle" src="{{ asset(course.enseignant.avatar) }}" alt="avatar">
                                     </div>
                                     <div class="ms-3">
-                                        <h6 class="mb-0"><a href="#">By {{ course.enseignant.utilisateur.personne.nomComplet }}</a></h6>
-                                        <p class="mb-0 small">Founder Eduport company</p>
+                                        <h6 class="mb-0"><a href="#">{% trans %}BY_KEY{% trans %} {{ course.enseignant.utilisateur.personne.nomComplet }}</a></h6>
+                                        <p class="mb-0 small">{% trans %}TRAINER_KEY{% endtrans %}</p>
                                     </div>
                                 </div>
 
@@ -85,7 +85,7 @@
                                     <!-- Share button with dropdown -->
                                     <div class="dropdown ms-2">
                                         <a href="#" class="btn btn-sm mb-0 btn-info-soft small" role="button" id="dropdownShare" data-bs-toggle="dropdown" aria-expanded="false">
-                                            share
+                                            {% trans %}SHARE_KEY{% endtrans %}
                                         </a>
                                         <!-- dropdown button -->
                                         <ul class="dropdown-menu dropdown-w-sm dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownShare">
@@ -106,11 +106,11 @@
                             <ul class="nav nav-pills nav-pills-bg-soft px-3" id="course-pills-tab" role="tablist">
                                 <!-- Tab item -->
                                 <li class="nav-item me-2 me-sm-4" role="presentation">
-                                    <button class="nav-link mb-0 active" id="course-pills-tab-1" data-bs-toggle="pill" data-bs-target="#course-pills-1" type="button" role="tab" aria-controls="course-pills-1" aria-selected="true">Overview</button>
+                                    <button class="nav-link mb-0 active" id="course-pills-tab-1" data-bs-toggle="pill" data-bs-target="#course-pills-1" type="button" role="tab" aria-controls="course-pills-1" aria-selected="true">{% trans %}COURSEOVERVIEW_KEY{% endtrans %}</button>
                                 </li>
                                 <!-- Tab item -->
                                 <li class="nav-item me-2 me-sm-4" role="presentation">
-                                    <button class="nav-link mb-0" id="course-pills-tab-2" data-bs-toggle="pill" data-bs-target="#course-pills-2" type="button" role="tab" aria-controls="course-pills-2" aria-selected="false">Reviews</button>
+                                    <button class="nav-link mb-0" id="course-pills-tab-2" data-bs-toggle="pill" data-bs-target="#course-pills-2" type="button" role="tab" aria-controls="course-pills-2" aria-selected="false">{% trans %}COURSE_REVIEWS_KEY{% trans %}</button>
                                 </li>
                                 <!-- Tab item -->
                                 <li class="nav-item me-2 me-sm-4" role="presentation">

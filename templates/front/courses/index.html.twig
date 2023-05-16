@@ -14,13 +14,13 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="bg-light p-4 text-center rounded-3">
-						<h1 class="m-0">Courses</h1>
+						<h1 class="m-0">{% trans %}COURSES_KEY{% endtrans %}</h1>
 						<!-- Breadcrumb -->
 						<div class="d-flex justify-content-center">
 							<nav aria-label="breadcrumb">
 								<ol class="breadcrumb breadcrumb-dots mb-0">
-									<li class="breadcrumb-item"><a href="{{ path('app_front') }}">Home</a></li>
-									<li class="breadcrumb-item active" aria-current="page">Courses</li>
+									<li class="breadcrumb-item"><a href="{{ path('app_front') }}">{% trans %}HOME_KEY{% endtrans %}</a></li>
+									<li class="breadcrumb-item active" aria-current="page">{% trans %}COURSES_KEY{% endtrans %}</li>
 								</ol>
 							</nav>
 						</div>
@@ -48,7 +48,7 @@
 							<!-- Select items -->
 							<div class="col-sm-6 col-md-4 pb-2 pb-md-0">
 								<select data-response="#search_specialites" name="filiere" id="select-filieres" data-element="#select-filieres" class="form-select form-select-sm js-choice find-data-with-ajax" aria-label=".form-select-sm example">
-									<option value="">Filières</option>
+									<option value="">{% trans %}SECTORS_KEY{% endtrans %}</option>
 									{% for f in filieres %}
 										<option {{ searchFiliere is not same as null and searchFiliere is same as f ? 'selected' : '' }} value="{{ f.slug }}">{{ f.name }}</option>
 									{% endfor %}
@@ -58,7 +58,7 @@
 							<!-- Select items -->
 							<div class="col-sm-6 col-md-4 pb-2 pb-md-0">
 								<select data-response="#search_classes" id="search_specialites"  id="select-filieres" data-element="#search_specialites" name="specialite" class="form-select form-select-sm js-choice find-data-with-ajax" aria-label=".form-select-sm example">
-									<option value="">Spécialités</option>
+									<option value="">{% trans %}SPECIALTIES_KEY{% endtrans %}</option>
 									{# {% if searchFiliere is not same as null %} #}
 										{% for s in specialites %}
 											<option {{ searchSpecialite is not same as null and searchSpecialite is same as s ? 'selected' : '' }} value="{{ s.slug }}">{{ s.name }}</option>
@@ -70,7 +70,7 @@
 							<!-- Select items -->
 							<div class="col-sm-6 col-md-4 pb-2 pb-md-0">
 								<select id="search_classes" name="classe" class="form-select form-select-sm js-choice" aria-label=".form-select-sm example">
-									<option value="">Classes</option>
+									<option value="">{% trans %}CLASSES_KEY{% endtrans %}</option>
 									{# {% if searchSpecialite is not same as null %} #}
 									{% for c in classes %}
 										<option {{ searchClasse is not same as null and searchClasse is same as c ? 'selected' : '' }} value="{{ c.slug }}">{{ c.name }}</option>
@@ -82,7 +82,7 @@
 							<!-- Select items -->
 							<div class="col-sm-6 col-md-3 pb-2 pb-md-0">
 								<select name="category" class="form-select form-select-sm js-choice" aria-label=".form-select-sm example">
-									<option value="">Categories</option>
+									<option value="">{% trans %}CATEGORIES_KEY{% endtrans %}</option>
 									{% for cat in categories %}
 										<option {{ searchCategory is not same as null and searchCategory.id is same as cat.id ? 'selected' : '' }} value="{{ cat.slug }}">{{ cat.name }}</option>
 									{% endfor %}
@@ -92,9 +92,9 @@
 							<!-- Search item -->
 							<div class="col-sm-6 col-md-3 pb-2 pb-md-0">
 								<select name="price" class="form-select form-select-sm js-choice" aria-label=".form-select-sm example">
-									<option value="">All</option>
-									<option {{ searchPrice is same as 'free' ? 'selected' : '' }} value="free">Free</option>
-									<option {{ searchPrice is same as 'paid' ? 'selected' : '' }} value="paid">Paid</option>
+									<option value="">{% trans %}ALL_KEY{% endtrans %}</option>
+									<option {{ searchPrice is same as 'free' ? 'selected' : '' }} value="free">{% trans %}FREE_KEY{% endtrans %}</option>
+									<option {{ searchPrice is same as 'paid' ? 'selected' : '' }} value="paid">{% trans %}PAID_KEY{% endtrans %}</option>
 								</select>
 							</div>
 
@@ -102,20 +102,20 @@
 							<div class="col-sm-6 col-md-3 pb-2 pb-md-0">
 								<select name="level" class="form-select form-select-sm js-choice" aria-label=".form-select-sm example">
 									<option value=""></option>
-									<option {{ searchLevel is same as 'Tout Niveau' ? 'selected' : '' }} value="Tout Niveau">Tout Niveau</option>
-									<option {{ searchLevel is same as 'Facile' ? 'selected' : '' }} value="Facile">Facile</option>
-									<option {{ searchLevel is same as 'Intermédiaire' ? 'selected' : '' }} value="Intermédiaire">Intermédiaire</option>
-									<option {{ searchLevel is same as 'Difficile' ? 'selected' : '' }} value="Difficile">Difficile</option>
-									<option {{ searchLevel is same as 'Très difficile' ? 'selected' : '' }} value="Très difficile">Très difficile</option>
+									<option {{ searchLevel is same as 'Tout Niveau' ? 'selected' : '' }} value="Tout Niveau">{% trans %}ALLLEVEL_KEY{% endtrans %}</option>
+									<option {{ searchLevel is same as 'Facile' ? 'selected' : '' }} value="Facile">{% trans %}EASY_KEY{% endtrans %}</option>
+									<option {{ searchLevel is same as 'Intermédiaire' ? 'selected' : '' }} value="Intermédiaire">{% trans %}INTERMEDIATE_KEY{% endtrans %}</option>
+									<option {{ searchLevel is same as 'Difficile' ? 'selected' : '' }} value="Difficile">{% trans %}DIFFICULT_KEY{% endtrans %}</option>
+									<option {{ searchLevel is same as 'Très difficile' ? 'selected' : '' }} value="Très difficile">{% trans %}VERYDIFFICULT_KEY{% endtrans %}</option>
 								</select>
 							</div>
 
 							<!-- Search item -->
 							<div class="col-sm-6 col-md-3 pb-2 pb-md-0">
 								<select name="language" class="form-select form-select-sm js-choice" aria-label=".form-select-sm example">
-									<option value="">Language</option>
-									<option value="English">English</option>
-									<option value="French">Français</option>
+									<option value="">{% trans %}LANGUAGE_KEY{% endtrans %}</option>
+									<option value="English">{% trans %}ENGLISH_KEY{% endtrans %}</option>
+									<option value="French">{% trans %}FRENCH_KEY{% endtrans %}</option>
 								</select>
 							</div>
 						</div> <!-- Row END -->
@@ -143,7 +143,7 @@
 								<!-- Card item END -->
 							{% else %}
 								<div class="text-center p-4 mb-5 mt-5">
-									<h2>No result</h2>
+									<h2>{% trans %}NORESULTS_KEY{% endtrans %}</h2>
 								</div>
 							{% endfor %}
 						</div>
@@ -196,14 +196,14 @@
 						<div class="row align-items-center">
 							<!-- Title -->
 							<div class="col-lg-6">
-								<h3 class="text-white mb-3 mb-lg-0">Are you ready for a more great Conversation?</h3>
+								<h3 class="text-white mb-3 mb-lg-0">{% trans %}AREYOUREADYFORCONVERSATION_KEY{% endtrans %}</h3>
 							</div>
 							<!-- Input item -->
 							<div class="col-lg-6 text-lg-end">
 								<form class="bg-body rounded p-2">
 									<div class="input-group">
-										<input class="form-control border-0 me-1" type="email" placeholder="Type your email here">
-										<button type="button" class="btn btn-dark mb-0 rounded">Subscribe</button>
+										<input class="form-control border-0 me-1" type="email" placeholder="{% trans %}TYPEEMAILHERE_KEY{% endtrans %}">
+										<button type="button" class="btn btn-dark mb-0 rounded">{% trans %}SUBSCRIBE_KEY{% endtrans %}</button>
 									</div>
 								</form>
 							</div>

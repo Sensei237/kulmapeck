@@ -83,7 +83,7 @@
                                 
 								<!-- Table data -->
 								<td>
-									<a data-url="{{ path('app_admin_pays_edit', {id: user.id}) }}" href="#" class="btn btn-sm btn-success-soft edit_with_modal_btn me-1 mb-1 mb-md-0">Edit</a>
+									<a href="{{ path('app_admin_registration_edit_register', {id: user.id}) }}" class="btn btn-sm btn-success-soft me-1 mb-1 mb-md-0">Edit</a>
                                     {% if not user.isBlocked %}
                                         <a href="{{ path('app_admin_registration_block', {id: user.id}) }}" class="btn btn-sm btn-warning-soft me-1 mb-1 mb-md-0">Block</a>
                                     {% else %}

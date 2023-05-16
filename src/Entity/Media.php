@@ -35,7 +35,7 @@ class Media
     #[ORM\Column(length: 255)]
     #[Groups(['read:course:collection'])]
     private ?string $imageFile = null;
-
+    
     #[ORM\OneToOne(inversedBy: 'media', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Cours $cours = null;

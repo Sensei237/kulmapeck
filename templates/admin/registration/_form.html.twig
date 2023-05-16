@@ -69,21 +69,31 @@
         {% endfor %}
     {% endif %}
 
-    {% if registrationForm.agreeTerms is defined %}
+    {% if registrationForm.filieres is defined %}
         <!-- Check box -->
         <div class="mb-4">
-            <div class="form-check">
-                {{ form_widget(registrationForm.agreeTerms) }}
+            <label for="exampleInputEmail1" class="form-label">{{ form_label(registrationForm.filieres) }}</label>
+            <div class="input-group input-group-lg">
+                {{ form_widget(registrationForm.filieres) }}
             </div>
         </div>
     {% endif %}
     
-    {% if registrationForm.plainPassword is defined %}
+    {% if registrationForm.roles is defined %}
         <div class="mb-4">
             <label for="exampleInputEmail1" class="form-label">{{ form_label(registrationForm.roles) }}*</label>
             <div class="input-group input-group-lg">
                 <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i class="fas fa-lock"></i></span>
                 {{ form_widget(registrationForm.roles) }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if registrationForm.agreeTerms is defined %}
+        <!-- Check box -->
+        <div class="mb-4">
+            <div class="form-check">
+                {{ form_widget(registrationForm.agreeTerms) }}
             </div>
         </div>
     {% endif %}

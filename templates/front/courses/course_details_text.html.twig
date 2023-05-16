@@ -14,7 +14,7 @@
                     <p class="text-white">{{ course.description }}</p>
                     <!-- Content -->
                     <ul class="list-inline mb-5">
-                        <li class="list-inline-item h6 me-4 mb-1 mb-sm-0 text-white"><span class="fw-light">By</span> {{ course.enseignant.utilisateur.personne.nomComplet }}</li>
+                        <li class="list-inline-item h6 me-4 mb-1 mb-sm-0 text-white"><span class="fw-light">{% trans %}BY_KEY{% endtrans %}</span> {{ course.enseignant.utilisateur.personne.nomComplet }}</li>
                         <li class="list-inline-item me-4 mb-1 mb-sm-0">
                             <ul class="list-inline mb-0">
                                 <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
@@ -31,19 +31,19 @@
                 </div>
 
                 <div class="col-lg-3">
-                    <h6 class="text-white lead fw-light mb-3"><i class="fas fa-user-graduate text-orange me-2"></i>{{ course.eleves|length }} already enrolled</h6>
+                    <h6 class="text-white lead fw-light mb-3"><i class="fas fa-user-graduate text-orange me-2"></i>{{ course.eleves|length }} {% trans %}ALLREADYENROLLED_KEY{% endtrans %}</h6>
                     
                     <!-- Button -->
-                    <a href="{{ url("app_front_course_start", {slug: course.slug}, "http", false) }}" class="btn btn-warning mb-3 w-100">{{ not exist ? 'Enroll Course and start' : 'Continue Reading' }}</a>
+                    <a href="{{ url("app_front_course_start", {slug: course.slug}, "http", false) }}" class="btn btn-warning mb-3 w-100">{{ not exist ? '{% trans %}ENROLLANDSTART_KEY{% endtrans %}' : '{% trans %}CONTINUE_READING_KEY{% endtrans %}' }}</a>
                     
                     <!-- Progress item -->
                     <div class="overflow-hidden mb-4">
-                        <h6 class="text-white">Your Progress</h6>
+                        <h6 class="text-white">{% trans %}YOURPROGRESS_KEY{% endtrans %}</h6>
                         {% set percent = lessons|length > 0 ? 100 * lectures|length / lessons|length : 0 %}
                         <div class="progress progress-sm bg-white bg-opacity-10 mb-1">
                             <div class="progress-bar bg-white aos" role="progressbar" data-aos="slide-right" data-aos-delay="200" data-aos-duration="1000" data-aos-easing="ease-in-out" style="width: {{ percent }}%;" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                        <small class="text-white">{{ lectures|length }} of {{ lessons|length }} Completed</small>
+                        <small class="text-white">{{ lectures|length }} of {{ lessons|length }} {% trans %}COMPLETED_KEY{% endtrans %}</small>
                     </div>
                 </div>
 
@@ -64,11 +64,11 @@
                             <ul class="nav nav-bottom-line py-0" id="course-pills-tab" role="tablist">
                                 <!-- Tab item -->
                                 <li class="nav-item me-2 me-sm-4" role="presentation">
-                                    <button class="nav-link mb-2 mb-md-0 active" id="course-pills-tab-1" data-bs-toggle="pill" data-bs-target="#course-pills-1" type="button" role="tab" aria-controls="course-pills-1" aria-selected="true">Course Materials</button>
+                                    <button class="nav-link mb-2 mb-md-0 active" id="course-pills-tab-1" data-bs-toggle="pill" data-bs-target="#course-pills-1" type="button" role="tab" aria-controls="course-pills-1" aria-selected="true">{% trans %}COURSEDESCRIPTION_KEY{% endtrans %}</button>
                                 </li>
                                 <!-- Tab item -->
                                 <li class="nav-item me-2 me-sm-4" role="presentation">
-                                    <button class="nav-link mb-2 mb-md-0" id="course-pills-tab-2" data-bs-toggle="pill" data-bs-target="#course-pills-2" type="button" role="tab" aria-controls="course-pills-2" aria-selected="false">Chapters</button>
+                                    <button class="nav-link mb-2 mb-md-0" id="course-pills-tab-2" data-bs-toggle="pill" data-bs-target="#course-pills-2" type="button" role="tab" aria-controls="course-pills-2" aria-selected="false">{% trans %}CHAPTERS_KEY{% endtrans %}</button>
                                 </li>
                                 <!-- Tab item -->
                                 <li class="nav-item me-2 me-sm-4" role="presentation">
@@ -94,7 +94,7 @@
                                             <div class="accordion-item mb-3">
                                                 <h6 class="accordion-header font-base" id="heading-{{ loop.index }}">
                                                     <button class="accordion-button fw-bold rounded d-flex collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ loop.index }}" aria-expanded="{{ loop.first ? 'true' : 'false' }}" aria-controls="collapse-{{ loop.index }}">
-                                                        Chapter {{ chap.numero }} : {{ chap.title }}
+                                                        {% trans %}CHAPTER_KEY{% endtrans %} {{ chap.numero }} : {{ chap.title }}
                                                         <span class="small ms-0 ms-sm-2 d-none d-sm-block">({{ chap.lessons|length }} {{ chap.lessons|length == 1 ? 'lesson' : 'lessons' }})</span> 
 
                                                         <!-- Mark button -->
@@ -124,7 +124,7 @@
                                                                     
                                                                     <!-- Content -->
                                                                     <div class="ms-3">
-                                                                        <a href="#" class="d-inline-block text-truncate mb-0 h6 fw-normal w-100px w-sm-200px w-md-400px"> Lesson {{ lesson.numero }} : {{ lesson.title }}</a>
+                                                                        <a href="#" class="d-inline-block text-truncate mb-0 h6 fw-normal w-100px w-sm-200px w-md-400px"> {% trans %}LESSONS_KEY{% endtrans %} {{ lesson.numero }} : {{ lesson.title }}</a>
                                                                     </div>
                                                                 </div>
                                                                 {% set isReaded = false %}
@@ -187,7 +187,7 @@
                                         <div class="card-header border-bottom p-0 pb-3">
                                             <!-- Title and select -->
                                             <div class="d-sm-flex justify-content-between align-items-center">
-                                                <h4 class="mb-0">All Chapters Description</h4>
+                                                <h4 class="mb-0">{% trans %}ALLCHAPTERS_KEY{% endtrans %}</h4>
                                             </div>
                                         </div>
 
@@ -202,7 +202,7 @@
                                                         <p>{{ chap.description|raw }}</p>
                                                         <!-- Buttons -->
                                                         <div class="hstack gap-3 flex-wrap">
-                                                            <a href="{{ url("app_front_course_start", {slug: course.slug}, "http", false) }}" class="btn btn-sm btn-primary mb-0"><i class="bi bi-play-fill me-2"></i> {{ not exist ? 'Start Reading' : 'Continue' }}</a>
+                                                            <a href="{{ url("app_front_course_start", {slug: course.slug}, "http", false) }}" class="btn btn-sm btn-primary mb-0"><i class="bi bi-play-fill me-2"></i> {{ not exist ? "{% trans %}STARTREADING_KEY{% endtrans %}" : "{% trans %}CONTINUE_KEY{% endtrans %}" }}</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -269,7 +269,7 @@
         <div class="container">
             <!-- Title -->
             <div class="row mb-4">
-                <h2 class="mb-0">Top Listed Courses</h2>
+                <h2 class="mb-0">{% trans %}TOPLISTED_KEY{% endtrans %}</h2>
             </div>
 
             <div class="row">

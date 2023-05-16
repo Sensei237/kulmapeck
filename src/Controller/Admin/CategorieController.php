@@ -7,6 +7,7 @@ use App\Form\CategorieType;
 use App\Repository\CategorieRepository;
 use App\Service\FileUploader;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('admin/categorie')]
+#[Security("is_granted('ROLE_COURSE_MANAGER')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
 class CategorieController extends AbstractController
 {
     #[Route('/', name: 'app_admin_categorie_index', methods: ['GET', 'POST'])]

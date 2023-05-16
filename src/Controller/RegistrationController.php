@@ -19,8 +19,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
-use function PHPUnit\Framework\throwException;
-
 class RegistrationController extends AbstractController
 {
 

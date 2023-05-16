@@ -4,14 +4,13 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Form\RegistrationStudentType;
-use App\Form\RegistrationTeacherType;
 use App\Repository\PersonneRepository;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 #[Route('/admin/users')]
+#[Security("is_granted('ROLE_SUPER_USER')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
 class RegistrationController extends AbstractController
 {
     private EmailVerifier $emailVerifier;
@@ -50,12 +50,16 @@ class RegistrationController extends AbstractController
         ]);
     }
 
+
     #[Route('/register', name: 'app_admin_registration_register', methods: ['POST', 'GET'])]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, FileUploader $fileUploader, PersonneRepository $personneRepository): Response
+    #[Route('/register/{id}', name: 'app_admin_registration_edit_register', methods: ['POST', 'GET'])]
+    public function register(User $user = null, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, FileUploader $fileUploader, PersonneRepository $personneRepository): Response
     {
 
-        $user = new User();
-        $user->parentCode = $request->get('invitation');
+        if ($user === null) {
+            $user = new User();
+            $user->parentCode = $request->get('invitation');
+        }
         
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -84,6 +88,9 @@ class RegistrationController extends AbstractController
 
             $user->getPersonne()->setUtilisateur($user);
             $user->addRole('ROLE_ADMIN')->setIsAdmin(true);
+            if (!$user->getFilieres()->isEmpty()) {
+                $user->addRole("ROLE_CHEF_DEPARTEMENT");
+            }
             $entityManager->persist($user);
             $entityManager->flush();
 

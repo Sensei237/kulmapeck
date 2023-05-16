@@ -1,0 +1,24 @@
+<div class="modal fade" id="modal-reject-request-{{ e.id }}">
+    <form class="modal-dialog" method="POST" action="{{ path('app_admin_enseignant_reject_request', {reference: e.reference}) }}">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title text-white" id="viewReviewLabel">Rejeter la demande</h5>
+                <button type="button" class="btn btn-sm btn-light mb-0" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+            </div>
+            
+            <div class="modal-body">
+                <div>
+                    <label for="mofif-rejet-{{e.id}}" class="form-label">Entrer le motif du rejet</label>
+                    <textarea name="motif" id="" cols="30" rows="7" class="form-control"></textarea>
+                    <input type="hidden" name="_token" value="{{ csrf_token('reject' ~ e.id) }}">
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-soft my-0" data-bs-dismiss="modal">Fermer</button>
+                <button type="submit" class="btn btn-warning-soft my-0">Rejeter</button>
+            </div>
+        </div>
+    </form>
+</div>

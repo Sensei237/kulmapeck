@@ -26,7 +26,7 @@
                                 <h5 class="purecounter mb-0 fw-bold" data-purecounter-start="0" data-purecounter-end="10"	data-purecounter-delay="200">0</h5>
                                 <span class="mb-0 h5">K</span>
                             </div>
-                            <p class="mb-0">Online Courses</p>
+                            <p class="mb-0">{% trans %}OONLINECOURSES_KEY{% endtrans %}</p>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                                 <h5 class="purecounter mb-0 fw-bold" data-purecounter-start="0" data-purecounter-end="200" data-purecounter-delay="200">0</h5>
                                 <span class="mb-0 h5">+</span>
                             </div>
-                            <p class="mb-0">Expert Tutors</p>
+                            <p class="mb-0">{% trans %}EXPERTSTUTORS_KEY{% endtrans %}</p>
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                                 <h5 class="purecounter mb-0 fw-bold" data-purecounter-start="0" data-purecounter-end="60"	data-purecounter-delay="200">0</h5>
                                 <span class="mb-0 h5">K+</span>
                             </div>
-                            <p class="mb-0">Online Students</p>
+                            <p class="mb-0">{% trans %}ONLINESTUDENTS_KEY{% endtrans %}</p>
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                                 <h5 class="purecounter mb-0 fw-bold" data-purecounter-start="0" data-purecounter-end="6" data-purecounter-delay="300">0</h5>
                                 <span class="mb-0 h5">K+</span>
                             </div>
-                            <p class="mb-0">Certified Courses</p>
+                            <p class="mb-0">{% trans %}CERTIFIEDCOURSES_KEY{% endtrans %}</p>
                         </div>
                     </div>
                 </div>
@@ -82,8 +82,8 @@
             <!-- Title -->
             <div class="row mb-4">
                 <div class="col-lg-8 mx-auto text-center">
-                    <h2 class="fs-1">Most Popular Courses</h2>
-                    <p class="mb-0">Choose from hundreds of courses from specialist organizations</p>
+                    <h2 class="fs-1">{% trans %}MOSTPOPULAR_KEY{% endtrans %}</h2>
+                    <p class="mb-0">{% trans %}MOSTPOPULARDESCRIPTION_KEY{% endtrans %}</p>
                 </div>
             </div>
 
@@ -97,7 +97,7 @@
                     </li>
                 {% endfor %}
                 <li class="nav-item me-2 me-sm-5">
-                    <a class="nav-link mb-2 mb-md-0" href="{{ url("app_front_courses") }}">All courses</a>
+                    <a class="nav-link mb-2 mb-md-0" href="{{ url("app_front_courses") }}">{% trans %}ALLCOURSES_KEY{% endtrans %}</a>
                 </li>
             </ul>
             <!-- Tabs END -->
@@ -157,12 +157,12 @@
                                 <div class="row align-items-center">
                                     <!-- Title -->
                                     <div class="col-lg-7">
-                                        <h3 class="text-white">Become an Instructor!</h3>
-                                        <p class="text-white mb-3 mb-lg-0">Speedily say has suitable disposal add boy. On forth doubt miles of child. Exercise joy man children rejoiced. Yet uncommonly his ten who diminution astonished.</p>
+                                        <h3 class="text-white">{% trans %}BECOMEINSTRUCTOR_KEY{% endtrans %}</h3>
+                                        <p class="text-white mb-3 mb-lg-0">{% trans %}BECOMEINSTRUCTORDESCRIPTION_KEY{% endtrans %}</p>
                                     </div>
                                     <!-- Content and input -->
                                     <div class="col-lg-5 text-lg-end">
-                                        <a href="{{ url("app_front_register", {type: 'trainer'}) }}" class="btn btn-outline-warning mb-0">Start Teaching Today</a>
+                                        <a href="{{ url("app_front_register", {type: 'trainer'}) }}" class="btn btn-outline-warning mb-0">{% trans %}STARTTEACHINGTODAY_KEY{% endtrans %}</a>
                                     </div>
                                 </div>
                             </div>
@@ -182,8 +182,8 @@
             <!-- Title -->
             <div class="row mb-4">
                 <div class="col-lg-8 mx-auto text-center">
-                    <h2 class="fs-1">Our Trending Courses</h2>
-                    <p class="mb-0">Check out most 🔥 courses in the market</p>
+                    <h2 class="fs-1">{% trans %}TRENDINGCOURSES_KEY{% endtrans %}</h2>
+                    <p class="mb-0">{% trans %}TRENDINGCOURSESDESCRIPTION_KEY{% endtrans %}</p>
                 </div>
             </div>
             <div class="row">
@@ -260,7 +260,7 @@
                                     <i class="bi bi-shield-fill-check text-dark"></i>
                                 </div>
                                 <!-- Title -->
-                                <h6 class="mb-3">100+ Verified Mentors</h6>
+                                <h6 class="mb-3">100+ {% trans %}VERIFIEDMENTOR_KEY{% endtrans %}</h6>
                                 <!-- Mentor Item -->
                                 <div class="d-flex align-items-center mb-3">
                                     <!-- Avatar -->
@@ -308,7 +308,7 @@
                         <div class="col-7 mt-0 mt-xl-5 text-end position-relative z-index-1 d-none d-md-block">
                             <!-- SVG -->
                             <figure	class="fill-danger position-absolute top-0 start-50 mt-n7 ms-6 ps-3 pt-2 z-index-n1 d-none d-lg-block">
-                                <svg enable-background="new 0 0 160.7 159.8" height="180px">
+                                <svg  vg enable-background="new 0 0 160.7 159.8" height="180px">
                                     <path d="m153.2 114.5c1.2 0 2.1 1 2.1 2.2s-1 2.2-2.1 2.2c-1.2 0-2.1-1-2.1-2.2-0.1-1.2 0.9-2.2 2.1-2.2z" />
                                     <path d="m116.4 114.5c1.2 0 2.1 1 2.1 2.2s-1 2.2-2.1 2.2c-1.2 0-2.1-1-2.1-2.2s0.9-2.2 2.1-2.2z" />
                                     <path d="m134.8 114.5c1.2 0 2.1 1 2.1 2.2s-1 2.2-2.1 2.2c-1.2 0-2.1-1-2.1-2.2s0.9-2.2 2.1-2.2z" />
@@ -410,10 +410,10 @@
                 </div>
                 <div class="col-xl-5 order-1 text-center text-xl-start">
                     <!-- Title -->
-                    <h2 class="fs-1">Some valuable feedback from our students</h2>
-                    <p>Supposing so be resolving breakfast am or perfectly. It drew a hill from me. Valley by oh twenty direct me so. Departure defective arranging rapturous did believe him all had supported. Family months lasted simple set nature vulgar him. Picture for attempt joy excited ten carried manners talking how.</p>
+                    <h2 class="fs-1">{% trans %}FEEDBACK_KEY{% endtrans %}</h2>
+                    <p>{% trans %}FEEDBACKDESCRIPTION_KEY{% endtrans %}</p>
                     {% if not app.user %}
-                        <a data-bs-toggle="modal" data-bs-target="#coursePremium" href="#" class="btn btn-primary mb-0">Create an account</a>
+                        <a data-bs-toggle="modal" data-bs-target="#coursePremium" href="#" class="btn btn-primary mb-0">{% trans %}CREATEANACCOUNT_KEY{% endtrans %}</a>
                     {% endif %}
                 </div>
             </div> <!-- Row END -->

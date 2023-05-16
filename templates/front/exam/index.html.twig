@@ -14,13 +14,13 @@
             <div class="row">
                 <div class="col-12">
                     <!-- Title -->
-                    <h1 class="text-white">Exams</h1>
+                    <h1 class="text-white">{% trans %}EXAMS_KEY{% endtrans %}</h1>
                     <!-- Breadcrumb -->
                     <div class="d-flex">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb breadcrumb-dark breadcrumb-dots mb-0">
-                                <li class="breadcrumb-item"><a href="{{ url("app_front") }}">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Exams</li>
+                                <li class="breadcrumb-item"><a href="{{ url("app_front") }}">{% trans %}HOME_KEY{% endtrans %}</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">{% trans %}EXAMS_KEY{% endtrans %}</li>
                             </ol>
                         </nav>
                     </div>
@@ -48,7 +48,7 @@
 						<!-- Advanced filter responsive toggler START -->
 						<div class="col-4 text-md-end">
 							<button class="btn btn-primary mb-0 d-xl-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
-								<i class="fas fa-sliders-h me-1"></i> Show filter
+								<i class="fas fa-sliders-h me-1"></i> {% trans %}SHOWFILTER_KEY{% endtrans %}
 							</button>
 						</div>
 						<!-- Advanced filter responsive toggler END -->
@@ -70,7 +70,7 @@
 						<!-- Card list END -->
                         {% else %}
                             <div class="text-center p-4 mb-5 mt-5">
-                                <h2>Empty</h2>
+                                <h2>{% trans %}EMPTY_KEY{% trans %}</h2>
                             </div>
                         {% endfor %}
 					</div>
@@ -88,7 +88,7 @@
 					<!-- Responsive offcanvas body START -->
 					<div class="offcanvas-xl offcanvas-end" tabindex="-1" id="offcanvasSidebar">
 						<div class="offcanvas-header bg-light">
-							<h5 class="offcanvas-title" id="offcanvasNavbarLabel">Advance Filter</h5>
+							<h5 class="offcanvas-title" id="offcanvasNavbarLabel">{% trans %}ADVANCEFILTER_KEY{% endtrans %}</h5>
 							<button  type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasSidebar" aria-label="Close"></button>
 						</div>
 						<div class="offcanvas-body p-3 p-xl-0">
@@ -96,13 +96,13 @@
 								<!-- Category START -->
 								<div class="card card-body shadow p-4 mb-4">
 									<!-- Title -->
-									<h4 class="mb-4">Category</h4>
+									<h4 class="mb-4">{% trans %}CATEGORY_KEY{% endtrans %}</h4>
 									<div class="row">
 										<!-- Category group -->
 										<div class="col-xxl-6">
 											<div class="form-check">
 												<input {{ sCategory is same as null ? 'checked' : '' }} required name="category" class="form-check-input" type="radio" value="all" id="flexCheckDefaultall">
-												<label class="form-check-label" for="flexCheckDefaultall">All</label>
+												<label class="form-check-label" for="flexCheckDefaultall">{% trans %}ALL_KEY{% endtrans %}</label>
 											</div>
 											{% set i = 1 %}
 											{% for category in categories %}
@@ -136,12 +136,12 @@
 								<!-- Price START -->
 								<div class="card card-body shadow p-4 mb-4">
 									<!-- Title -->
-									<h4 class="mb-3">Skill Level</h4>
+									<h4 class="mb-3">{% trans %}SKILLLEVEL_KEY{% endtrans %}</h4>
 									<ul class="list-inline mb-0">
 										<!-- Price item -->
 										<li class="list-inline-item">
 											<input {{ skillLevel is same as null ? 'checked' : '' }} type="radio" value="all" class="btn-check" name="skill" id="skill">
-											<label class="btn btn-light btn-primary-soft-check" for="skill">All</label>
+											<label class="btn btn-light btn-primary-soft-check" for="skill">{% trans %}ALL_KEY{% endtrans %}</label>
 										</li>
 										{% for skill in skillLevels %}
 											<!-- Price item -->
@@ -157,12 +157,12 @@
 								<!-- Price START -->
 								<div class="card card-body shadow p-4 mb-4">
 									<!-- Title -->
-									<h4 class="mb-3">Classes</h4>
+									<h4 class="mb-3">{% trans %}CLASSES_KEY{% endtrans %}</h4>
 									<ul class="list-inline mb-0">
 										<!-- Price item -->
 										<li class="list-inline-item">
 											<input {{ sClasse is same as null ? 'checked' : '' }} checked type="radio" value="all" class="btn-check" name="classe" id="option">
-											<label class="btn btn-light btn-primary-soft-check" for="option">All</label>
+											<label class="btn btn-light btn-primary-soft-check" for="option">{% trans %}ALL_KEY{% endtrans %}</label>
 										</li>
 										{% for classe in classes %}
 											<!-- Price item -->
@@ -178,22 +178,22 @@
 								<!-- Language START -->
 								<div class="card card-body shadow p-4 mb-4">
 									<!-- Title -->
-									<h4 class="mb-3">Language</h4>
+									<h4 class="mb-3">{% trans %}LANGUAGE_KEY{% endtrans %}</h4>
 									<ul class="list-inline mb-0 g-3">
 										<!-- Item -->
 										<li class="list-inline-item mb-2">
 											<input {{ language is same as null ? 'checked' : '' }} value="all" checked type="radio" name="language" class="btn-check" id="btn-check-2">
-											<label class="btn btn-light btn-primary-soft-check" for="btn-check-2">All</label>
+											<label class="btn btn-light btn-primary-soft-check" for="btn-check-2">{% trans %}ALL_KEY{% endtrans %}</label>
 										</li>
 										<!-- Item -->
 										<li class="list-inline-item mb-2">
 											<input  {{ language|upper is same as 'FRENCH' ? 'checked' : '' }} name="language" value="French" type="radio" class="btn-check" id="btn-check-3">
-											<label class="btn btn-light btn-primary-soft-check" for="btn-check-3">French</label>
+											<label class="btn btn-light btn-primary-soft-check" for="btn-check-3">{% trans %}FRENCH_KEY{% endtrans %}</label>
 										</li>
 										<!-- Item -->
 										<li class="list-inline-item mb-2">
 											<input {{ language|upper is same as 'ENGLISH' ? 'checked' : '' }} value="English" name="language" type="radio" class="btn-check" id="btn-check-4">
-											<label class="btn btn-light btn-primary-soft-check" for="btn-check-4">English</label>
+											<label class="btn btn-light btn-primary-soft-check" for="btn-check-4">{% trans %}ENGLISH_KEY{% endtrans %}</label>
 										</li>
 									</ul>
 								</div>
@@ -204,7 +204,7 @@
 
 						<!-- Button -->
 						<div class="d-grid p-2 p-xl-0 bg-body text-center">
-							<button class="btn btn-primary mb-0" type="button" onclick="$('#filter-form').submit()">Filter Results</button>
+							<button class="btn btn-primary mb-0" type="button" onclick="$('#filter-form').submit()">{% trans %}FILTERRESULTS_KEY{% endtrans %}</button>
 						</div>
 					</div>
 					<!-- Responsive offcanvas body END -->

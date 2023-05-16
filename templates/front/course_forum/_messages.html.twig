@@ -46,13 +46,13 @@
                                     <ul class="nav nav-divider py-2 small">
                                         <li class="nav-item"> <a class="text-primary-hover {{ heIsMembre and not sujet.isSolved ? 'like-forum-message' : ''}}" href="{{ heIsMembre and not sujet.isSolved ? url("app_course_like_forum_message", {id: message.id}) : '#item-comment-' ~ message.id }}"><i class="fas fa-thumbs-up"></i> Like (<span class="nb-likes">{{ message.likes }}</span>)</a> </li>
                                         {% if not sujet.isSolved and membre is not same as null %}
-                                            <li class="nav-item"> <a class="text-primary-hover {{ heIsMembre and not sujet.isSolved ? 'reply-forum-message' : '' }}" data-forum-message="{{ message.id }}" data-membre="{{ membre.id }}" data-append-response="#reply-forum-message-{{ message.id }}" {{ heIsMembre and not sujet.isSolved ? 'data-bs-toggle="modal" data-bs-target="#replyForumMessage"' : '' }} href="#"><i class="fas fa-reply"></i> Reply</a> </li>
+                                            <li class="nav-item"> <a class="text-primary-hover {{ heIsMembre and not sujet.isSolved ? 'reply-forum-message' : '' }}" data-forum-message="{{ message.id }}" data-membre="{{ membre.id }}" data-append-response="#reply-forum-message-{{ message.id }}" {{ heIsMembre and not sujet.isSolved ? 'data-bs-toggle="modal" data-bs-target="#replyForumMessage"' : '' }} href="#"><i class="fas fa-reply"></i> {% trans %}REPLY_KEY{% endtrans %}</a> </li>
                                             {% if membre is same as sujet.membre %}
-                                                <li class="nav-item"> <a onclick="return confirm('Are you sure that you want to set these response as the top response that solved your problem ?')" data-bs-toggle="tooltip" title="Resolved by these post" class="text-primary-hover text-success" href="{{ url("app_course_solve_forum_message", {id: message.id}) }}"><i class="fas fa-check"></i> Resolved</a> </li>
+                                                <li class="nav-item"> <a onclick="return confirm('{% trans %}RESOVEDCONFIRM_KEY{% trans %}')" data-bs-toggle="tooltip" title="{% trans %}RESOLVEDBY_KEY{% trans %}" class="text-primary-hover text-success" href="{{ url("app_course_solve_forum_message", {id: message.id}) }}"><i class="fas fa-check"></i> {% trans %}RESOLVED_KEY{% endtrans %}</a> </li>
                                             {% endif %}
                                             {% if heIsMembre and not sujet.isSolved and  (membre.utilisateur.eleve is same as null or message.membre is same as membre) %}
                                                 <li class="nav-item"> 
-                                                    <a onclick="return confirm('Are you sure you want to remov this item?')" class="text-primary-hover text-danger" href="{{ url("app_instructor_course_forum_subject_delete_message", {id: message.id, _token: csrf_token('delete' ~ message.id)}) }}"><i class="fas fa-trash"></i> Remove</a> 
+                                                    <a onclick="return confirm('Are you sure you want to remov this item?')" class="text-primary-hover text-danger" href="{{ url("app_instructor_course_forum_subject_delete_message", {id: message.id, _token: csrf_token('delete' ~ message.id)}) }}"><i class="fas fa-trash"></i> {% trans %}REMOVE_KEY{% endtrans %}</a> 
                                                 </li>
                                             {% endif %}
                                         {% endif %}
@@ -85,7 +85,7 @@
                                                         <ul class="nav nav-divider py-2 small">
                                                             <li class="nav-item"> <a class="text-primary-hover {{ heIsMembre and not sujet.isSolved ? 'like-forum-message' : ''}}" href="{{ heIsMembre and not sujet.isSolved ? url("app_course_like_forum_message", {id: fm.id}) : '#item-comment-' ~ fm.id }}"><i class="fas fa-thumbs-up"></i> Like (<span class="nb-likes">{{ fm.likes }}</span>)</a> </li>
                                                             {% if not sujet.isSolved and membre is same as sujet.membre %}
-                                                                <li class="nav-item"> <a onclick="return confirm('Are you sure that you want to set these response as the top response that solved your problem ?')" class="text-primary-hover text-success" href="{{ url("app_course_solve_forum_message", {id: fm.id}) }}"><i class="fas fa-check"></i> Resolved by these post</a> </li>
+                                                                <li class="nav-item"> <a onclick="return confirm('Are you sure that you want to set these response as the top response that solved your problem ?')" class="text-primary-hover text-success" href="{{ url("app_course_solve_forum_message", {id: fm.id}) }}"><i class="fas fa-check"></i> {% trans %}RESOLVEDBY_KEY{% endtrans %}</a> </li>
                                                             
                                                             {% endif %}
                                                         </ul>
@@ -99,7 +99,7 @@
                         </li>
                     {% endif %}
                 {% else %}
-                    <h5 class="mt-2 text-danger">No answer found</h5>
+                    <h5 class="mt-2 text-danger">{% trans %}NOANSWERFOUND_KEY{% endtrans %}</h5>
                 {% endfor %}
             </ul>
 
@@ -117,7 +117,7 @@
                 </div>
 
                 <form id="newForumMessageForm" method="POST" action="{{ path("app_front_course_new_forum_message", {referenceSujet: sujet.reference, membreId: membre.id}) }}" class="w-100 d-flex">
-                    <textarea name="message" class="one form-control pe-4 bg-light" placeholder="Add a comment..." rows="1"></textarea>
+                    <textarea name="message" class="one form-control pe-4 bg-light" placeholder="{% trans %}ADDCOMMENT_KEY{% endtrans %}" rows="1"></textarea>
                     <button class="btn btn-primary ms-2 mb-0" type="submit"><i class="fas fa-paper-plane"></i></button>
                 </form>
             </div>

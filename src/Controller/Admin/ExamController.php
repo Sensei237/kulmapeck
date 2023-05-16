@@ -5,11 +5,13 @@ namespace App\Controller\Admin;
 use App\Entity\Exam;
 use App\Repository\ExamRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Security("is_granted('ROLE_COURSE_MANAGER')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
 class ExamController extends AbstractController
 {
     #[Route('/admin/exam', name: 'app_admin_exam')]

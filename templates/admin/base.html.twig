@@ -109,6 +109,27 @@
         <!-- Page main content START -->
 		{% block mainPageContent %}
         <div class="page-content-wrapper border">
+			{% for msg in app.flashes('info') %}
+				<div class="col-12">
+					<div class="alert alert-info text-center">
+						{{ msg }}
+					</div>
+				</div>
+			{% endfor %}
+			{% for msg in app.flashes('danger') %}
+				<div class="col-12">
+					<div class="alert alert-danger text-center">
+						{{ msg }}
+					</div>
+				</div>
+			{% endfor %}
+			{% for msg in app.flashes('warning') %}
+				<div class="col-12">
+					<div class="alert alert-warning text-center">
+						{{ msg }}
+					</div>
+				</div>
+			{% endfor %}
             <!-- Title -->
             <div class="row">
                 <div class="col-12 mb-3 d-sm-flex justify-content-between align-items-center">
@@ -117,7 +138,9 @@
                 </div>
             </div>
 
-            {% block mainContent %}{% endblock %}
+            {% block mainContent %}
+				
+			{% endblock %}
 
         </div>
         <!-- Page main content END -->
@@ -133,6 +156,9 @@
 <!-- Back to top -->
 <div class="back-top"><i class="bi bi-arrow-up-short position-absolute top-50 start-50 translate-middle"></i></div>
 
+<script>
+	var baseUrl = "http://localhost:8000";
+</script>
 <!-- Vendors -->
 <script src="{{ asset('assets/vendor/jquery/jquery-3.6.4.min.js') }}"></script>
 

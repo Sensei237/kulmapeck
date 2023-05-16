@@ -12,6 +12,7 @@ use App\Repository\NotificationRepository;
 use App\Repository\NotificationTemplateRepository;
 use App\Repository\ReviewRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('admin/cours')]
+#[Security("is_granted('ROLE_COURSE_MANAGER')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
 class CoursController extends AbstractController
 {
     #[Route('/', name: 'app_admin_cours_index', methods: ['GET'])]
@@ -27,7 +29,10 @@ class CoursController extends AbstractController
     {
         if ($request->get('search') !== null) {
             $courses = $coursRepository->searchByAdmin($request->query->get('search'));
-        } else {
+        } elseif ($this->isGranted("ROLE_CHEF_DEPARTEMENT", $this->getUser())) {
+            $courses = $coursRepository->findForChefDepartement($this->getUser());
+        } 
+        else {
             switch ($request->query->get('filter')) {
                 case 'free':
                     $courses = $coursRepository->findBy(['isFree' => true], ['isPublished' => 'ASC', 'createdAt' => 'DESC']);

@@ -5,12 +5,14 @@ namespace App\Controller\Admin;
 use App\Entity\Etablissement;
 use App\Form\EtablissementType;
 use App\Repository\EtablissementRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/admin/schools')]
+#[Security("is_granted('ROLE_SUPER_USER')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
 class EtablissementController extends AbstractController
 {
     private const ACTIVE_PAGE = 'etc';

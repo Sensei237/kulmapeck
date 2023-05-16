@@ -4,6 +4,7 @@ namespace App\EventSubscriber;
 
 use App\Repository\PersonneRepository;
 use App\Repository\SiteSettingRepository;
+use App\Repository\SocialSettingRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -20,7 +21,12 @@ class KernelSubscriber implements EventSubscriberInterface
     private $userRepo;
     private $personneRepo;
 
-    public function __construct(PersonneRepository $personneRepo, SiteSettingRepository $siteSettingRepository, UserRepository $userRepo, UrlGeneratorInterface $urlGeneratorInterface, RequestStack $requestStack)
+    public function __construct(PersonneRepository $personneRepo, 
+        SiteSettingRepository $siteSettingRepository, 
+        private SocialSettingRepository $socialSettingRepository,
+        UserRepository $userRepo, 
+        UrlGeneratorInterface $urlGeneratorInterface, 
+        RequestStack $requestStack)
     {
         $this->siteSettingRepository = $siteSettingRepository;
         $this->requestStack = $requestStack;
@@ -37,6 +43,8 @@ class KernelSubscriber implements EventSubscriberInterface
 
             $siteSettings = $session->get('siteSettings', $this->siteSettingRepository->findOneBy([]));
 
+            $socialsSettings = $session->get('socialsSettings', $this->socialSettingRepository->findAll());
+
             $session->set('siteSettings', $siteSettings);
 
             // dd($personne);
@@ -52,6 +60,7 @@ class KernelSubscriber implements EventSubscriberInterface
             // On verifie si le site est en mode maintenance
 
             $session->set('siteSettings', $siteSettings);
+            $session->set('socialsSettings', $socialsSettings);
         }
     }
 

@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Chapitre;
 use App\Form\ChapitreType;
 use App\Repository\ChapitreRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('admin/chapitre')]
+#[Security("is_granted('ROLE_UNAUTHORIZE')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
 class ChapitreController extends AbstractController
 {
     #[Route('/', name: 'app_chapitre_index', methods: ['GET'])]

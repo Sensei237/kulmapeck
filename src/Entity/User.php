@@ -125,12 +125,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: NotificationSetting::class, orphanRemoval: true)]
     private Collection $notificationSettings;
 
+    #[ORM\ManyToMany(targetEntity: Filiere::class, inversedBy: 'users')]
+    private Collection $filieres;
+
     public function __construct()
     {
         $this->notifications = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->exams = new ArrayCollection();
         $this->notificationSettings = new ArrayCollection();
+        $this->filieres = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -408,6 +412,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $notificationSetting->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Filiere>
+     */
+    public function getFilieres(): Collection
+    {
+        return $this->filieres;
+    }
+
+    public function addFiliere(Filiere $filiere): self
+    {
+        if (!$this->filieres->contains($filiere)) {
+            $this->filieres->add($filiere);
+        }
+
+        return $this;
+    }
+
+    public function removeFiliere(Filiere $filiere): self
+    {
+        $this->filieres->removeElement($filiere);
 
         return $this;
     }

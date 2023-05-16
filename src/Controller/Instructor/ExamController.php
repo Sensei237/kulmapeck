@@ -4,6 +4,7 @@ namespace App\Controller\Instructor;
 
 use App\Entity\Exam;
 use App\Form\ExamFormType;
+use App\Repository\EnseignantRepository;
 use App\Repository\ExamRepository;
 use App\Service\FileUploader;
 use Knp\Component\Pager\PaginatorInterface;
@@ -29,8 +30,13 @@ class ExamController extends AbstractController
 
     #[Route('/new', name: 'app_instructor_exam_new', methods: ['POST', 'GET'])]
     #[Route('{reference}/edit', name: 'app_instructor_exam_edit', methods: ['POST', 'GET'])]
-    public function edit(Exam $exam=null, Request $request, ExamRepository $examRepository, FileUploader $fileUploader): Response
+    public function edit(Exam $exam=null, Request $request, EnseignantRepository $enseignantRepository, ExamRepository $examRepository, FileUploader $fileUploader): Response
     {
+        $enseignant = $enseignantRepository->findOneBy(['utilisateur' => $this->getUser()]);
+        if ($enseignant === null || !$enseignant->isIsCertified() || ($exam !== null && $enseignant->getUtilisateur()->getId() !== $exam->getUser()->getId())) {
+            throw $this->createAccessDeniedException();
+        }
+        
         if ($exam === null) {
             $exam = new Exam();
         }

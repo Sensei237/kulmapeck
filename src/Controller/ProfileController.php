@@ -39,12 +39,15 @@ class ProfileController extends AbstractController
         $eleve = $personne->getUtilisateur()->getEleve();
         $enseignant = $personne->getUtilisateur()->getEnseignant();
 
+        $template = "profile/index.html.twig";
+
         if ($eleve !== null) {
             $postUri = $this->generateUrl('app_student_profile_edit');
         } elseif ($enseignant !== null) {
             $postUri = $this->generateUrl('app_instructor_profile_edit');
         } else {
             $postUri = $this->generateUrl('app_profile_edit');
+            $template = "profile/admin.html.twig";
         }
 
         $personneForm = $this->createForm(PersonneFormType::class, $personne, [
@@ -52,7 +55,7 @@ class ProfileController extends AbstractController
 
         ]);
 
-        return $this->render('profile/index.html.twig', [
+        return $this->render($template, [
             'isProfile' => true,
             'student' => $eleve,
             'personneForm' => $personneForm->createView(),

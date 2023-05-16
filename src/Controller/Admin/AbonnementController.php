@@ -8,6 +8,7 @@ use App\Form\AbonnementItemType;
 use App\Form\AbonnementType;
 use App\Repository\AbonnementItemRepository;
 use App\Repository\AbonnementRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/admin/abonnement')]
+#[Security("is_granted('ROLE_SUPER_USER')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
 class AbonnementController extends AbstractController
 {
     #[Route('/', name: 'app_admin_abonnement_index', methods: ['GET'])]

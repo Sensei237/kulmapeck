@@ -5,7 +5,7 @@
 
             <!-- Tab contents START -->
             <div class="card-body p-4">
-                <h5>Questions Asked</h5>
+                <h5>{% trans %}QUESTIONSASKED_KEY{% endtrans %}</h5>
                 <hr>
                 <div class="h-500px overflow-hidden custom-scroolbar">
                     <ul class="list-unstyled">
@@ -25,15 +25,15 @@
                                             <br>
                                             <span class="badge {{ sujet.isSolved ? "btn-success-soft" : 'btn-danger-soft' }}">{{ sujet.isSolved ? "Resolved" : "Unresolved" }}</span> |
                                             <i class="badge btn-info-soft">{{ sujet.createdAt|date('d M, Y - H:i:s') }}</i>
-                                            | <span class="badge btn-warning-soft">{{ sujet.forumMessages|length }} comments</span>
-                                            | <a href="{{ viewCommentUri|default(url("app_front_course_forum_subject_message", {slug: course.slug, reference: sujet.reference})) }}" class="btn btn-primary-soft">Show comment</a>
+                                            | <span class="badge btn-warning-soft">{{ sujet.forumMessages|length }} {% trans %}COMMENTS_KEY{% endtrans %}</span>
+                                            | <a href="{{ viewCommentUri|default(url("app_front_course_forum_subject_message", {slug: course.slug, reference: sujet.reference})) }}" class="btn btn-primary-soft">{% trans %}SHOWCOMMENT_KEY{% endtrans %}</a>
                                         </p>
                                     </div>
                                 </div>
                             </li>
                             <hr>
                         {% else %}
-                            <h3 class="text-danger">No topics found! Be the first to ask a problem</h3>
+                            <h3 class="text-danger">{% trans %}NOTOPICSFOUND_KEY{% endtrans %}</h3>
                         {% endfor %}
                     </ul>
                 </div>
@@ -42,7 +42,7 @@
 
             <div class="card-footer p-4">
                 {% if heIsMembre %}
-                    <h5 class="mb-4">Ask Your Question</h5>
+                    <h5 class="mb-4">{% trans %}ASKQUESTION_KEY{% endtrans %}</h5>
                     <!-- Comment box -->
                     <div class="d-flex mb-4" id="newForumSubjectFormContainer">
                         <!-- Avatar -->
@@ -52,7 +52,7 @@
 
                         {{ form_start(sujetForm) }}
                             {{ form_widget(sujetForm.content) }}
-                            <button class="btn btn-primary ms-2 mb-0" type="submit">Post</button>
+                            <button class="btn btn-primary ms-2 mb-0" type="submit">{% trans %}POST_KEY{% endtrans %}</button>
                         {{ form_end(sujetForm) }}
                     </div>
                     {% endif %}

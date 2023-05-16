@@ -133,8 +133,8 @@
                         </svg>
                     </figure>
                     <!-- Title -->
-                    <h1 class="mb-0 display-6">Limitless learning at your
-                        <span class="position-relative">fingertips
+                    <h1 class="mb-0 display-6">{% trans %}MAINMESSAGE_KEY{% endtrans %}
+                        <span class="position-relative">{% trans %}FINGERSTIPS_KEY{% endtrans %}
                             <!-- SVG START -->
                             <span class="position-absolute top-50 start-50 translate-middle ms-3 z-index-n1">
                                 <svg width="300px" height="62.1px" enable-background="new 0 0 366 62.1" viewBox="0 0 366 62.1" xmlns="http://www.w3.org/2000/svg">
@@ -146,23 +146,23 @@
                     </h1>
                     
                     <!-- Content -->
-                    <p class="my-4 lead">Online learning and teaching marketplace with 5K+ courses & 10M students. Taught by experts to help you acquire new skills.</p>
+                    <p class="my-4 lead">{% trans %}MAINMESSAGEDESCRIPTION_KEY{% endtrans %}</p>
                     
                     <!-- Info -->
                     <ul class="list-inline position-relative justify-content-center justify-content-lg-start mb-4">
-                        <li class="list-inline-item me-2"> <i class="bi bi-patch-check-fill h6 me-1"></i>Learn with experts</li>
-                        <li class="list-inline-item me-2"> <i class="bi bi-patch-check-fill h6 me-1"></i>Get certificate</li>
-                        <li class="list-inline-item"> <i class="bi bi-patch-check-fill h6 me-1"></i>Get membership</li>
+                        <li class="list-inline-item me-2"> <i class="bi bi-patch-check-fill h6 me-1"></i>{% trans %}LEARNEXPERT_KEY{% endtrans %}</li>
+                        <li class="list-inline-item me-2"> <i class="bi bi-patch-check-fill h6 me-1"></i>{% trans %}GETCERTIFICATE_KEY{% endtrans %}</li>
+                        <li class="list-inline-item"> <i class="bi bi-patch-check-fill h6 me-1"></i>{% trans %}GETMEMBERSHIP_KEY{% endtrans %}</li>
                     </ul>
 
                     <div class="d-sm-flex align-items-center justify-content-center justify-content-lg-start">
                         <!-- Button -->
-                        <a href="{{ url("app_front_courses") }}" class="btn btn-lg btn-danger-soft me-2 mb-4 mb-sm-0">Get Started</a>
+                        <a href="{{ url("app_front_courses") }}" class="btn btn-lg btn-danger-soft me-2 mb-4 mb-sm-0">{% trans %}GETSTARTED_KEY{% endtrans %}</a>
                         <!-- Video button -->
                         <div class="d-flex align-items-center justify-content-center py-2 ms-0 ms-sm-4">
                             <a  data-bs-toggle="modal" data-bs-target="#coursePremium" href="#" class="btn btn-round btn-primary-shadow mb-0 overflow-visible me-7"> 
                                 <i class="fas fa-user"></i>
-                                <h6 class="mb-0 ms-3 fw-normal position-absolute start-100 top-50 translate-middle-y">Create account</h6>
+                                <h6 class="mb-0 ms-3 fw-normal position-absolute start-100 top-50 translate-middle-y">{% trans %}CREATEACCOUNT_KEY{% endtrans %}</h6>
                             </a>
                         </div>
                     </div>
@@ -223,15 +223,15 @@
                             <span class="icon-lg bg-warning rounded-circle"><i class="fas fa-envelope text-white"></i></span>
                             <!-- Info -->
                             <div class="text-start ms-3">
-                                <h6 class="mb-0 text-white">Congratulations <span class="ms-4"><i class="fas fa-check-circle text-success"></i></span></h6>
-                                <p class="mb-0 small text-white">Your admission completed</p>
+                                <h6 class="mb-0 text-white">{% trans %}CONGRATULATION_KEY{% endtrans %} <span class="ms-4"><i class="fas fa-check-circle text-success"></i></span></h6>
+                                <p class="mb-0 small text-white">{% trans %}ADMISSIONCOMPLETE_KEY{% endtrans %}</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Active student --> 
                     <div class="p-3 bg-success d-inline-block rounded-4 shadow-lg position-absolute top-50 end-0 translate-middle-y mt-n7 z-index-1 d-none d-md-block" style="background:url(assets/images/pattern/01.png) no-repeat center center; background-size:cover;">
-                        <p class="text-white">Our daily new students</p>
+                        <p class="text-white">{% trans %}DAILYSTUDENT_KEY{% endtrans %}</p>
                         <!-- Avatar group -->
                         <ul class="avatar-group mb-0">
                             {% if dailyStudents|length < 4 %}

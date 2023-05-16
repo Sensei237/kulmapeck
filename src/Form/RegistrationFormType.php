@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Filiere;
 use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -59,6 +61,16 @@ class RegistrationFormType extends AbstractType
                 ]
             ])
             ->add("personne", PersonneType::class)
+            ->add("filieres", EntityType::class, [
+                'class' => Filiere::class,
+                'choice_label' => 'name',
+                'multiple' => true,
+                'required' => false,
+                'label' => "Can check courses in",
+                'attr' => [
+                    'class' => 'border-0 js-choice bg-light rounded-end ps-1',
+                ]
+            ])
             ->add('roles', ChoiceType::class, [
                 'multiple' => true,
                 'choices' => [

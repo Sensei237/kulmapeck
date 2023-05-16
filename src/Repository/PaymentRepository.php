@@ -5,8 +5,10 @@ namespace App\Repository;
 use App\Entity\Eleve;
 use App\Entity\Enseignant;
 use App\Entity\Payment;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * @extends ServiceEntityRepository<Payment>
@@ -68,6 +70,20 @@ class PaymentRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+    * @return Payment[] Returns an array of Payment objects
+    */
+    public function findBetweenDates(DateTime $dateStart, DateTime $dateEnd): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.paidAt >= :dateStart')
+            ->andWhere('p.paidAt <= :dateEnd')
+            ->setParameter('dateStart', $dateStart)
+            ->setParameter('dateEnd', $dateEnd)
+            ->getQuery()
+            ->getResult();
     }
 
 //    public function findOneBySomeField($value): ?Payment

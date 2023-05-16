@@ -5,12 +5,14 @@ namespace App\Controller\Admin;
 use App\Entity\FAQ;
 use App\Form\FAQType;
 use App\Repository\FAQRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/admin/f/a/q')]
+#[Security("is_granted('ROLE_UNAUTHORIZE')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
 class FAQController extends AbstractController
 {
     #[Route('/', name: 'app_admin_f_a_q_index', methods: ['GET'])]

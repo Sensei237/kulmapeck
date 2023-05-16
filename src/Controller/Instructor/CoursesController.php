@@ -92,7 +92,7 @@ class CoursesController extends AbstractController
     public function edit(Cours $cours = null, NotificationTypeRepository $notificationTypeRepository, UserRepository $userRepository, Request $request, SluggerInterface $slugger, ForumRepository $forumRepository, CoursRepository $coursRepository, EnseignantRepository $enseignantRepository, FileUploader $fileUploader): Response
     {
         $enseignant = $enseignantRepository->findOneBy(['utilisateur' => $this->getUser()]);
-        if ($enseignant === null || ($cours !== null && $enseignant->getId() !== $cours->getEnseignant()->getId())) {
+        if ($enseignant === null || !$enseignant->isIsCertified() || ($cours !== null && $enseignant->getId() !== $cours->getEnseignant()->getId())) {
             throw $this->createAccessDeniedException();
         }
         
@@ -364,7 +364,7 @@ class CoursesController extends AbstractController
     public function publishedCourse(Cours $cours, Request $request, EnseignantRepository $enseignantRepository, CoursRepository $coursRepository): Response
     {
         $enseignant = $enseignantRepository->findOneBy(['utilisateur' => $this->getUser()]);
-        if ($enseignant === null || $enseignant->getId() !== $cours->getEnseignant()->getId()) {
+        if ($enseignant === null || !$enseignant->isIsCertified()  || $enseignant->getId() !== $cours->getEnseignant()->getId()) {
             throw $this->createAccessDeniedException();
         }
 

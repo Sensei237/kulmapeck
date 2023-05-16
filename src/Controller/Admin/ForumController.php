@@ -7,12 +7,14 @@ use App\Form\ForumType;
 use App\Repository\ForumRepository;
 use App\Repository\SujetRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/admin/forum')]
+#[Security("is_granted('ROLE_ADMIN')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
 class ForumController extends AbstractController
 {
     #[Route('/', name: 'app_forum_index', methods: ['GET'])]
@@ -26,6 +28,7 @@ class ForumController extends AbstractController
     }
 
     #[Route('/new', name: 'app_forum_new', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_UNAUTHORIZE')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
     public function new(Request $request, ForumRepository $forumRepository): Response
     {
         throw $this->createNotFoundException();
@@ -40,13 +43,14 @@ class ForumController extends AbstractController
             return $this->redirectToRoute('app_forum_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('forum/new.html.twig', [
+        return $this->render('forum/new.html.twig', [
             'forum' => $forum,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/{id}', name: 'app_forum_show', methods: ['GET'])]
+    #[Security("is_granted('ROLE_UNAUTHORIZE')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
     public function show(Forum $forum): Response
     {
         throw $this->createNotFoundException();
@@ -57,6 +61,7 @@ class ForumController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_forum_edit', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_UNAUTHORIZE')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
     public function edit(Request $request, Forum $forum, ForumRepository $forumRepository): Response
     {
         throw $this->createNotFoundException();
@@ -70,9 +75,9 @@ class ForumController extends AbstractController
             return $this->redirectToRoute('app_forum_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('forum/edit.html.twig', [
+        return $this->render('forum/edit.html.twig', [
             'forum' => $forum,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
