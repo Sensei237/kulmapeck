@@ -2,10 +2,14 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\Eleve;
+use App\Entity\Evaluation;
+use App\Repository\EvaluationRepository;
 use App\Repository\PersonneRepository;
 use App\Repository\SiteSettingRepository;
 use App\Repository\SocialSettingRepository;
 use App\Repository\UserRepository;
+use DateTime;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -26,7 +30,9 @@ class KernelSubscriber implements EventSubscriberInterface
         private SocialSettingRepository $socialSettingRepository,
         UserRepository $userRepo, 
         UrlGeneratorInterface $urlGeneratorInterface, 
-        RequestStack $requestStack)
+        RequestStack $requestStack,
+        private EvaluationRepository $evaluationRepository
+        )
     {
         $this->siteSettingRepository = $siteSettingRepository;
         $this->requestStack = $requestStack;
@@ -55,8 +61,56 @@ class KernelSubscriber implements EventSubscriberInterface
                     $session->remove('personne');
                     $event->setResponse(new RedirectResponse($this->urlGeneratorInterface->generate('app_logout')));
                 }
-            }
 
+                $eleve = $user->getEleve();
+                $hideAnnonces = $session->get('hideAnnonces', []);
+                $sessionContainsAnnonces  = $session->get('hasAnnonces', false);
+                $showAnnonces = $session->get('showAnnonces', true);
+                // dump($sessionContainsAnnonces); dump($showAnnonces);dump($hideAnnonces);die;
+                if ($eleve !== null && $eleve->getClasse() !== null && (!$sessionContainsAnnonces && $showAnnonces)) {
+                    $classe = $eleve->getClasse();
+                    $evaluations = $this->evaluationRepository->findSudentEvaluationsAnnonces($classe);
+                    $annonces = null;
+                    foreach ($evaluations as $evaluation) {
+                        $nbJours = 2;
+                        if (!$eleve->getEvaluations()->contains($evaluation) && $nbJours < 7 && !in_array($evaluation->getId(), $hideAnnonces)) {
+                            $annonces = [
+                                'evaluation' => [
+                                    'titre' => $evaluation->getTitre(),
+                                    'description' => $evaluation->getDescription(),
+                                    'slug' => $evaluation->getSlug(),
+                                    'startAt' => $evaluation->getStartAt(),
+                                    'endAt' => $evaluation->getEndAt(),
+                                    'duree' => $evaluation->getDuree(),
+                                ],
+                                'nombreInscris' => $evaluation->getEleves()->count(),
+                                'matiere' => $evaluation->getMatiere()->getName(),
+                            ];
+                            $cmp = 1;
+                            $annonces['eleves'] = [];
+                            foreach ($evaluation->getEleves() as $e) {
+                                $annonces['eleves'][] = $e->getUtilisateur()->getPersonne()->getAvatarPath(); 
+                                $cmp++;
+                                if ($cmp > 4) {
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    if (empty($annonces)) {
+                        $session->set('showAnnonces', false);
+                        $session->set('hasAnnonces', true);
+                        $session->set('annonce', null);
+                    } else {
+                        $session->set('showAnnonces', true);
+                        $session->set('hasAnnonces', true);
+                        $session->set('annonce', $annonces);
+                    }
+
+                    $this->showAnnonceEvaluationEncours($evaluations, $eleve);
+                }
+            }
             // On verifie si le site est en mode maintenance
 
             $session->set('siteSettings', $siteSettings);
@@ -70,6 +124,27 @@ class KernelSubscriber implements EventSubscriberInterface
                 $request->setLocale($request->getSession()->get('_locale', 'fr'));
             }
         }
+    } 
+    
+    /**
+     * Undocumented function
+     *
+     * @param Evaluation[] $evaluations
+     * @param Eleve $eleve
+     * @return Evaluation|null
+     */
+    private function showAnnonceEvaluationEncours($evaluations, Eleve $eleve): ?Evaluation
+    {
+        $currentEvaluation = null;
+        foreach ($evaluations as $evaluation) {
+            $currentDateTime = new DateTime();
+            if ($eleve->getEvaluations()->contains($evaluation) && $evaluation->getStartAt() <= $currentDateTime && $evaluation->getEndAt() > $currentDateTime->modify('+1 hour')) {
+                $currentEvaluation = $evaluation;
+                break;
+            }
+        }
+
+        return $currentEvaluation;
     }
 
     public static function getSubscribedEvents(): array

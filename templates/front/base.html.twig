@@ -226,8 +226,8 @@
                         {% endif %}
                     </a>
                     <ul class="dropdown-menu min-w-auto" aria-labelledby="languageSwitcher">
-                        <li><a class="dropdown-item me-4 {{ app.session.get('_locale') == 'en' ? 'active' : '' }}" href="{{ url('app_security_change_language', {lang: 'en'}) }}"><img class="fa-fw me-2" src="{{ asset('assets/images/flags/uk.svg') }}" alt="">{% trans %}ENGLISH_KEY{% endtrans %}</a></li>
-                        <li><a class="dropdown-item me-4 {{ app.session.get('_locale') == 'fr' ? 'active' : '' }}" href="{{ url('app_security_change_language', {lang: 'en'}) }}"><img class="fa-fw me-2" src="{{ asset('assets/images/flags/sp.svg') }}" alt="">{% trans %}FRENCH_KEY{% endtrans %}</a></li>
+                        <li><a class="dropdown-item me-4 {{ app.session.get('_locale') is same as 'en' ? 'active' : '' }}" href="{{ url('app_security_change_language', {lang: 'en'}) }}"><img class="fa-fw me-2" src="{{ asset('assets/images/flags/uk.svg') }}" alt="">{% trans %}ENGLISH_KEY{% endtrans %}</a></li>
+                        <li><a class="dropdown-item me-4 {{ app.session.get('_locale') is same as 'fr' ? 'active' : '' }}" href="{{ url('app_security_change_language', {lang: 'fr'}) }}"><img class="fa-fw me-2" src="{{ asset('assets/images/flags/sp.svg') }}" alt="">{% trans %}FRENCH_KEY{% endtrans %}</a></li>
                     </ul>
                 </div>
 
@@ -485,6 +485,10 @@
     <!-- =======================
     Footer END -->
     {% endblock %}
+
+    {% if app.session.get('annonce') and app.session.get('showAnnonces') %}
+        {{ include('front/evaluation/_annonces.html.twig', {'annonce': app.session.get('annonce')}) }}
+    {% endif %}
     
     {% if app.flashes('notification') %}
         <div id="bottom-notification" style="position: fixed;bottom: 5px;right: 15px; min-height: 0px;z-index: 200;min-width: 400px;">

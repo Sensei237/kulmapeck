@@ -1,5 +1,5 @@
 # FRONT BASE TEMPLATE
-NUMERO_REGISTRE_COMMERCE_KEY: composer require symfony/translation
+NUMERO_REGISTRE_COMMERCE_KEY: Company number authorization
 LOCALISATION_KEY: Localisation
 HOME_KEY: Home
 COURSESFORMATION_KEY: Courses & formations
@@ -229,3 +229,4 @@ SUBMIT_KEY: Submit
 HELLOHELP_KEY: Hello, how can we help?
 CATEGORYDESCRIPTION_KEY: Perceived end knowledge certainly day sweetness why cordially
 PERSONNE_NAME_KEY: Last name
+WELCOME_LOGIN_KEY: Welcome to our largest community

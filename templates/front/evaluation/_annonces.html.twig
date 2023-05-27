@@ -1,0 +1,42 @@
+
+<div class="alert alert-dismissible sticky-element fade show bg-dark text-white rounded-3 shadow p-4 ms-3 mb-3 col-10 col-md-4 col-lg-3 col-xl-2 d-none d-lg-block sticky-element-sticked" role="alert">
+	<div class="d-sm-flex align-items-center mb-3">
+		<!-- Avatar -->
+		<div>
+			<div class="icon-lg bg-purple rounded-circle text-purple">
+				<img class="p-3" src="assets/images/client/aftereffect.svg" alt="avatar">
+			</div>
+		</div>
+		<!-- Info -->
+		<div class="ms-sm-2 mt-2 mt-sm-0">
+			<h6 class="mb-0 text-white">{{ annonce.evaluation.titre }}</h6>
+			<span class="small mb-0 me-3"><i class="far fa-clock text-danger me-2"></i>{{ annonce.evaluation.duree }} heures</span>
+			<span class="small mb-0 me-1"><i class="fas fa-circle fw-bold text-success small me-2"></i>{{ annonce.evaluation.startAt|date('d/m/Y à H:i:s') }}</span>
+		</div>
+	</div>
+	<p class="mb-0 small">{{ annonce.evaluation.description }}</p>
+
+	<!-- Avatar group -->
+	<div class="d-sm-flex justify-content-between mt-4">
+		<ul class="avatar-group mb-2 mb-sm-0">
+			{% if annonce.eleves is defined %}
+                {% for eleve in annonce.eleves %}
+                    <li class="avatar avatar-xs">
+                        <img class="avatar-img rounded-circle" src="{{ asset(eleve) }}" alt="avatar">
+                    </li>
+                {% endfor %}
+            {% endif %}
+		</ul>
+
+		<!-- Button -->
+		<a href="{{ url('app_front_evaluation_inscription', {'slug': annonce.evaluation.slug}) }}" type="button" class="btn btn-success btn-sm mb-0">
+			<span aria-hidden="true">S'inscrire !</span>
+		</a>
+	</div>
+	<!-- Close button -->
+	<div class="position-absolute end-0 top-0 mt-n3 me-n3">
+		<a href="{{ url('app_front_evaluation_hide_annonce', {'slug': annonce.evaluation.slug}) }}" type="button" class="btn btn-danger btn-round btn-sm mb-0">
+			<span aria-hidden="true"><i class="bi bi-x-lg"></i></span>
+		</a>
+	</div>
+</div>

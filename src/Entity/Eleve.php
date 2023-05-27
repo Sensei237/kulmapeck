@@ -68,6 +68,9 @@ class Eleve
     #[ORM\OneToMany(mappedBy: 'eleve', targetEntity: QuizLost::class, orphanRemoval: true)]
     private Collection $quizLosts;
 
+    #[ORM\ManyToMany(targetEntity: Evaluation::class, mappedBy: 'Eleves')]
+    private Collection $evaluations;
+
     public function __construct()
     {
         $this->cours = new ArrayCollection();
@@ -80,6 +83,7 @@ class Eleve
         $this->quizResults = new ArrayCollection();
         $this->isPremium = false;
         $this->quizLosts = new ArrayCollection();
+        $this->evaluations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -385,6 +389,33 @@ class Eleve
             if ($quizLost->getEleve() === $this) {
                 $quizLost->setEleve(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Evaluation>
+     */
+    public function getEvaluations(): Collection
+    {
+        return $this->evaluations;
+    }
+
+    public function addEvaluation(Evaluation $evaluation): self
+    {
+        if (!$this->evaluations->contains($evaluation)) {
+            $this->evaluations->add($evaluation);
+            $evaluation->addEleve($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvaluation(Evaluation $evaluation): self
+    {
+        if ($this->evaluations->removeElement($evaluation)) {
+            $evaluation->removeEleve($this);
         }
 
         return $this;

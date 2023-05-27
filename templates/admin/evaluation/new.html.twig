@@ -1,0 +1,17 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Evaluations{% endblock %}
+
+{% block actionBtn %}
+	<a href="{{ path('app_admin_evaluation_index') }}" class="btn btn-warning-soft">Retour</a>
+{% endblock %}
+
+{% block script %}
+    
+{% endblock %}
+
+{% block mainContent %}
+
+    {{ include('admin/evaluation/_form.html.twig') }}
+
+{% endblock %}

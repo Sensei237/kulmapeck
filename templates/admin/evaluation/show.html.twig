@@ -1,0 +1,64 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Evaluations{% endblock %}
+
+{% block actionBtn %}
+    <a class="btn btn-primary-soft" href="{{ path('app_admin_evaluation_index') }}">Retour</a>
+	<a class="btn btn-success-soft" href="{{ path('app_admin_evaluation_new') }}">Nouvelle Evaluation</a>
+    {% if not evaluation.isPassed %}
+        <a class="btn btn-warning-soft" href="{{ path('app_admin_evaluation_edit', {'id': evaluation.id}) }}">Modifier</a>
+        <div class="d-inline">{{ include('admin/evaluation/_delete_form.html.twig') }}</div>
+    {% endif %}
+{% endblock %}
+
+{% block script %}
+    
+{% endblock %}
+
+{% block mainContent %}
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Titre</th>
+                <td>{{ evaluation.titre }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ evaluation.description }}</td>
+            </tr>
+            <tr>
+                <th>Matière</th>
+                <td>{{ evaluation.matiere.name }}</td>
+            </tr>
+            <tr>
+                <th>Classes</th>
+                <td>
+                    {% for classe in evaluation.classes %}
+                        <span class="badge badge-info bg-success">{{ classe.name }}</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Début de l'évaluation</th>
+                <td>{{ evaluation.startAt ? evaluation.startAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Fin de l'évaluation</th>
+                <td>{{ evaluation.endAt ? evaluation.endAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Durée</th>
+                <td>{{ evaluation.duree ~ ' Heures' }}</td>
+            </tr>
+            <tr>
+                <th>Type de questionnaire</th>
+                <td>{{ evaluation.isGeneratedRandomQuestions ? 'Aléatoire' : 'Epreuve unique' }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {% if evaluation.evaluationQuestions is not empty %}
+        {{ include("admin/evaluation_question/_questions.html.twig", {'evaluation_questions': evaluation.evaluationQuestions}) }}
+    {% endif %}
+
+{% endblock %}

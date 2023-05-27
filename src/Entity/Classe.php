@@ -68,11 +68,15 @@ class Classe
     #[Groups(['read:classe:collection', 'read:user:item'])]
     private ?SousSysteme $sousSysteme = null;
 
+    #[ORM\ManyToMany(targetEntity: Evaluation::class, mappedBy: 'classes')]
+    private Collection $evaluations;
+
     public function __construct()
     {
         $this->cours = new ArrayCollection();
         $this->eleves = new ArrayCollection();
         $this->exams = new ArrayCollection();
+        $this->evaluations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -223,6 +227,33 @@ class Classe
     public function setSousSysteme(?SousSysteme $sousSysteme): self
     {
         $this->sousSysteme = $sousSysteme;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Evaluation>
+     */
+    public function getEvaluations(): Collection
+    {
+        return $this->evaluations;
+    }
+
+    public function addEvaluation(Evaluation $evaluation): self
+    {
+        if (!$this->evaluations->contains($evaluation)) {
+            $this->evaluations->add($evaluation);
+            $evaluation->addClass($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvaluation(Evaluation $evaluation): self
+    {
+        if ($this->evaluations->removeElement($evaluation)) {
+            $evaluation->removeClass($this);
+        }
 
         return $this;
     }

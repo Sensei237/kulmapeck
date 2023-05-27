@@ -77,6 +77,9 @@ class Categorie
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Exam::class)]
     private Collection $exams;
 
+    #[ORM\OneToMany(mappedBy: 'matiere', targetEntity: Evaluation::class, orphanRemoval: true)]
+    private Collection $evaluations;
+
     public function __construct()
     {
         $this->cours = new ArrayCollection();
@@ -84,6 +87,7 @@ class Categorie
         $this->enseignants = new ArrayCollection();
         $this->exams = new ArrayCollection();
         $this->isSubCategory = false;
+        $this->evaluations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -265,6 +269,36 @@ class Categorie
             // set the owning side to null (unless already changed)
             if ($exam->getCategory() === $this) {
                 $exam->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Evaluation>
+     */
+    public function getEvaluations(): Collection
+    {
+        return $this->evaluations;
+    }
+
+    public function addEvaluation(Evaluation $evaluation): self
+    {
+        if (!$this->evaluations->contains($evaluation)) {
+            $this->evaluations->add($evaluation);
+            $evaluation->setMatiere($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvaluation(Evaluation $evaluation): self
+    {
+        if ($this->evaluations->removeElement($evaluation)) {
+            // set the owning side to null (unless already changed)
+            if ($evaluation->getMatiere() === $this) {
+                $evaluation->setMatiere(null);
             }
         }
 

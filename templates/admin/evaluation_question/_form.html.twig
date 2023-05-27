@@ -1,0 +1,22 @@
+{{ form_start(form) }}
+    <div class="mb-4">
+        {{ form_row(form.question) }}
+    </div>
+    <div class="mb-4">
+        {{ form_row(form.proposition1) }}
+    </div>
+    <div class="mb-4">
+        {{ form_row(form.propoition2) }}
+    </div>
+    <div class="mb-4">
+        {{ form_row(form.proposition3) }}
+    </div>
+    <div class="mb-4">
+        {{ form_row(form.proposition4) }}
+    </div>
+    <div class="mb-4">
+        {{ form_row(form.propositionJuste) }}
+    </div>
+    {{ form_rest(form) }}
+    <button class="btn btn-success-soft">{{ button_label|default('Enregistrer la question') }}</button>
+{{ form_end(form) }}
