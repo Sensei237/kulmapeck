@@ -1,0 +1,81 @@
+{% extends "student/base.html.twig" %}
+
+{% block pageContent %}
+
+    
+    <div class="card bg-transparent border rounded-3">
+		<!-- Card body START -->
+		<div class="card-body">
+			<!-- Course list table START -->
+			<div class="table-responsive border-0">
+				<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+					<!-- Table head -->
+					<thead>
+						<tr>
+							<th scope="col" class="border-0 rounded-start">Titre</th>
+							<th scope="col" class="border-0">Matière</th>
+							<th scope="col" class="border-0">Durée</th>
+							<th scope="col" class="border-0">Date début</th>
+							<th scope="col" class="border-0">Date fin</th>
+							<th scope="col" class="border-0">Satut</th>
+							<th scope="col" class="border-0 rounded-end">Action</th>
+						</tr>
+					</thead>
+
+					<!-- Table body START -->
+					<tbody>
+						{% for evaluation in student.evaluations %}
+							<tr>
+								<!-- Table data -->
+								<td>{{ evaluation.titre }}</td>
+
+								<!-- Table data -->
+								<td>{{ evaluation.matiere.name }}</td>
+
+								<!-- Table data -->
+								<td>{{ evaluation.duree }}</td>
+
+								<!-- Table data -->
+								<td>{{ evaluation.startAt|date("d/m/Y  à H:i:s") }}</td>
+								<td>{{ evaluation.endAt|date("d/m/Y à H:i:s") }}</td>
+								<td>
+                                    {% set status = 'en attente...' %}
+                                    {% set hasDone = false %}
+                                    {% for item in student.evaluationResultats %}
+                                        {% if item.evaluation is same as evaluation %}
+                                            {% set status = 'déjà' %}
+                                            {% set hasDone = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {{ status }}</td>
+								<td>
+                                    {% if not hasDone %}
+                                        <a href="{{ url('app_front_evaluation_begin', {'slug': evaluation.slug}) }}" class="btn btn-success-soft btn-xs">commencer</a>
+                                    {% else %}
+                                        <a class="btn btn-primary-soft btn-xs" href="{{ url('app_front_evaluation_result', {'slug': evaluation.slug}) }}">resultat</a>
+                                    {% endif %}
+                                </td>
+							</tr>
+							
+						{% else %}
+							<tr>
+								<td colspan="4">Liste vide</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+					<!-- Table body END -->
+				</table>
+			</div>
+			<!-- Course list table END -->
+
+			<!-- Pagination START -->
+			<div class="d-sm-flex justify-content-sm-between pagination-container align-items-sm-center mt-4 mt-sm-3">
+				
+			</div>
+			<!-- Pagination END -->
+		</div>
+		<!-- Card body START -->
+	</div>
+
+
+{% endblock %}

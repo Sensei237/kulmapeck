@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Evaluation;
 use App\Form\EvaluationType;
 use App\Repository\EvaluationRepository;
+use App\Repository\EvaluationResultatRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,12 +48,13 @@ class EvaluationController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_evaluation_show', methods: ['GET'])]
-    public function show(Evaluation $evaluation): Response
+    public function show(Evaluation $evaluation, EvaluationResultatRepository $evaluationResultatRepository): Response
     {
         return $this->render('admin/evaluation/show.html.twig', [
             'evaluation' => $evaluation,
             'isCourses' => true,
             'evc' => true,
+            'resultats' => $evaluationResultatRepository->findBy(['evaluation' => $evaluation], ['noteObtenue' => 'DESC'])
         ]);
     }
 
@@ -93,4 +95,5 @@ class EvaluationController extends AbstractController
 
         return $this->redirectToRoute('app_admin_evaluation_index', [], Response::HTTP_SEE_OTHER);
     }
+
 }

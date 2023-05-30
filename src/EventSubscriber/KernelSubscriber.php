@@ -5,6 +5,7 @@ namespace App\EventSubscriber;
 use App\Entity\Eleve;
 use App\Entity\Evaluation;
 use App\Repository\EvaluationRepository;
+use App\Repository\EvaluationResultatRepository;
 use App\Repository\PersonneRepository;
 use App\Repository\SiteSettingRepository;
 use App\Repository\SocialSettingRepository;
@@ -31,7 +32,8 @@ class KernelSubscriber implements EventSubscriberInterface
         UserRepository $userRepo, 
         UrlGeneratorInterface $urlGeneratorInterface, 
         RequestStack $requestStack,
-        private EvaluationRepository $evaluationRepository
+        private EvaluationRepository $evaluationRepository,
+        private EvaluationResultatRepository $evaluationResultatRepository
         )
     {
         $this->siteSettingRepository = $siteSettingRepository;
@@ -155,7 +157,8 @@ class KernelSubscriber implements EventSubscriberInterface
         $evaluations = $eleve->getEvaluations();
         foreach ($evaluations as $evaluation) {
             $currentDateTime = new DateTime();
-            if ($evaluation->getStartAt() <= $currentDateTime && $evaluation->getEndAt() > $currentDateTime->modify('+1 hour')) {
+            $r = $this->evaluationResultatRepository->findOneBy(['eleve' => $eleve, 'evaluation' => $evaluation]);
+            if (!$r && $evaluation->getStartAt() <= $currentDateTime && $evaluation->getEndAt() > $currentDateTime->modify('+1 hour')) {
                 $currentEvaluation = [
                     'evaluation' => [
                         'titre' => $evaluation->getTitre(),
