@@ -1,6 +1,6 @@
 {% extends "front/base.html.twig" %}
 
-{% block title %} - Course détails{% endblock %}
+{% block title %} - Quizzes{% endblock %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{{ asset('assets/vendor/stepper/css/bs-stepper.min.css') }}">
@@ -125,22 +125,22 @@
                                                                     <!-- Feed ques item -->
                                                                     <div>
                                                                         <input data-parent="#step-{{ loop.index }}" required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check btn-quiz-check" value="1" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option1">
-                                                                        <label class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option1">{{ quiz.proposition1 }}</label>
+                                                                        <label style="white-space: normal" class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option1">{{ quiz.proposition1 }}</label>
                                                                     </div>
                                                                     <!-- Feed ques item -->
                                                                     <div>
                                                                         <input data-parent="#step-{{ loop.index }}" required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check btn-quiz-check" value="2" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option2">
-                                                                        <label class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option2">{{ quiz.proposition2 }}</label>
+                                                                        <label style="white-space: normal" class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option2">{{ quiz.proposition2 }}</label>
                                                                     </div>
                                                                     <!-- Feed ques item -->
                                                                     <div>
                                                                         <input data-parent="#step-{{ loop.index }}" required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check btn-quiz-check" value="3" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option3">
-                                                                        <label class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option3">{{ quiz.proposition3 }}</label>
+                                                                        <label style="white-space: normal" class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option3">{{ quiz.proposition3 }}</label>
                                                                     </div>
                                                                     <!-- Feed ques item -->
                                                                     <div>
                                                                         <input data-parent="#step-{{ loop.index }}" required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check btn-quiz-check" value="4" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option4">
-                                                                        <label class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option4">{{ quiz.proposition4 }}</label>
+                                                                        <label style="white-space: normal" class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option4">{{ quiz.proposition4 }}</label>
                                                                     </div>
                                                                 </div>
 
@@ -189,7 +189,7 @@
                                                                             {% set className = 'btn-danger' %}
                                                                         {% endif %}
                                                                         <input disabled {{ value in quiz.propositionJuste ? 'checked' : '' }} required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check" id="quiz{{ quiz.id }}option1">
-                                                                        <label class="btn {{ className }} w-100" for="quiz{{ quiz.id }}option1">{{ quiz.proposition1 }}</label>
+                                                                        <label style="white-space: normal" class="btn {{ className }} w-100" for="quiz{{ quiz.id }}option1">{{ quiz.proposition1 }}</label>
                                                                     </div>
                                                                     <!-- Feed ques item -->
                                                                     <div>
@@ -203,7 +203,7 @@
                                                                             {% set className = 'btn-danger' %}
                                                                         {% endif %}
                                                                         <input disabled {{ value in quiz.propositionJuste ? 'checked' : '' }} required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check" value="2" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option2">
-                                                                        <label class="btn {{ className }} w-100" for="quiz{{ quiz.id }}option2">{{ quiz.proposition2 }}</label>
+                                                                        <label style="white-space: normal" class="btn {{ className }} w-100" for="quiz{{ quiz.id }}option2">{{ quiz.proposition2 }}</label>
                                                                     </div>
                                                                     <!-- Feed ques item -->
                                                                     <div>
@@ -217,7 +217,7 @@
                                                                             {% set className = 'btn-danger' %}
                                                                         {% endif %}
                                                                         <input disabled {{ value in quiz.propositionJuste ? 'checked' : '' }} required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check" value="3" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option3">
-                                                                        <label class="btn {{ className }} w-100" for="quiz{{ quiz.id }}option3">{{ quiz.proposition3 }}</label>
+                                                                        <label style="white-space: normal" class="btn {{ className }} w-100" for="quiz{{ quiz.id }}option3">{{ quiz.proposition3 }}</label>
                                                                     </div>
                                                                     <!-- Feed ques item -->
                                                                     <div>
@@ -231,7 +231,7 @@
                                                                             {% set className = 'btn-danger' %}
                                                                         {% endif %}
                                                                         <input disabled {{ value in quiz.propositionJuste ? 'checked' : '' }} required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check" value="4" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option4">
-                                                                        <label class="btn {{ className }} w-100" for="quiz{{ quiz.id }}option4">{{ quiz.proposition4 }}</label>
+                                                                        <label style="white-space: normal" class="btn {{ className }} w-100" for="quiz{{ quiz.id }}option4">{{ quiz.proposition4 }}</label>
                                                                     </div>
                                                                 </div>
 

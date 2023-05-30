@@ -1,0 +1,122 @@
+{% extends "front/base.html.twig" %}
+
+{% block title %} - Test de connaissance{% endblock %}
+
+{% block mainBarnner %}
+
+{% endblock %}
+
+{% block mainContent %}
+
+    <section class="pt-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    {% for msg in app.flashes('infoEvaluation') %}
+                        <div class="col-12">
+                            <div class="alert alert-info text-center">
+                                {{ msg }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="col-12 alert alert-success">
+                    <div class="d-flex">
+                        <div style="width: 100%">
+                            <h2>Correction</h2>
+                            <h3>{{ evaluation.titre }}</h3>
+                            <p>{{ evaluation.description }}</p>
+                            <div class="d-flex">
+                                <p>Matière : {{ evaluation.matiere.name }}</p>
+                                <p>Durée : {{ evaluation.duree }} heures</p>
+                                <p>Temps Restant : <b>01h : 55min</b></p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="bg-danger text-white" style="width: 150px;height:150px;border-radius:50%;text-align:center;padding-top:30px;font-size:2em">
+                                <span>{{ noteObtenue|number_format('2', ',') }}</span>
+                                <hr style="width:70%;margin:auto">
+                                <span>20</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-12">
+                    <!-- Course item START -->
+                    <div class="card border">
+                        <div class="card-body">
+                            {% for item in resultats %}
+                                <div class="{{ item.isCorrect ? 'border-success' : 'bg-danger text-white' }} p-2 mb-2">
+                                    <div class="d-flex">
+                                        <h5 style="margin-right: 10px">{{ loop.index }} - </h5>
+                                        <div>{{ item.quiz.question|raw }}</div>
+                                    </div>
+                                    <ul>
+                                        <li class="d-flex">
+                                            <div class="m-2">
+                                                {% set value = 1 %}
+                                                {% if value in item.quiz.propositionJuste %}
+                                                    <span class="fas fa-check text-success"></span>
+                                                {% else %}
+                                                    {% if value in item.reponses %}
+                                                        <span class="fas fa-times text-red"></span>
+                                                    {% endif %}
+                                                {% endif %}
+                                                
+                                                <input {{ value in item.reponses ? 'checked' : '' }} type="{{ item.quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio' }}" disabled="true">
+                                            </div>
+                                            <div class="m-2">{{ item.quiz.proposition1|raw }}</div>
+                                        </li>
+                                        <li class="d-flex">
+                                            <div class="m-2">
+                                                {% set value = 2 %}
+                                                {% if value in item.quiz.propositionJuste %}
+                                                    <span class="fas fa-check text-success"></span>
+                                                {% else %}
+                                                    {% if value in item.reponses %}
+                                                        <span class="fas fa-times text-red"></span>
+                                                    {% endif %}
+                                                {% endif %}
+                                                <input {{ value in item.reponses ? 'checked' : '' }} type="{{ item.quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio' }}" disabled="true">
+                                            </div>
+                                            <div class="m-2">{{ item.quiz.proposition2|raw }}</div>
+                                        </li>
+                                        <li class="d-flex">
+                                            <div class="m-2">
+                                                {% set value = 3 %}
+                                                {% if value in item.quiz.propositionJuste %}
+                                                    <span class="fas fa-check text-success"></span>
+                                                {% else %}
+                                                    {% if value in item.reponses %}
+                                                        <span class="fas fa-times text-red"></span>
+                                                    {% endif %}
+                                                {% endif %}
+                                                <input {{ value in item.reponses ? 'checked' : '' }} type="{{ item.quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio' }}" disabled="true">
+                                            </div>
+                                            <div class="m-2">{{ item.quiz.proposition3|raw }}</div>
+                                        </li>
+                                        <li class="d-flex">
+                                            <div class="m-2">
+                                                {% set value = 4 %}
+                                                {% if value in item.quiz.propositionJuste %}
+                                                    <span class="fas fa-check text-success"></span>
+                                                {% else %}
+                                                    {% if value in item.reponses %}
+                                                        <span class="fas fa-times text-red"></span>
+                                                    {% endif %}
+                                                {% endif %}
+                                                <input {{ value in item.reponses ? 'checked' : '' }} type="{{ item.quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio' }}" disabled="true">
+                                            </div>
+                                            <div class="m-2">{{ item.quiz.proposition4|raw }}</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

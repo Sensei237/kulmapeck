@@ -1,0 +1,38 @@
+<form action="" method="POST">
+    <div>
+        {% for quiz in evaluation %}
+            <div>
+                <!-- Title -->
+                <h4>{{ quiz.question }}</h4>
+                {% if quiz.propositionJuste|length > 1 %}
+                    <div class="text-info alert alert-info"><i class="fas fa-info" style="font-size: 2em;"></i> Plusieurs réponses sont possibles pour cette question</div>
+                {% endif %}
+                <input type="hidden" value="{{ quiz.id }}" name="quizzes[{{ loop.index }}][id]">
+                <hr> <!-- Divider -->
+                <div>
+                    <!-- Feed ques item -->
+                    <div>
+                        <input required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check btn-quiz-check" value="1" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option1">
+                        <label style="white-space: normal" class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option1">{{ quiz.proposition1 }}</label>
+                    </div>
+                    <!-- Feed ques item -->
+                    <div>
+                        <input required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check btn-quiz-check" value="2" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option2">
+                        <label style="white-space: normal" class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option2">{{ quiz.proposition2 }}</label>
+                    </div>
+                    <!-- Feed ques item -->
+                    <div>
+                        <input required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check btn-quiz-check" value="3" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option3">
+                        <label style="white-space: normal" class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option3">{{ quiz.proposition3 }}</label>
+                    </div>
+                    <!-- Feed ques item -->
+                    <div>
+                        <input required type="{{ quiz.propositionJuste|length > 1 ? 'checkbox' : 'radio'}}" class="btn-check btn-quiz-check" value="4" name="quizzes[{{ loop.index }}][reponses][]" id="quiz{{ quiz.id }}option4">
+                        <label style="white-space: normal" class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option4">{{ quiz.proposition4 }}</label>
+                    </div>
+                </div>
+        
+            </div>
+        {% endfor %}
+    </div>
+</form>

@@ -486,8 +486,11 @@
     Footer END -->
     {% endblock %}
 
-    {% if app.session.get('annonce') and app.session.get('showAnnonces') %}
-        {{ include('front/evaluation/_annonces.html.twig', {'annonce': app.session.get('annonce')}) }}
+    {% if app.session.get('annonce') and app.session.get('showAnnonces') and dontShowAnnonces is not defined %}
+        {{ include('front/evaluation/_annonces.html.twig', {'annonce': app.session.get('annonce'), 'isForPrommedTest': true}) }}
+    {% endif %}
+    {% if app.session.get('currentEvaluation') and dontShowAnnonces is not defined %}
+        {{ include('front/evaluation/_annonces.html.twig', {'annonce': app.session.get('currentEvaluation'), 'isForCurrentTest': true}) }}
     {% endif %}
     
     {% if app.flashes('notification') %}

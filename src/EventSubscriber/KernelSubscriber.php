@@ -53,6 +53,10 @@ class KernelSubscriber implements EventSubscriberInterface
 
             $session->set('siteSettings', $siteSettings);
 
+            $session->set('showAnnonces', true);
+            $session->set('hasAnnonces', false);
+            // $session->set('hideAnnonces', []);
+
             // dd($personne);
             if ($personne) {
                 $personne = $this->personneRepo->findOneBy(['id' => $personne->getId()]);
@@ -67,48 +71,60 @@ class KernelSubscriber implements EventSubscriberInterface
                 $sessionContainsAnnonces  = $session->get('hasAnnonces', false);
                 $showAnnonces = $session->get('showAnnonces', true);
                 // dump($sessionContainsAnnonces); dump($showAnnonces);dump($hideAnnonces);die;
-                if ($eleve !== null && $eleve->getClasse() !== null && (!$sessionContainsAnnonces && $showAnnonces)) {
+                if ($eleve !== null && $eleve->getClasse() !== null) {
                     $classe = $eleve->getClasse();
-                    $evaluations = $this->evaluationRepository->findSudentEvaluationsAnnonces($classe);
                     $annonces = null;
-                    foreach ($evaluations as $evaluation) {
-                        $nbJours = 2;
-                        if (!$eleve->getEvaluations()->contains($evaluation) && $nbJours < 7 && !in_array($evaluation->getId(), $hideAnnonces)) {
-                            $annonces = [
-                                'evaluation' => [
-                                    'titre' => $evaluation->getTitre(),
-                                    'description' => $evaluation->getDescription(),
-                                    'slug' => $evaluation->getSlug(),
-                                    'startAt' => $evaluation->getStartAt(),
-                                    'endAt' => $evaluation->getEndAt(),
-                                    'duree' => $evaluation->getDuree(),
-                                ],
-                                'nombreInscris' => $evaluation->getEleves()->count(),
-                                'matiere' => $evaluation->getMatiere()->getName(),
-                            ];
-                            $cmp = 1;
-                            $annonces['eleves'] = [];
-                            foreach ($evaluation->getEleves() as $e) {
-                                $annonces['eleves'][] = $e->getUtilisateur()->getPersonne()->getAvatarPath(); 
-                                $cmp++;
-                                if ($cmp > 4) {
-                                    break;
+                    if ((!$sessionContainsAnnonces && $showAnnonces)) {
+                        // die("cici");
+                        $evaluations = $this->evaluationRepository->findSudentEvaluationsAnnonces($classe);
+                        foreach ($evaluations as $evaluation) {
+                            // die("ici");
+                            $currentDateTime = new DateTime();
+                            $diff = $evaluation->getStartAt()->diff($currentDateTime);
+                            $h = $diff->h;
+                            $d = $diff->days;
+                            $m = $diff->m;
+                            $y = $diff->y;
+                            $nbHeures = $h + $d*24 + $m*30*24 + 8760*$y;
+                            // dump($nbHeures, 24*6, $evaluation->getStartAt()->diff($currentDateTime));die;
+                            if (!$eleve->getEvaluations()->contains($evaluation) && $nbHeures <= 7*24 && $nbHeures > 0 && !in_array($evaluation->getId(), $hideAnnonces)) {
+                            //    die;
+                                $annonces = [
+                                    'evaluation' => [
+                                        'titre' => $evaluation->getTitre(),
+                                        'description' => $evaluation->getDescription(),
+                                        'slug' => $evaluation->getSlug(),
+                                        'startAt' => $evaluation->getStartAt(),
+                                        'endAt' => $evaluation->getEndAt(),
+                                        'duree' => $evaluation->getDuree(),
+                                    ],
+                                    'nombreInscris' => $evaluation->getEleves()->count(),
+                                    'matiere' => $evaluation->getMatiere()->getName(),
+                                ];
+                                $cmp = 1;
+                                $annonces['eleves'] = [];
+                                foreach ($evaluation->getEleves() as $e) {
+                                    $annonces['eleves'][] = $e->getUtilisateur()->getPersonne()->getAvatarPath(); 
+                                    $cmp++;
+                                    if ($cmp > 4) {
+                                        break;
+                                    }
                                 }
+                                break;
                             }
-                            break;
+                        }
+                        if (empty($annonces)) {
+                            $session->set('showAnnonces', false);
+                            $session->set('hasAnnonces', true);
+                            $session->set('annonce', null);
+                        } else {
+                            $session->set('showAnnonces', true);
+                            $session->set('hasAnnonces', true);
+                            $session->set('annonce', $annonces);
                         }
                     }
-                    if (empty($annonces)) {
-                        $session->set('showAnnonces', false);
-                        $session->set('hasAnnonces', true);
-                        $session->set('annonce', null);
-                    } else {
-                        $session->set('showAnnonces', true);
-                        $session->set('hasAnnonces', true);
-                        $session->set('annonce', $annonces);
-                    }
 
-                    $this->showAnnonceEvaluationEncours($evaluations, $eleve);
+                    $this->showAnnonceEvaluationEncours($eleve);
                 }
             }
             // On verifie si le site est en mode maintenance
@@ -133,18 +149,34 @@ class KernelSubscriber implements EventSubscriberInterface
      * @param Eleve $eleve
      * @return Evaluation|null
      */
-    private function showAnnonceEvaluationEncours($evaluations, Eleve $eleve): ?Evaluation
+    private function showAnnonceEvaluationEncours(Eleve $eleve): void
     {
         $currentEvaluation = null;
+        $evaluations = $eleve->getEvaluations();
         foreach ($evaluations as $evaluation) {
             $currentDateTime = new DateTime();
-            if ($eleve->getEvaluations()->contains($evaluation) && $evaluation->getStartAt() <= $currentDateTime && $evaluation->getEndAt() > $currentDateTime->modify('+1 hour')) {
-                $currentEvaluation = $evaluation;
+            if ($evaluation->getStartAt() <= $currentDateTime && $evaluation->getEndAt() > $currentDateTime->modify('+1 hour')) {
+                $currentEvaluation = [
+                    'evaluation' => [
+                        'titre' => $evaluation->getTitre(),
+                        'description' => $evaluation->getDescription(),
+                        'slug' => $evaluation->getSlug(),
+                        'startAt' => $evaluation->getStartAt(),
+                        'endAt' => $evaluation->getEndAt(),
+                        'duree' => $evaluation->getDuree(),
+                    ],
+                    'nombreInscris' => $evaluation->getEleves()->count(),
+                    'matiere' => $evaluation->getMatiere()->getName(),
+                ];
                 break;
             }
         }
 
-        return $currentEvaluation;
+        $session = $this->requestStack->getSession();
+        $session->set('currentEvaluation', []);
+        if ($currentEvaluation !== null && !empty($currentEvaluation)) {
+            $session->set('currentEvaluation', $currentEvaluation);
+        }
     }
 
     public static function getSubscribedEvents(): array

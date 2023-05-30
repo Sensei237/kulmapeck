@@ -2,27 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\EvaluationQuestion;
+use App\Entity\EvaluationResultat;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<EvaluationQuestion>
+ * @extends ServiceEntityRepository<EvaluationResultat>
  *
- * @method EvaluationQuestion|null find($id, $lockMode = null, $lockVersion = null)
- * @method EvaluationQuestion|null findOneBy(array $criteria, array $orderBy = null)
- * @method EvaluationQuestion[]    findAll()
- * @method EvaluationQuestion[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method EvaluationResultat|null find($id, $lockMode = null, $lockVersion = null)
+ * @method EvaluationResultat|null findOneBy(array $criteria, array $orderBy = null)
+ * @method EvaluationResultat[]    findAll()
+ * @method EvaluationResultat[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EvaluationQuestionRepository extends ServiceEntityRepository
+class EvaluationResultatRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, EvaluationQuestion::class);
+        parent::__construct($registry, EvaluationResultat::class);
     }
 
-    public function save(EvaluationQuestion $entity, bool $flush = false): void
+    public function save(EvaluationResultat $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -31,7 +30,7 @@ class EvaluationQuestionRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(EvaluationQuestion $entity, bool $flush = false): void
+    public function remove(EvaluationResultat $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -41,7 +40,7 @@ class EvaluationQuestionRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return EvaluationQuestion[] Returns an array of EvaluationQuestion objects
+//     * @return EvaluationResultat[] Returns an array of EvaluationResultat objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -55,7 +54,7 @@ class EvaluationQuestionRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?EvaluationQuestion
+//    public function findOneBySomeField($value): ?EvaluationResultat
 //    {
 //        return $this->createQueryBuilder('e')
 //            ->andWhere('e.exampleField = :val')

@@ -1,0 +1,52 @@
+{% set dontShowAnnonces = true %}
+{% extends "front/base.html.twig" %}
+
+{% block title %} - Test de connaissance{% endblock %}
+
+{% block mainBarnner %}
+
+{% endblock %}
+
+{% block mainContent %}
+
+     <!-- =======================
+    Page content START -->
+    <section class="pt-0">
+        <div class="container">
+            <div class="row">
+                <!-- Main content START -->
+                <div class="col-12 alert alert-success">
+                    <h3>{{ evaluation.titre }}</h3>
+                    <p>{{ evaluation.description }}</p>
+                    <div class="d-flex">
+                        <p>Matière : {{ evaluation.matiere.name }}</p>
+                        <p>Durée : {{ evaluation.duree }} heures</p>
+                        <p>Temps Restant : <b>01h : 55min</b></p>
+                    </div>
+                </div>
+                <div class="col-xl-12">
+                    <!-- Course item START -->
+                    <div class="card border">
+                        <div class="card-body">
+                            
+                            {% if not evaluation.isGeneratedRandomQuestions %}
+                                {{ include('front/evaluation/_epreuve_unique.html.twig', {'epreuve': epreuve}) }}
+                            {% else %}
+                                {{ include('front/evaluation/_epreuve_random.html.twig', {'epreuve': epreuve}) }}
+                            {% endif %}
+
+                        </div>
+                        
+                    </div>
+                    <!-- Course item END -->
+
+                </div>
+                <!-- Main content END -->
+
+            </div> <!-- Row END -->
+        </div>	
+    </section>
+    <!-- =======================
+    Page content END -->
+
+{% endblock %}

@@ -1,0 +1,46 @@
+<form action="" method="POST">
+    <div>
+        {% for question in epreuve %}
+            <div>
+                <input type="hidden" value="{{ question.id }}" name="quizzes[{{ loop.index }}][id]">
+                <div class="d-flex">
+                    <h5 class="m-2">{{ loop.index }}.</h5>
+                    <h5 class="m-2">{{ question.question|raw }}</h5>
+                </div>
+                {% if question.propositionJuste|length > 1 %}
+                    <div class="text-info alert alert-info">Plusieurs réponses sont possibles pour cette question</div>
+                {% endif %}
+                <div>
+                    <div>
+                        <input class="btn-check btn-quiz-check" name="quizzes[{{ loop.index }}][reponses][]" value="1" id="propsition1-{{question.id}}" type="{{ question.propositionJuste|length > 1 ? 'checkbox' : 'radio' }}">
+                        <label style="white-space: normal" class="btn btn-outline-primary w-100" for="propsition1-{{question.id}}">{{ question.proposition1|raw }}</label>
+                    </div>
+                    <div>
+                        <input class="btn-check btn-quiz-check" name="quizzes[{{ loop.index }}][reponses][]" value="2" id="propsition2-{{question.id}}" type="{{ question.propositionJuste|length > 1 ? 'checkbox' : 'radio' }}">
+                        <label style="white-space: normal" class="btn btn-outline-primary w-100" for="propsition2-{{question.id}}">{{ question.proposition2|raw }}</label>
+                    </div>
+                    <div>
+                        <input class="btn-check btn-quiz-check" name="quizzes[{{ loop.index }}][reponses][]" value="3" id="propsition3-{{question.id}}" type="{{ question.propositionJuste|length > 1 ? 'checkbox' : 'radio' }}">
+                        <label style="white-space: normal" class="btn btn-outline-primary w-100" for="propsition3-{{question.id}}">{{ question.proposition3|raw }}</label>
+                    </div>
+                    <div>
+                        <input class="btn-check btn-quiz-check" name="quizzes[{{ loop.index }}][reponses][]" value="4" id="propsition4-{{question.id}}" type="{{ question.propositionJuste|length > 1 ? 'checkbox' : 'radio' }}">
+                        <label style="white-space: normal" class="btn btn-outline-primary w-100" for="propsition4-{{question.id}}">{{ question.proposition4|raw }}</label>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+    <div>
+        <label>
+            <input type="checkbox" required> 
+            
+            Je suis sûre de vouloir soumettre c'est réponses
+        </label>
+        <input type="hidden" name="isSubmittedExamResponses" value="true">
+    </div>
+    <div class="mt-5">
+        <button type="submit" class="btn btn-success-soft">Envoyer les réponses</button>
+    </div>
+</form>

@@ -591,7 +591,7 @@ class CoursesController extends AbstractController
         
         return $this->render('front/courses/quiz.html.twig', [
             'chapitre' => $chapitre,
-            'quizzes' => $chapitre !== null ? $chapitre->getQuizzes() : $cours->getQuizzes(),
+            'quizzes' => $chapitre !== null ? $chapitre->getQuizzes() : $quizRepository->findBy(['cours'=>$cours, 'chapitre'=>null]),
             'cours' => $cours,
             'submitUri' => $chapitre === null ? $this->generateUrl('app_front_course_course_quizzes', ['slugCours' => $cours->getSlug()]) : $this->generateUrl('app_front_course_chapitre_quizzes', ['slugCours' => $cours->getSlug(), 'slugChapitre' => $chapitre->getSlug()]),
             'isCorrectionMode' => $showCorrection,

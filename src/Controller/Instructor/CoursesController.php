@@ -179,6 +179,7 @@ class CoursesController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()) {
             $quiz->setChapitre($chapitre)
+                ->setCours($chapitre->getCours())
                 ->setReference(time()+$quiz->getId());
             
             $quizRepository->save($quiz, true);
@@ -210,7 +211,8 @@ class CoursesController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $quiz->setCours($cours)
-                ->setReference(time() + $quiz->getId());
+                ->setReference(time() + $quiz->getId())
+                ->setChapitre(null);
 
             $quizRepository->save($quiz, true);
 
