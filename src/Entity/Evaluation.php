@@ -2,21 +2,96 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\EvaluationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use App\Controller\Api\Controller\Evaluation\InscriptionController;
+use App\Controller\Api\Controller\Evaluation\ListController;
+use App\Controller\Api\Controller\Evaluation\PostCorrectionController;
+use App\Controller\Api\Controller\Evaluation\QuestionnaireController;
+use App\Controller\Api\Controller\Evaluation\ResultatController;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EvaluationRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            uriTemplate: '/evaluations/{id}/list',
+            controller: ListController::class,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]],
+                'description' => 'ID = Id de eleve'
+            ],
+            normalizationContext: [
+                'groups' => ['read:evaluation:collection']
+            ],
+            read: false
+        ),
+        new Post(
+            uriTemplate: '/evaluations/{id}/inscription',
+            controller: InscriptionController::class,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]],
+                'description' => 'id = evaluation_id'
+            ],
+            write: false
+        ),
+        new Get(
+            uriTemplate: '/evaluations/{id}/questionnaire',
+            controller: QuestionnaireController::class,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]],
+                'description' => 'id = evaluation_id'
+            ],
+            normalizationContext: [
+                'groups' => ['read:evaluation:question']
+            ],
+            read: false
+        ),
+        new Post(
+            uriTemplate: '/evaluations/{id}/corrige',
+            controller: PostCorrectionController::class,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]],
+                'description' => 'id = evaluation_id'
+            ],
+            normalizationContext: [
+                'groups' => ['read:evaluation:question'],
+                'description' => 'id = evaluation_id'
+            ],
+            write: false
+        ),
+        new Get(
+            uriTemplate: '/evaluations/{id}/resultat',
+            controller: ResultatController::class,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]],
+                'description' => "Cette route permet de récupérer la correction d'une évaluation. id = evaluation_id"
+            ],
+            normalizationContext: [
+                'groups' => ['read:evaluation:question']
+            ],
+            read: false
+        )
+
+    ]
+)]
 class Evaluation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:evaluation:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:evaluation:collection'])]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -24,30 +99,38 @@ class Evaluation
 
     #[ORM\ManyToOne(inversedBy: 'evaluations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:evaluation:collection'])]
     private ?Categorie $matiere = null;
 
     #[ORM\ManyToMany(targetEntity: Classe::class, inversedBy: 'evaluations')]
+    #[Groups(['read:evaluation:collection'])]
     private Collection $classes;
 
     #[ORM\Column]
+    #[Groups(['read:evaluation:collection'])]
     private ?\DateTime $startAt = null;
 
     #[ORM\Column]
+    #[Groups(['read:evaluation:collection'])]
     private ?\DateTime $endAt = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Groups(['read:evaluation:collection'])]
     private ?int $duree = null;
 
     #[ORM\Column]
+    #[Groups(['read:evaluation:collection'])]
     private ?bool $isGeneratedRandomQuestions = null;
 
     #[ORM\OneToMany(mappedBy: 'evaluation', targetEntity: EvaluationQuestion::class, orphanRemoval: true)]
     private Collection $evaluationQuestions;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:evaluation:collection'])]
     private ?string $slug = null;
 
     #[ORM\Column]
+    #[Groups(['read:evaluation:collection'])]
     private ?bool $isPassed = false;
 
     #[ORM\ManyToMany(targetEntity: Eleve::class, inversedBy: 'evaluations')]

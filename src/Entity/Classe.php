@@ -34,7 +34,7 @@ class Classe
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:classe:collection', 'read:user:item'])]
+    #[Groups(['read:classe:collection', 'read:user:item', 'read:evaluation:collection'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'classes')]
@@ -44,11 +44,11 @@ class Classe
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom de classe ne peut être vide !")]
     #[Assert\NotNull(message: "Le nom de classe ne peut être nul !")]
-    #[Groups(['read:classe:collection', 'read:user:item'])]
+    #[Groups(['read:classe:collection', 'read:user:item', 'read:evaluation:collection'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:classe:collection', 'read:user:item'])]
+    #[Groups(['read:classe:collection', 'read:user:item', 'read:evaluation:collection'])]
     private ?string $slug = null;
 
     #[ORM\ManyToMany(targetEntity: Cours::class, mappedBy: 'classe')]

@@ -144,7 +144,7 @@ class Personne
     public ?File $file = null;
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'])]
-    #[Groups(['read:course:item', 'read:review:collection', 'read:personne:item'])]
+    #[Groups(['read:course:item', 'read:course:collection', 'read:review:collection', 'read:personne:item'])]
     public ?string $contentUrl = null;
 
     #[ORM\Column(nullable: true)]

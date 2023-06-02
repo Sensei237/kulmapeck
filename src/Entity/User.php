@@ -50,9 +50,11 @@ use Symfony\Component\Validator\Constraints\Valid;
                 'security' => [['bearerAuth' => []]]
             ]
         ),
-        new Put(),
-        new Delete(),
-        new Patch()
+        new Put(
+            denormalizationContext: [
+                'groups' => ['post:user:item']
+            ],
+        ),
     ],
     normalizationContext: [
         'groups' => ['read:user:item']

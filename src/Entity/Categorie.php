@@ -38,15 +38,15 @@ class Categorie
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:collection', 'read:category:collection'])]
+    #[Groups(['read:course:collection', 'read:category:collection', 'read:evaluation:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:course:collection', 'read:category:collection'])]
+    #[Groups(['read:course:collection', 'read:category:collection', 'read:evaluation:collection'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:course:collection', 'read:category:collection'])]
+    #[Groups(['read:course:collection', 'read:category:collection', 'read:evaluation:collection'])]
     private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Cours::class)]

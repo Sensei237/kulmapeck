@@ -21,8 +21,6 @@ class PostController extends AbstractController
 
     public function __invoke(Request $request): QuizResult
     {
-        dd($request);
-
         $user = $this->security->getUser();
         $eleveConnected = $this->eleveRepository->findOneBy(['utilisateur' => $user]);
 
