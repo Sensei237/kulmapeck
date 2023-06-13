@@ -4,6 +4,7 @@ namespace App\Controller\Api\Controller\Evaluation;
 use App\Entity\Evaluation;
 use App\Repository\EleveRepository;
 use App\Repository\EvaluationResultatRepository;
+use App\Repository\QuizRepository;
 use App\Utils\Dto\EvaluationDto;
 use ArrayObject;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +20,8 @@ class QuestionnaireController extends AbstractController
         private EleveRepository $eleveRepository,
         private Security $security,
         private EvaluationResultatRepository $evaluationResultatRepository,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private QuizRepository $quizRepository
     )
     {
         
@@ -54,12 +56,7 @@ class QuestionnaireController extends AbstractController
         if (!$evaluation->isIsGeneratedRandomQuestions()) {
             $epreuve = $evaluation->getEvaluationQuestions();
         }else {
-            $epreuve = $this->entityManager->createQuery(
-                'SELECT q FROM App\Entity\Quiz q JOIN App\Entity\Cours c WHERE c.categorie = :categorie ORDER BY RAND()'
-                )
-                ->setParameter('categorie', $evaluation->getMatiere())
-                ->setMaxResults(20)
-                ->execute();
+            $epreuve = $this->quizRepository->findRandomQuizzes($evaluation);
         }
 
         return new ArrayObject(

@@ -1,7 +1,7 @@
 <form action="" method="POST">
     <div>
         {% for question in epreuve %}
-            <div>
+            <div class="mb-3 border-dashed p-3">
                 <input type="hidden" value="{{ question.id }}" name="quizzes[{{ loop.index }}][id]">
                 <div class="d-flex">
                     <h5 class="m-2">{{ loop.index }}.</h5>

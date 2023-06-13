@@ -1,7 +1,7 @@
 <form action="" method="POST">
     <div>
-        {% for quiz in evaluation %}
-            <div>
+        {% for quiz in epreuve %}
+            <div class="mb-3 border-dashed p-3">
                 <!-- Title -->
                 <h4>{{ quiz.question }}</h4>
                 {% if quiz.propositionJuste|length > 1 %}
@@ -31,7 +31,6 @@
                         <label style="white-space: normal" class="btn btn-outline-primary w-100" for="quiz{{ quiz.id }}option4">{{ quiz.proposition4 }}</label>
                     </div>
                 </div>
-        
             </div>
         {% endfor %}
     </div>

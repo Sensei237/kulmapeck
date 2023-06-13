@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/admin/formation')]
-#[Security("is_granted('ROLE_UNAUTHORIZE')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
+#[Security("is_granted('ROLE_SUPER_USERSS')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
 class FormationController extends AbstractController
 {
     #[Route('/', name: 'app_admin_formation_index', methods: ['GET'])]
@@ -21,7 +21,8 @@ class FormationController extends AbstractController
     {
         return $this->render('admin/formation/index.html.twig', [
             'formations' => $formationRepository->findAll(),
-            'foc' => true,
+            'isFormationController' => true,
+            'isCourses' => true,
         ]);
     }
 
@@ -42,7 +43,8 @@ class FormationController extends AbstractController
         return $this->render('admin/formation/new.html.twig', [
             'formation' => $formation,
             'form' => $form->createView(),
-            'foc' => true,
+            'isFormationController' => true,
+            'isCourses' => true,
         ]);
     }
 
@@ -51,7 +53,8 @@ class FormationController extends AbstractController
     {
         return $this->render('admin/formation/show.html.twig', [
             'formation' => $formation,
-            'foc' => true,
+            'isFormationController' => true,
+            'isCourses' => true,
         ]);
     }
 
@@ -71,7 +74,8 @@ class FormationController extends AbstractController
         return $this->render('admin/formation/edit.html.twig', [
             'formation' => $formation,
             'form' => $form->createView(),
-            'foc' => true,
+            'isFormationController' => true,
+            'isCourses' => true,
         ]);
     }
 

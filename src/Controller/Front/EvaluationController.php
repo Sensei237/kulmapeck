@@ -158,12 +158,8 @@ class EvaluationController extends AbstractController
         if (!$evaluation->isIsGeneratedRandomQuestions()) {
             $epreuve = $evaluation->getEvaluationQuestions();
         }else {
-            $epreuve = $entityManager->createQuery(
-                'SELECT q FROM App\Entity\Quiz q JOIN App\Entity\Cours c WHERE c.categorie = :categorie ORDER BY RAND()'
-                )
-                ->setParameter('categorie', $evaluation->getMatiere())
-                ->setMaxResults(20)
-                ->execute();
+            $epreuve = $quizRepository->findRandomQuizzes($evaluation);
+            // dd("icid", $epreuve);die;
         }
 
         return $this->render('front/evaluation/epreuve.html.twig', [

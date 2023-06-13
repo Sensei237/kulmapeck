@@ -112,6 +112,7 @@ class HomeController extends AbstractController
                         ->setProposition4($faker->sentence($faker->numberBetween(6, 15)));
                     $quiz->setPropositionJuste([$faker->numberBetween(1, 4)]);
                     $quiz->setChapitre($chap);
+                    $quiz->setCours($cours);
                     $em->persist($quiz);
                 }
             }

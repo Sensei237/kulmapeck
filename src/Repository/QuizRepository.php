@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Evaluation;
 use App\Entity\Quiz;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -37,6 +38,20 @@ class QuizRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+    * @return Quiz[] Returns an array of Quiz objects
+    */
+    public function findRandomQuizzes(Evaluation $evaluation): array
+    {
+        return $this->getEntityManager()->createQuery(
+            'SELECT q FROM App\Entity\Quiz q JOIN App\Entity\Cours c WHERE c.categorie = :categorie AND c.isValidated = :isValidated ORDER BY RAND()'
+            )
+            ->setParameter('categorie', $evaluation->getMatiere())
+            ->setParameter('isValidated', true)
+            ->setMaxResults(20)
+            ->execute();
     }
 
 //    /**

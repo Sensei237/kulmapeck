@@ -1,51 +1,53 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base.html.twig' %}
 
-{% block title %} | Formations{% endblock %}
+{% block pageTitle %}Exams{% endblock %}
 
-{% block pageTitle %}Formation{% endblock %}
-
-{% block cardTitle %}Liste{% endblock %}
-
-{% block cardFooter %}
-    <a class="btn btn-app" href="{{ path('app_formation_new') }}">
-        <i class="fas fa-plus"></i> Ajouter
-    </a>
+{% block actionBtn %}
+	<a href="{{ path('app_admin_formation_new') }}" class="btn btn-sm btn-primary mb-0">Add new formation</a>
 {% endblock %}
 
-{% block body %}
+{% block mainContent %}
+    <!-- Card START -->
+	<div class="card bg-transparent border">
+        <!-- Card body START -->
+		<div class="card-body">
+			<!-- Course table START -->
+			<div class="table-responsive border-0 rounded-3">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Intitulé</th>
-                <th>Durée</th>
-                <th>Niveau de difficulté</th>
-                <th>Gratuite</th>
-                <th>Date de création</th>
-                <th>Publié</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for formation in formations %}
-            <tr>
-                <td>{{ formation.name }}</td>
-                <td>{{ formation.duree }}</td>
-                <td>{{ formation.niveauDifficulte }}</td>
-                <td>{{ formation.isFree ? 'Yes' : 'No' }}</td>
-                <td>{{ formation.createdAt ? formation.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ formation.isPublished ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a class="btn btn-xs btn-primary" href="{{ path('app_formation_show', {'id': formation.id}) }}">détails</a>
-                    <a class="btn btn-xs btn-warning" href="{{ path('app_formation_edit', {'id': formation.id}) }}">éditer</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="10">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Intitulé</th>
+                            <th>Durée</th>
+                            <th>Niveau de difficulté</th>
+                            <th>Gratuite</th>
+                            <th>Date de création</th>
+                            <th>Publié</th>
+                            <th>actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for formation in formations %}
+                        <tr>
+                            <td>{{ formation.name }}</td>
+                            <td>{{ formation.duree }}</td>
+                            <td>{{ formation.niveauDifficulte }}</td>
+                            <td>{{ formation.isFree ? 'Yes' : 'No' }}</td>
+                            <td>{{ formation.createdAt ? formation.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ formation.isPublished ? 'Yes' : 'No' }}</td>
+                            <td>
+                                <a class="btn btn-xs btn-primary" href="{{ path('app_formation_show', {'id': formation.id}) }}">détails</a>
+                                <a class="btn btn-xs btn-warning" href="{{ path('app_formation_edit', {'id': formation.id}) }}">éditer</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="10">no records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}

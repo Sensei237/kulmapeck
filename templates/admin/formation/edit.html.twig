@@ -1,19 +1,14 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/formation/index.html.twig' %}
 
-{% block title %} | Formations{% endblock %}
-
-{% block pageTitle %}Formation{% endblock %}
-
-{% block cardTitle %}Ajouter{% endblock %}
-
-{% block cardFooter %}
+{% block actionBtn %}
+	<a href="{{ path('app_admin_formation_index') }}" class="btn btn-sm btn-primary mb-0">Retour</a>
     <a class="btn btn-app" href="{{ path('app_formation_index') }}">
         <i class="fas fa-arrow-left"></i> Liste
     </a>
     {{ include('includes/_delete_form.html.twig', {path: path('app_formation_delete', {'id': formation.id}), token: csrf_token('delete' ~ formation.id), classes: 'btn-danger'}) }}
 {% endblock %}
 
-{% block body %}
+{% block mainContent %}
 
     <div class="row">
         <div class="col-md-9">

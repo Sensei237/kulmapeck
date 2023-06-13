@@ -21,22 +21,26 @@ class FormationType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Intitulé de la formation',
+                'label_attr' => ['class' => 'form-label']
             ])
             ->add('imageFile', FileType::class, [
                 'label' => 'Image à la une',
                 'mapped' => false,
                 'attr' => [
                     'placeholder' => 'Sélectionner une image',
-                    'accept' => '.png, .jpg, .PNG, .JPG, .jpeg, .JPEG'
+                    'accept' => '.png, .jpg, .PNG, .JPG, .jpeg, .JPEG',
                 ],
                 'required' => false,
+                'label_attr' => ['class' => 'form-label']
             ])
             // ->add('slug')
             ->add('description', CKEditorType::class)
             ->add('duree', null, [
                 'label' => "Durée d'apprentissage",
+                'label_attr' => ['class' => 'form-label'],
                 'attr' => [
-                    'placeholder' => 'Exemple: 03 mois'
+                    'placeholder' => 'Exemple: 03 mois',
+                    
                 ]
             ])
             ->add('niveauDifficulte', ChoiceType::class, [
@@ -45,14 +49,18 @@ class FormationType extends AbstractType
                     'Intermédiaire' => 'Intermédiaire',
                     'Difficile' => 'Difficile',
                     'Très difficile' => 'Très difficile'
-                ]
+                ],
+                'label_attr' => ['class' => 'form-label'],
+                'label' => 'Niveau de difficulté',
             ])
             ->add('cours', EntityType::class, [
                 'class' => Cours::class,
                 'choice_label' => 'intitule',
                 'required' => true,
                 'multiple' => true,
-                'label' => "Liste de cours associés"
+                'label' => "Liste de cours associés",
+                'attr' => ['class' => 'form-select js-choice border-0 z-index-9 bg-transparent'],
+                'label_attr' => ['class' => 'form-label']
             ])
             ->add('isFree', CheckboxType::class, [
                 'label' => "Cette formation est gratuite",
@@ -72,6 +80,9 @@ class FormationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Formation::class,
+            'attr' => [
+                'class' => 'row g-3'
+            ]
         ]);
     }
 }
