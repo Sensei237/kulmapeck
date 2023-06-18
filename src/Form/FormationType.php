@@ -25,7 +25,6 @@ class FormationType extends AbstractType
             ])
             ->add('imageFile', FileType::class, [
                 'label' => 'Image à la une',
-                'mapped' => false,
                 'attr' => [
                     'placeholder' => 'Sélectionner une image',
                     'accept' => '.png, .jpg, .PNG, .JPG, .jpeg, .JPEG',
@@ -59,7 +58,13 @@ class FormationType extends AbstractType
                 'required' => true,
                 'multiple' => true,
                 'label' => "Liste de cours associés",
-                'attr' => ['class' => 'form-select js-choice border-0 z-index-9 bg-transparent'],
+                'attr' => [
+                    'class' => 'form-select js-choice border-0 z-index-9 bg-transparent',
+                    'data-placeholder' =>"true",
+                    'data-placeholder-Val' => "Ajouter un cours", 
+                    'data-max-item-count' => "20", 
+                    'data-remove-item-button' => "true"
+                ],
                 'label_attr' => ['class' => 'form-label']
             ])
             ->add('isFree', CheckboxType::class, [

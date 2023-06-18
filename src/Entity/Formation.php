@@ -8,10 +8,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FormationRepository::class)]
+#[Vich\Uploadable]
 class Formation
 {
     #[ORM\Id]
@@ -59,6 +62,9 @@ class Formation
 
     #[ORM\Column(length: 255)]
     private ?string $image = null;
+
+    #[Vich\UploadableField(mapping: "formations_path", fileNameProperty: "image")]
+    public ?File $imageFile = null;
 
     public function __construct()
     {

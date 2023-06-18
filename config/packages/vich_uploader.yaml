@@ -18,3 +18,8 @@ vich_uploader:
             uri_prefix: /media/courses/lessons/videos
             upload_destination: '%kernel.project_dir%/public/uploads/media/courses/lessons/videos'
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+
+        formations_path:
+            uri_prefix: /media/formations/images
+            upload_destination: '%kernel.project_dir%/public/uploads/media/formations/images'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer

@@ -36,8 +36,8 @@
                             <td>{{ formation.createdAt ? formation.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                             <td>{{ formation.isPublished ? 'Yes' : 'No' }}</td>
                             <td>
-                                <a class="btn btn-xs btn-primary" href="{{ path('app_formation_show', {'id': formation.id}) }}">détails</a>
-                                <a class="btn btn-xs btn-warning" href="{{ path('app_formation_edit', {'id': formation.id}) }}">éditer</a>
+                                <a class="btn btn-xs btn-primary" href="{{ path('app_admin_formation_show', {'id': formation.id}) }}">détails</a>
+                                <a class="btn btn-xs btn-warning" href="{{ path('app_admin_formation_edit', {'id': formation.id}) }}">éditer</a>
                             </td>
                         </tr>
                     {% else %}

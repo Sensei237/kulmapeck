@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/admin/formation')]
-#[Security("is_granted('ROLE_SUPER_USERSS')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
+#[Security("is_granted('ROLE_SUPER_USER')", statusCode: 403, message: "Vous n'avez pas les autorisations suffisantes pour consulter cette page")]
 class FormationController extends AbstractController
 {
     #[Route('/', name: 'app_admin_formation_index', methods: ['GET'])]
@@ -65,7 +65,7 @@ class FormationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $formation->setSlug($slugger->slug(time() . ' ' . $formation->getName()));
+            //$formation->setSlug($slugger->slug(time() . ' ' . $formation->getName()));
             $formationRepository->save($formation, true);
 
             return $this->redirectToRoute('app_admin_formation_index', [], Response::HTTP_SEE_OTHER);
