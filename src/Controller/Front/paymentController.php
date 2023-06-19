@@ -10,6 +10,7 @@ use App\Repository\AbonnementItemRepository;
 use App\Repository\EleveRepository;
 use App\Repository\PaymentMethodRepository;
 use App\Repository\PaymentRepository;
+use PaymentUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +42,7 @@ class paymentController extends AbstractController
             if ($this->isCsrfTokenValid('payment' . $course->getId(), $request->request->get('_token'))) {
                 // En fonction de la methode de payment choisie on fait appel à l'API indiquée
                 $paymentMethod = $paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
-                if ($this->initierPayment($course, $paymentMethod)) {
+                if (PaymentUtil::initierPayment($course, $paymentMethod)) {
                     $eleve->addCour($course);
                     $payment = new Payment();
                     $payment->setEleve($eleve)
@@ -89,7 +90,7 @@ class paymentController extends AbstractController
             if ($this->isCsrfTokenValid('payment' . $abonnement->getId(), $request->request->get('_token'))) {
                 // En fonction de la methode de payment choisie on fait appel à l'API indiquée
                 $paymentMethod = $paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
-                if ($this->initierPaymentPlan($abonnement, $paymentMethod)) {
+                if (PaymentUtil::initierPaymentPlan($abonnement, $paymentMethod)) {
 
                     $payment = new Payment();
                     $today = date_format(new \DateTimeImmutable(), 'Y-m-d');
@@ -128,20 +129,4 @@ class paymentController extends AbstractController
         ]);
     }
 
-    private function initierPaymentPlan(Abonnement $abonnement, ?PaymentMethod $paymentMethod): bool
-    {
-        $isPaied = true;
-
-
-        return $isPaied;
-    }
-
-    private function initierPayment(Cours $course, ?PaymentMethod $paymentMethod): bool
-    {
-        $isPaied = true;
-
-
-
-        return $isPaied;
-    }
 }

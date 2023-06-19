@@ -5,6 +5,9 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use App\Controller\Api\Controller\Payment\PayerAbonnementController;
+use App\Controller\Api\Controller\Payment\PayerCoursController;
 use App\Controller\Api\Controller\Payment\StudentPaymentController;
 use App\Repository\PaymentRepository;
 use DateTimeImmutable;
@@ -22,6 +25,26 @@ use Symfony\Component\Serializer\Annotation\Groups;
             read: false,
             openapiContext: [
                 'security' => [['bearerAuth' => []]]
+            ]
+        ),
+        new Post(
+            uriTemplate: '/abonnement/{id}/subscribe',
+            controller: PayerAbonnementController::class,
+            read: false,
+            write: false,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]],
+                'description' => "Cette route permet à un élève de payer un cours. Ici ID = id de l'abonnement. Dans le corps de la requête HTTP, il faut envoyé la propriété payment_method contenant la methode de paiement et initiate_payment qui est juste un booleen"
+            ]
+        ),
+        new Post(
+            uriTemplate: '/cours/{id}/paied',
+            controller: PayerCoursController::class,
+            read: false,
+            write: false,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]],
+                'description' => "Cette route permet à un élève de payer un cours. Ici ID = id du cours. Dans le corps de la requête HTTP, il faut envoyé la propriété payment_method contenant la methode de paiement"
             ]
         ),
     ],
