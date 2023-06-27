@@ -159,7 +159,7 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_check_email');
         }
 
-        $siteSettings = $this->session->get('siteSettings');
+        $siteSettings = $session->get('siteSettings');
         $supportEmail = 'support@mail.com';
         $siteName = 'Kulmapeck';
         if ($siteSettings instanceof SiteSetting) {

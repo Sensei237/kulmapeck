@@ -307,10 +307,12 @@ class CoursesController extends AbstractController
                     
                 }else {
                     // On lui demande de soit ajouter payer le cours soit devenir premium
+                    dd("C'est ici");
                     return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $course->getSlug()]);
                 }
             }else {
-                if (!$eleve->isIsPremium() || !$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $course, 'isExpired' => false])) {
+                if (!$course->isIsFree() && (!$eleve->isIsPremium() || !$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $course, 'isExpired' => false]))) {
+                    dd("Peut etre ici");
                     return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $course->getSlug()]);
                 }
             }
@@ -347,11 +349,12 @@ class CoursesController extends AbstractController
             // le cours soit souscrire a un compte premium
             if (!$eleve->getCours()->contains($lesson->getChapitre()->getCours())) {
                 return $this->redirectToRoute('app_front_course_start', ['slug' => $lesson->getChapitre()->getCours()->getSlug()]);
-            }else {
-                if (!$eleve->isIsPremium() || !$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $lesson->getChapitre()->getCours(), 'isExpired' => false])) {
-                    return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $lesson->getChapitre()->getCours()->getSlug()]);
-                }
             }
+            // else {
+            //     if (!$eleve->isIsPremium() || !$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $lesson->getChapitre()->getCours(), 'isExpired' => false])) {
+            //         return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $lesson->getChapitre()->getCours()->getSlug()]);
+            //     }
+            // }
         }
 
         if ($lesson->getVideoLink() !== null && $request->query->get('view') === null) {
@@ -435,10 +438,11 @@ class CoursesController extends AbstractController
             // On verifie si l'élève n'a pas déjà ce cours dans sa liste des cours
             // le cours soit souscrire a un compte premium
             if (!$eleve->getCours()->contains($cours)) {
-                return $this->redirectToRoute('app_front_course_start', ['slug' => $cours]);
-            } else {
-                if (!$eleve->isIsPremium() || !$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $cours, 'isExpired' => false])) {
-                    return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $cours]);
+                return $this->redirectToRoute('app_front_course_start', ['slug' => $cours->getSlug()]);
+            } 
+            else {
+                if (!$cours->isIsFree() && (!$eleve->isIsPremium() || !$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $cours, 'isExpired' => false]))) {
+                    return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $cours->getSlug()]);
                 }
             }
         }

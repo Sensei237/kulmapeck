@@ -173,7 +173,7 @@
                                                                 <!-- Title -->
                                                                 <h4>{{ quiz.question }}</h4>
                                                                 {% if quiz.propositionJuste|length > 1 %}
-                                                                    <div class="text-info alert alert-info"><i class="fas fa-info" style="font-size: 2em;"></i> Plusieurs réponses sont possibles pour cette question</div>
+                                                                    <div class="text-info alert alert-info"><i class="fas fa-info" style="font-size: 2em;"></i>{% trans %}MANY_ANSWERS_POSSIBLE_KEY{% endtrans %}</div>
                                                                 {% endif %}
                                                                 <hr> <!-- Divider -->
                                                                 <div class="vstack gap-2">
@@ -238,10 +238,10 @@
                                                                 <!-- Step button -->
                                                                 <div class="d-flex justify-content-center mt-3">
                                                                     {% if not loop.first %}
-                                                                        <button type="button" class="btn btn-danger-soft prev-btn mb-0 " style="margin-right: 15px;">Prev</button>
+                                                                        <button type="button" class="btn btn-danger-soft prev-btn mb-0 " style="margin-right: 15px;">{% trans %}PREV_KEY{% endtrans %}</button>
                                                                     {% endif %}
                                                                     {% if not loop.last %}
-                                                                        <button type="button" class="btn btn-primary-soft next-btn mb-0">Next</button>
+                                                                        <button type="button" class="btn btn-primary-soft next-btn mb-0">{% trans %}NEXT_KEY{% endtrans %}</button>
                                                                     {% endif %}
                                                                 </div>
                                                         
@@ -253,7 +253,7 @@
                                         </div>
                                         {% if isCorrectionMode %}
                                             <div class="card-footer">
-                                                <a class="btn btn-primary-soft" href="{{ url("app_front_course_start", {slug: cours.slug}) }}">Back to course</a>
+                                                <a class="btn btn-primary-soft" href="{{ url("app_front_course_start", {slug: cours.slug}) }}">{% trans %}BACK_TO_COURSE_KEY{% endtrans %}Back to course</a>
                                             </div>
                                         {% endif %}
                                         <!-- Card body END -->

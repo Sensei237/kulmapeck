@@ -68,7 +68,7 @@
                                             <!-- Playlist responsive toggler END -->
                                         </div>
                                     {% endif %}
-                                    <h3>{% trans %}LESSON_KEY{% trans %} {{ lesson.numero }} : {{ lesson.title }}</h3>
+                                    <h3>{% trans %}LESSON_KEY{% endtrans %} {{ lesson.numero }} : {{ lesson.title }}</h3>
                                     <hr>
                                     <!-- Course detail START -->
                                     {{ lesson.content|raw }}

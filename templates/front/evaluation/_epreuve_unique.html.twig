@@ -8,7 +8,7 @@
                     <h5 class="m-2">{{ question.question|raw }}</h5>
                 </div>
                 {% if question.propositionJuste|length > 1 %}
-                    <div class="text-info alert alert-info">Plusieurs réponses sont possibles pour cette question</div>
+                    <div class="text-info alert alert-info">{% trans %}MANY_ANSWERS_POSSIBLE_KEY{% endtrans %}</div>
                 {% endif %}
                 <div>
                     <div>

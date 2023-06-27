@@ -75,9 +75,9 @@ class FinishedController extends AbstractController
 
         return new ArrayObject([
             'notAuthorized' => false,
+            'showQuizzes' => false,
             'lesson' => $lesson,
             'lecture' => $lecture ? $lecture->getId() : null,
-            'showQuizzes' => false,
         ]);
     }
 }

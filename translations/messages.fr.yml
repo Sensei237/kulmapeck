@@ -230,3 +230,10 @@ HELLOHELP_KEY: Bonjour, comment pouvons-nous vous aider ?
 CATEGORYDESCRIPTION_KEY: Perceived end knowledge certainly day sweetness why cordially
 PERSONNE_NAME_KEY: Nom de famille
 WELCOME_LOGIN_KEY: Welcome to our largest community
+
+I_HAVE_FINISHED_KEY: J'ai fini cette leçon, je passe à la leçon suivante !
+COURSE_PLAYLIST_KEY: Liste de lecture
+BACK_TO_COURSE_KEY: Continuer la lecture
+NEXT_KEY: Suivant
+PREV_KEY: Précédent
+MANY_ANSWERS_POSSIBLE_KEY: Plusieurs réponses sont possibles pour cette question

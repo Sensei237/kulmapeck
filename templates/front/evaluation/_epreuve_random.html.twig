@@ -5,7 +5,7 @@
                 <!-- Title -->
                 <h4>{{ quiz.question }}</h4>
                 {% if quiz.propositionJuste|length > 1 %}
-                    <div class="text-info alert alert-info"><i class="fas fa-info" style="font-size: 2em;"></i> Plusieurs réponses sont possibles pour cette question</div>
+                    <div class="text-info alert alert-info"><i class="fas fa-info" style="font-size: 2em;"></i> {% trans %}MANY_ANSWERS_POSSIBLE_KEY{% endtrans %}</div>
                 {% endif %}
                 <input type="hidden" value="{{ quiz.id }}" name="quizzes[{{ loop.index }}][id]">
                 <hr> <!-- Divider -->
