@@ -194,7 +194,8 @@ class PostController extends AbstractController
 
             return [
                 'hasDone' => true,
-                'quizzesResults' => $quizResultRepository->findStudentQuizResultsByCourseOrChapter($eleve, $cours, $chapitre)
+                'quizzesResults' => $quizResultRepository->findStudentQuizResultsByCourseOrChapter($eleve, $cours, $chapitre),
+                'note' => $noteQuiz,
             ];
         }
 

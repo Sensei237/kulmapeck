@@ -2,11 +2,8 @@
 
 namespace App\Controller\Api\Controller\Course\Lesson;
 
-use App\Entity\Cours;
 use App\Entity\Eleve;
-use App\Entity\Forum;
 use App\Entity\Lecture;
-use App\Entity\Membre;
 use App\Repository\EleveRepository;
 use App\Repository\ForumRepository;
 use App\Repository\LectureRepository;
@@ -17,9 +14,7 @@ use ArrayObject;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 #[AsController]
 class FinishedController extends AbstractController
@@ -60,6 +55,8 @@ class FinishedController extends AbstractController
                 'notAuthorized' => false,
                 'showQuizzes' => true,
                 'chapterId' => $lecture->getLesson()->getChapitre()->getId(),
+                'chapitreSlug' => $lecture->getLesson()->getChapitre()->getSlug(),
+                'coursID' => $lecture->getLesson()->getChapitre()->getCours()->getId()
             ]);
         }
 
@@ -78,6 +75,8 @@ class FinishedController extends AbstractController
             'showQuizzes' => false,
             'lesson' => $lesson,
             'lecture' => $lecture ? $lecture->getId() : null,
+            'chapitreSlug' => $lecture->getLesson()->getChapitre()->getSlug(),
+            'coursID' => $lecture->getLesson()->getChapitre()->getCours()->getId()
         ]);
     }
 }
