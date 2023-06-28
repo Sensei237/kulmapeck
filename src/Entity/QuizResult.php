@@ -26,7 +26,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(
             denormalizationContext: ['groups' => ['post:quizresult:item']],
             controller: PostController::class,
-            uriTemplate: '/cours/{id}/quzzes/{slug}',
+            uriTemplate: '/submit/quizzes-form',
             openapiContext: [
                 'security' => [['bearerAuth' => []]]
             ]

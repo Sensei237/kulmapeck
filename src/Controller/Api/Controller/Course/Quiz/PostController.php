@@ -8,6 +8,7 @@ use App\Entity\Lecture;
 use App\Entity\QuizLost;
 use App\Entity\QuizResult;
 use App\Repository\ChapitreRepository;
+use App\Repository\CoursRepository;
 use App\Repository\EleveRepository;
 use App\Repository\LectureRepository;
 use App\Repository\PaymentRepository;
@@ -34,7 +35,8 @@ class PostController extends AbstractController
         private EntityManagerInterface $entityManager,
         private LectureRepository $lectureRepository, 
         private QuizResultRepository $quizResultRepository, 
-        private QuizRepository $quizRepository
+        private QuizRepository $quizRepository,
+        private CoursRepository $coursRepository
     ) {
     }
 
@@ -54,10 +56,10 @@ class PostController extends AbstractController
         //     return $data;
         // }
 
-        return $this->correction($cours, $chapitre, $this->paymentRepository, $this->chapitreRepository, $this->quizLostRepository, $request, $this->entityManager, $this->lectureRepository, $this->quizResultRepository, $this->eleveRepository, $this->quizRepository);
+        return $this->correction($this->paymentRepository, $this->chapitreRepository, $this->quizLostRepository, $request, $this->entityManager, $this->lectureRepository, $this->quizResultRepository, $this->eleveRepository, $this->quizRepository);
     }
 
-    public function correction(Cours $cours, Chapitre $chapitre=null, PaymentRepository $paymentRepository, ChapitreRepository $chapitreRepository, QuizLostRepository $quizLostRepository, Request $request, EntityManagerInterface $entityManager, LectureRepository $lectureRepository, QuizResultRepository $quizResultRepository, EleveRepository $eleveRepository, QuizRepository $quizRepository)
+    public function correction(PaymentRepository $paymentRepository, ChapitreRepository $chapitreRepository, QuizLostRepository $quizLostRepository, Request $request, EntityManagerInterface $entityManager, LectureRepository $lectureRepository, QuizResultRepository $quizResultRepository, EleveRepository $eleveRepository, QuizRepository $quizRepository)
     {
         $user = $this->security->getUser();
 
@@ -66,6 +68,10 @@ class PostController extends AbstractController
         if ($eleve === null) {
             throw $this->createAccessDeniedException();
         }
+
+        $data = $request->request->getIterator();
+        $cours = $this->coursRepository->find($request->request->get('cours_id'));
+        $chapitre = $this->chapitreRepository->findOneBy(['slug' => $request->request->get('chapitre_slug')]);
 
         // On verifie si l'élève n'a pas déjà ce cours dans sa liste des cours
         // le cours soit souscrire a un compte premium
@@ -94,7 +100,7 @@ class PostController extends AbstractController
 
         if ($request->request->get('submit') !== null) {
 
-            $data = $request->request->getIterator();
+            
             $noteQuiz = 0;
             // dd($data['quizzes']);
             $quizzes = $data['quizzes'];
