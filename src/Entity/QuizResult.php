@@ -14,6 +14,8 @@ use App\Repository\QuizResultRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\RequestBody;
 
 #[ORM\Entity(repositoryClass: QuizResultRepository::class)]
 #[UniqueEntity(fields: ['quiz', 'eleve'], message: 'This item exist')]
@@ -29,7 +31,33 @@ use Symfony\Component\Serializer\Annotation\Groups;
             uriTemplate: '/submit/quizzes-form',
             openapiContext: [
                 'security' => [['bearerAuth' => []]]
-            ]
+            ],
+            openapi: new Operation(
+                requestBody: new RequestBody(
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'quizzes' => [
+                                        'type' => [],
+                                    ],
+                                    'submit' => [
+                                        'type' => 'string',
+                                    ],
+                                    'cours_id' => [
+                                        'type' => 'integer',
+                                    ],
+                                    'chapitre_slug' => [
+                                        'type' => 'string',
+                                    ],
+                                ]
+                            ]
+                        ]
+                    ])
+                )
+            ),
+            deserialize: false
         ),
         new Put(
             denormalizationContext: ['groups' => ['put:quizresult:item']],

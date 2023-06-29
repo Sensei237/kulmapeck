@@ -33,9 +33,9 @@ class PostCorrectionController extends AbstractController
     {
         $user = $this->security->getUser();
         $eleve = $this->eleveRepository->findOneBy(['utilisateur' => $user]);
+        $data = $request->toArray();
 
-        if ($request->request->get('isSubmittedExamResponses')) {
-            $data = $request->request->getIterator();
+        if (!empty($data['isSubmittedExamResponses'])) {
             $noteQuiz = 0;
             $resultset = [];
             if (empty($data['quizzes'])) {

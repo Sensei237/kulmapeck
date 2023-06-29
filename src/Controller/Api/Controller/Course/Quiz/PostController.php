@@ -40,7 +40,7 @@ class PostController extends AbstractController
     ) {
     }
 
-    public function __invoke(Cours $cours, Chapitre $chapitre, Request $request)
+    public function __invoke(Request $request)
     {
         $user = $this->security->getUser();
         $eleveConnected = $this->eleveRepository->findOneBy(['utilisateur' => $user]);
@@ -69,18 +69,14 @@ class PostController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $data = $request->request->getIterator();
-        $cours = $this->coursRepository->find($request->request->get('cours_id'));
-        $chapitre = $this->chapitreRepository->findOneBy(['slug' => $request->request->get('chapitre_slug')]);
+        $data = $request->toArray();
+        $cours = $this->coursRepository->find($data['cours_id']);
+        $chapitre = $this->chapitreRepository->findOneBy(['slug' => $data['chapitre_slug']]);
 
         // On verifie si l'élève n'a pas déjà ce cours dans sa liste des cours
         // le cours soit souscrire a un compte premium
         if (!$eleve->getCours()->contains($cours)) {
             throw $this->createAccessDeniedException();
-        } else {
-            if (!$eleve->isIsPremium() || !$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $cours, 'isExpired' => false])) {
-                throw $this->createAccessDeniedException("Vous devez payer ce cours ou être premium");
-            }
         }
 
         if ($chapitre !== null) {
@@ -97,113 +93,108 @@ class PostController extends AbstractController
             $lectureRepository->save($lecture, true);
             $quizLost = $quizLostRepository->findOneBy(['cours' => $cours, 'eleve' => $eleve]);
         }
-
-        if ($request->request->get('submit') !== null) {
-
             
-            $noteQuiz = 0;
-            // dd($data['quizzes']);
-            $quizzes = $data['quizzes'];
-            foreach ($quizzes as $quizze) {
-                $quizId = $quizze['id'];
-                $results = $quizze['reponses'];
-                $quiz = $quizRepository->find($quizId);
+        $noteQuiz = 0;
+        // dd($data['quizzes']);
+        $quizzes = $data['quizzes'];
+        foreach ($quizzes as $quizze) {
+            $quizId = $quizze['id'];
+            $results = $quizze['reponses'];
+            $quiz = $quizRepository->find($quizId);
 
-                if ($quiz === null) {
-                    throw new BadRequestException("Données corrompu");
-                }
-
-                $isCorrect = false;
-                $note = 0;
-                // dump($quiz->getPropositionJuste());
-                
-                if($results == $quiz->getPropositionJuste()) {
-                    $isCorrect = true;
-                    $note = 20/count($chapitre->getQuizzes());
-                    $noteQuiz += $note;
-                    // dd($results);
-                }
-
-                $quizResult = $quizResultRepository->findOneBy(['quiz' => $quiz, 'eleve' => $eleve, ]);
-                if ($quizResult === null) {
-                    $quizResult = new QuizResult();
-                }
-                $quizResult->setEleve($eleve)->setQuiz($quiz)->setIsCorrect($isCorrect)->setResult($results)->setNote($note)->setUpdatedAt(new \DateTimeImmutable());
-                $quizResultRepository->save($quizResult);
-            }
-            
-            if ($eleve !== null) {
-                if ($lecture === null) {
-                    $lecture = new Lecture();
-                    if ($chapitre !== null) {
-                        $lecture->setChapitre($chapitre);
-                    } else {
-                        $lecture->setCours($cours);
-                    }
-                    $lecture->setEleve($eleve)->setReference(time() + $quiz->getId())->setEndAt(new \DateTimeImmutable());
-                }
-                $isFinished = false;
-                if (($noteQuiz * 100) / 20 > 70) {
-                    $isFinished = true;
-                }
-                $lecture->setIsFinished($isFinished)->setNote($noteQuiz);
-
-                if ($isFinished) {
-                    if ($lecture->getChapitre()) {
-                        $nextChapNumber = $lecture->getChapitre()->getNumero() + 1;
-                        $nextChapter = $chapitreRepository->findOneBy(['numero' => $nextChapNumber, 'cours' => $lecture->getChapitre()->getCours()]);
-                        if ($nextChapter && count($nextChapter->getLessons()) > 0) {
-                            $newLecture = new Lecture();
-                            $newLecture->setLesson($nextChapter->getLessons()[0])
-                                ->setEleve($eleve)->setStartAt(new \DateTimeImmutable())->setReference(time()+$nextChapter->getId())
-                                ->setIsFinished(false);
-                            $lectureRepository->save($newLecture);
-                        }
-                    }else {
-                        // il n'y a plus de chapitres donc on passe au quiz de fin de chapitre
-                        $newLecture = new Lecture();
-                            $newLecture->setCours($cours)
-                                ->setEleve($eleve)->setStartAt(new \DateTimeImmutable())->setReference(time()+$cours->getId())
-                                ->setIsFinished(false);
-                            $lectureRepository->save($newLecture);
-                    }
-                }
-
-                $lectureRepository->save($lecture);
-                if (!$isFinished) {
-                    if ($quizLost === null) {
-                        $quizLost = new QuizLost();
-                        if ($chapitre) {
-                            $quizLost->setChapitre($chapitre);
-                        } else {
-                            $quizLost->setCours($cours);
-                        }
-                        $quizLost->setEleve($eleve);
-                    }
-                    $quizLost->setAttempt($quizLost->getAttempt() + 1)
-                        ->setLastAt(new \DateTimeImmutable())
-                        ->setNextAt(new \DateTimeImmutable(date('Y-m-d H:i:s', strtotime('+2 hour'))))
-                        ->setIsOk(false);
-                    $quizLostRepository->save($quizLost);
-                } else {
-                    if ($quizLost !== null) {
-                        $quizLost->setLastAt(new \DateTimeImmutable())
-                            ->setIsOk(true);
-                        $quizLostRepository->save($quizLost);
-                    }
-                }
+            if ($quiz === null) {
+                throw new BadRequestException("Données corrompu");
             }
 
-            // dump("Note: ".$noteQuiz);dd($data['quizzes']);
+            $isCorrect = false;
+            $note = 0;
+            // dump($quiz->getPropositionJuste());
             
-            $entityManager->flush();
+            if($results == $quiz->getPropositionJuste()) {
+                $isCorrect = true;
+                $note = 20/count($chapitre->getQuizzes());
+                $noteQuiz += $note;
+                // dd($results);
+            }
 
-            return [
-                'hasDone' => true,
-                'quizzesResults' => $quizResultRepository->findStudentQuizResultsByCourseOrChapter($eleve, $cours, $chapitre),
-                'note' => $noteQuiz,
-            ];
+            $quizResult = $quizResultRepository->findOneBy(['quiz' => $quiz, 'eleve' => $eleve, ]);
+            if ($quizResult === null) {
+                $quizResult = new QuizResult();
+            }
+            $quizResult->setEleve($eleve)->setQuiz($quiz)->setIsCorrect($isCorrect)->setResult($results)->setNote($note)->setUpdatedAt(new \DateTimeImmutable());
+            $quizResultRepository->save($quizResult);
         }
+        
+        if ($eleve !== null) {
+            if ($lecture === null) {
+                $lecture = new Lecture();
+                if ($chapitre !== null) {
+                    $lecture->setChapitre($chapitre);
+                } else {
+                    $lecture->setCours($cours);
+                }
+                $lecture->setEleve($eleve)->setReference(time() + $quiz->getId())->setEndAt(new \DateTimeImmutable());
+            }
+            $isFinished = false;
+            if (($noteQuiz * 100) / 20 > 70) {
+                $isFinished = true;
+            }
+            $lecture->setIsFinished($isFinished)->setNote($noteQuiz);
+
+            if ($isFinished) {
+                if ($lecture->getChapitre()) {
+                    $nextChapNumber = $lecture->getChapitre()->getNumero() + 1;
+                    $nextChapter = $chapitreRepository->findOneBy(['numero' => $nextChapNumber, 'cours' => $lecture->getChapitre()->getCours()]);
+                    if ($nextChapter && count($nextChapter->getLessons()) > 0) {
+                        $newLecture = new Lecture();
+                        $newLecture->setLesson($nextChapter->getLessons()[0])
+                            ->setEleve($eleve)->setStartAt(new \DateTimeImmutable())->setReference(time()+$nextChapter->getId())
+                            ->setIsFinished(false);
+                        $lectureRepository->save($newLecture);
+                    }
+                }else {
+                    // il n'y a plus de chapitres donc on passe au quiz de fin de chapitre
+                    $newLecture = new Lecture();
+                        $newLecture->setCours($cours)
+                            ->setEleve($eleve)->setStartAt(new \DateTimeImmutable())->setReference(time()+$cours->getId())
+                            ->setIsFinished(false);
+                        $lectureRepository->save($newLecture);
+                }
+            }
+
+            $lectureRepository->save($lecture);
+            if (!$isFinished) {
+                if ($quizLost === null) {
+                    $quizLost = new QuizLost();
+                    if ($chapitre) {
+                        $quizLost->setChapitre($chapitre);
+                    } else {
+                        $quizLost->setCours($cours);
+                    }
+                    $quizLost->setEleve($eleve);
+                }
+                $quizLost->setAttempt($quizLost->getAttempt() + 1)
+                    ->setLastAt(new \DateTimeImmutable())
+                    ->setNextAt(new \DateTimeImmutable(date('Y-m-d H:i:s', strtotime('+2 hour'))))
+                    ->setIsOk(false);
+                $quizLostRepository->save($quizLost);
+            } else {
+                if ($quizLost !== null) {
+                    $quizLost->setLastAt(new \DateTimeImmutable())
+                        ->setIsOk(true);
+                    $quizLostRepository->save($quizLost);
+                }
+            }
+        }
+        
+        $entityManager->flush();
+
+        return [
+            'hasDone' => true,
+            'quizzesResults' => $quizResultRepository->findStudentQuizResultsByCourseOrChapter($eleve, $cours, $chapitre),
+            'note' => $noteQuiz,
+        ];
+        
 
         throw $this->createAccessDeniedException("Vous devez poster le quiz");
     }
