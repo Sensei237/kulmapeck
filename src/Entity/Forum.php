@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use App\Controller\Api\Controller\Course\Forum\CourseForum;
 use App\Repository\ForumRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
         new Get(), 
         new Get(
             uriTemplate: '/cours/{id}/forum',
-            controller: StudentLectureController::class,
+            controller: CourseForum::class,
             read: false,
         )
     ]
