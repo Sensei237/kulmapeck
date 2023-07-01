@@ -35,9 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'description' => "Cette route permet de récuperer la liste des sujets d'un forum donné en foction de son id"
             ]
         ),
-        new Get(
-            normalizationContext: ['group' => ['read:sujet:item', 'read:sujet:collection']]
-        ),
+        new Get(),
         new Post(
             uriTemplate: '/sujet/{id}/new',
             controller: PostSubjectController::class,
