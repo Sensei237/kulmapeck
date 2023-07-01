@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\Api\Controller\Course\Forum\ForumSubjects;
 use App\Controller\Api\Controller\Course\Forum\PostSubjectController;
 use App\Controller\Api\Controller\Course\Forum\SujetResoluController;
 use App\Repository\SujetRepository;
@@ -27,6 +28,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(),
+        new GetCollection(
+            uriTemplate: '/forum/{id}/subjects',
+            controller: ForumSubjects::class,
+            openapiContext: [
+                'description' => "Cette route permet de récuperer la liste des sujets d'un forum donné en foction de son id"
+            ]
+        ),
         new Get(
             normalizationContext: ['group' => ['read:sujet:item', 'read:sujet:collection']]
         ),
