@@ -602,7 +602,6 @@ class CoursesController extends AbstractController
             'lecture' => $lecture,
             'quizzesResults' => $quizzesResults,
             'nextQuizAt' => $nextQuizAt,
-            
         ]);
     }
 

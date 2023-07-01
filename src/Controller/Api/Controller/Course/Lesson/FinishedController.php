@@ -56,7 +56,8 @@ class FinishedController extends AbstractController
                 'showQuizzes' => true,
                 'chapterId' => $lecture->getLesson()->getChapitre()->getId(),
                 'chapitreSlug' => $lecture->getLesson()->getChapitre()->getSlug(),
-                'coursID' => $lecture->getLesson()->getChapitre()->getCours()->getId()
+                'coursID' => $lecture->getLesson()->getChapitre()->getCours()->getId(),
+                'chapitreID' => $lecture->getLesson()->getChapitre()->getId()
             ]);
         }
 

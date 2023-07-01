@@ -59,6 +59,9 @@ class QuizResultRepository extends ServiceEntityRepository
                 ->setParameter('cours', $cours);
         }
 
+        $query->andWhere('q.eleve = :eleve')
+            ->setParameter('eleve', $eleve);
+
         return $query->getQuery()
             ->getResult()
         ;

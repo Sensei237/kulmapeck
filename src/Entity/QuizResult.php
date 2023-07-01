@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
@@ -16,19 +17,30 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\OpenApi\Model\Operation;
 use ApiPlatform\OpenApi\Model\RequestBody;
+use App\Controller\Api\Controller\Course\Chapter\ShowQuizzesResultList;
 
 #[ORM\Entity(repositoryClass: QuizResultRepository::class)]
 #[UniqueEntity(fields: ['quiz', 'eleve'], message: 'This item exist')]
 #[ApiResource(
     normalizationContext: ['groups' => ['read:quizresult:collection']],
     denormalizationContext: ['groups' => ['post:quizresult:item']],
+    paginationClientItemsPerPage: true,
+    paginationItemsPerPage: 20,
+    paginationMaximumItemsPerPage: 20,
     operations: [
         new GetCollection(),
+        new GetCollection(
+            controller: ShowQuizzesResultList::class,
+            uriTemplate: '/chapitre/{id}/results',
+            openapiContext: [
+                'security' => [['bearerAuth' => []]]
+            ],
+        ),
         new Get(),
         new Post(
-            denormalizationContext: ['groups' => ['post:quizresult:item']],
+            normalizationContext: ['groups' => ['post:item']],
             controller: PostController::class,
-            uriTemplate: '/submit/quizzes-form',
+            uriTemplate: '/chapitre/{id}/submit/quizzes-form',
             openapiContext: [
                 'security' => [['bearerAuth' => []]]
             ],
@@ -77,7 +89,8 @@ class QuizResult
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:quizresult:collection'])]
+    #[Groups(['read:quizresult:collection', 'post:item'])]
+    #[ApiProperty(iris: "https://schema.org/identifier", identifier: true)]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'quizResults')]

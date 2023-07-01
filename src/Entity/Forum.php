@@ -12,7 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ForumRepository::class)]
 #[ApiResource(
     operations: [
-        new Get()
+        new Get(), 
+        new Get(
+            uriTemplate: '/cours/{id}/forum',
+            controller: StudentLectureController::class,
+            read: false,
+        )
     ]
 )]
 class Forum

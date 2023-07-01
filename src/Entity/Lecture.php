@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Controller\Api\Controller\Course\Lesson\FinishedController;
+use App\Controller\Api\Controller\Course\Lesson\FinishedLectures;
 use App\Controller\Api\Controller\Course\StudentLectureController;
 use App\Repository\LectureRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,6 +19,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new GetCollection(
             uriTemplate: '/student/{id}/lectures',
             controller: StudentLectureController::class,
+            read: false,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/student/{id}/finished-lectures',
+            controller: FinishedLectures::class,
             read: false,
             openapiContext: [
                 'security' => [['bearerAuth' => []]]

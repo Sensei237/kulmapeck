@@ -40,7 +40,7 @@ class PostController extends AbstractController
     ) {
     }
 
-    public function __invoke(Request $request)
+    public function __invoke(Chapitre $chapitre, Request $request): \ArrayObject
     {
         $user = $this->security->getUser();
         $eleveConnected = $this->eleveRepository->findOneBy(['utilisateur' => $user]);
@@ -59,7 +59,7 @@ class PostController extends AbstractController
         return $this->correction($this->paymentRepository, $this->chapitreRepository, $this->quizLostRepository, $request, $this->entityManager, $this->lectureRepository, $this->quizResultRepository, $this->eleveRepository, $this->quizRepository);
     }
 
-    public function correction(PaymentRepository $paymentRepository, ChapitreRepository $chapitreRepository, QuizLostRepository $quizLostRepository, Request $request, EntityManagerInterface $entityManager, LectureRepository $lectureRepository, QuizResultRepository $quizResultRepository, EleveRepository $eleveRepository, QuizRepository $quizRepository)
+    public function correction(PaymentRepository $paymentRepository, ChapitreRepository $chapitreRepository, QuizLostRepository $quizLostRepository, Request $request, EntityManagerInterface $entityManager, LectureRepository $lectureRepository, QuizResultRepository $quizResultRepository, EleveRepository $eleveRepository, QuizRepository $quizRepository): \ArrayObject
     {
         $user = $this->security->getUser();
 
@@ -189,11 +189,11 @@ class PostController extends AbstractController
         
         $entityManager->flush();
 
-        return [
+        return new \ArrayObject([
             'hasDone' => true,
-            'quizzesResults' => $quizResultRepository->findStudentQuizResultsByCourseOrChapter($eleve, $cours, $chapitre),
             'note' => $noteQuiz,
-        ];
+            'quizzesResults' => $quizResultRepository->findStudentQuizResultsByCourseOrChapter($eleve, $cours, $chapitre),
+        ]);
         
 
         throw $this->createAccessDeniedException("Vous devez poster le quiz");
