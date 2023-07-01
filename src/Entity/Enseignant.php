@@ -24,7 +24,7 @@ class Enseignant
 
     #[ORM\OneToOne(inversedBy: 'enseignant', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read:course:collection', 'read:payment:collection', 'read:forum:item'])]
+    #[Groups(['read:course:collection', 'read:payment:collection'])]
     private ?User $utilisateur = null;
 
     #[ORM\ManyToOne(inversedBy: 'enseignants')]
