@@ -9,9 +9,11 @@ use App\Repository\ForumRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ForumRepository::class)]
 #[ApiResource(
+    normalizationContext: ['groups' => ['read:forum:item']],
     operations: [
         new Get(), 
         new Get(
@@ -26,6 +28,7 @@ class Forum
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:forum:item'])]
     private ?int $id = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
