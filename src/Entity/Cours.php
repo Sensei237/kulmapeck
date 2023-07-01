@@ -101,7 +101,7 @@ class Cours
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:collection', 'read:payment:collection', 'read:lecture:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection', 'read:lecture:collection', 'read:forum:item'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Classe::class, inversedBy: 'cours')]
@@ -111,11 +111,11 @@ class Cours
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
-    #[Groups(['read:course:collection', 'read:payment:collection', 'read:lecture:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection', 'read:lecture:collection', 'read:forum:item'])]
     private ?string $intitule = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:course:collection'])]
+    #[Groups(['read:course:collection', 'read:forum:item'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -131,7 +131,7 @@ class Cours
     private ?string $description = null;
 
     #[ORM\Column]
-    #[Groups(['read:course:collection'])]
+    #[Groups(['read:course:collection', 'read:forum:item'])]
     private ?bool $isPublished = null;
 
     #[ORM\Column]
@@ -144,7 +144,7 @@ class Cours
 
     #[ORM\ManyToOne(inversedBy: 'cours')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read:course:collection'])]
+    #[Groups(['read:course:collection', 'read:forum:item'])]
     private ?Enseignant $enseignant = null;
 
     #[ORM\ManyToMany(targetEntity: Eleve::class, mappedBy: 'cours')]

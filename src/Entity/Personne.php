@@ -70,18 +70,18 @@ class Personne
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:collection', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection', 'read:exam:collection', 'read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
+    #[Groups(['read:course:collection', 'read:forum:item', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection', 'read:exam:collection', 'read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Ne peut être vide !")]
     #[Assert\NotNull(message: "Ne peut être nul !")]
     #[Assert\Length(min: 2, minMessage: "Le nom doit faire au moins 2 caractères !")]
-    #[Groups(['read:course:collection', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection', 'read:exam:collection', 'post:user:item','read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
+    #[Groups(['read:course:collection', 'read:forum:item', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection', 'read:exam:collection', 'post:user:item','read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['read:course:collection', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection','read:exam:collection', 'post:user:item','read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
+    #[Groups(['read:course:collection', 'read:forum:item', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection','read:exam:collection', 'post:user:item','read:payment:collection','read:personne:item', 'read:quizresult:collection'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
@@ -106,7 +106,7 @@ class Personne
     private ?string $sexe = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['read:course:collection', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection', 'read:exam:collection','read:personne:item', 'read:personne:item'])]
+    #[Groups(['read:course:collection', 'read:forum:item', 'read:forum:messsage:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection', 'read:exam:collection','read:personne:item', 'read:personne:item'])]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 255, nullable: true)]

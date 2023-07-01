@@ -16,7 +16,7 @@ class Enseignant
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:collection', 'read:payment:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection', 'read:forum:item'])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'enseignant', targetEntity: Cours::class, orphanRemoval: true)]
@@ -24,7 +24,7 @@ class Enseignant
 
     #[ORM\OneToOne(inversedBy: 'enseignant', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read:course:collection', 'read:payment:collection'])]
+    #[Groups(['read:course:collection', 'read:payment:collection', 'read:forum:item'])]
     private ?User $utilisateur = null;
 
     #[ORM\ManyToOne(inversedBy: 'enseignants')]

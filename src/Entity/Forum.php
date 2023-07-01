@@ -33,6 +33,7 @@ class Forum
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:forum:item'])]
     private ?Cours $cours = null;
 
     #[ORM\ManyToMany(targetEntity: Membre::class, mappedBy: 'forums', cascade: ['persist', 'remove'])]
