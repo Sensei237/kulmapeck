@@ -9,6 +9,7 @@ use App\Repository\MembreRepository;
 use Cassandra\Exception\UnauthorizedException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -32,7 +33,7 @@ class PostSubjectController extends AbstractController
 
         $membre = $this->membreRepository->findOneBy(['utilisateur' => $user]);
         if (!$membre || !$membre->getForums()->contains($forum)) {
-            throw new UnauthorizedException("Vous ne pouvez pas écrire dans ce forum");
+            throw new BadRequestException("Vous ne pouvez pas écrire dans ce forum");
         }
 
         $data = $request->attributes->getIterator()['data'];
