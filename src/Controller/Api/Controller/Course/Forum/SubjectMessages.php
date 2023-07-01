@@ -17,12 +17,12 @@ class SubjectMessages extends AbstractController
 
     public function __invoke(Sujet $sujet)
     {
-        $messagesListe = $this->forumMessageRepository->findBy(['sujet' => $sujet, 'isResponse' => false]);
+        $messagesListe = $this->forumMessageRepository->findBy(['sujet' => $sujet, 'isAnswer' => false]);
         $messages = [];
         foreach ($messagesListe as $m) {
             $messages[] = [
                 'messages' => $m,
-                'responses' => $this->forumMessageRepository->findBy(['sujet' => $sujet, 'isResponse' => false, 'forumMessage' => $m])
+                'responses' => $this->forumMessageRepository->findBy(['sujet' => $sujet, 'isAnswer' => false, 'forumMessage' => $m])
             ];
         }
         

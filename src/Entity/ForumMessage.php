@@ -27,10 +27,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new GetCollection(
             uriTemplate: '/sujet/{id}/messages',
             controller: SubjectMessages::class,
-            openapiContext: [
-                'security' => [['bearerAuth' => []]]
-            ],
-            denormalizationContext: ['groups' => ['like:message:forum:items']],
         ),
         new Put(
             uriTemplate: '/forum_message/{id}/like',
