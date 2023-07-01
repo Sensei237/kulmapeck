@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Put;
 use App\Controller\Api\Controller\Course\Forum\AnswerForumMessage;
 use App\Controller\Api\Controller\Course\Forum\LikeForumMessageController;
 use App\Controller\Api\Controller\Course\Forum\NewForumMessage;
+use App\Controller\Api\Controller\Course\Forum\SubjectMessages;
 use App\Repository\ForumMessageRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,7 +24,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ForumMessageRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),
+        new GetCollection(
+            uriTemplate: '/sujet/{id}/messages',
+            controller: SubjectMessages::class,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]]
+            ],
+            denormalizationContext: ['groups' => ['like:message:forum:items']],
+        ),
         new Put(
             uriTemplate: '/forum_message/{id}/like',
             controller: LikeForumMessageController::class,
