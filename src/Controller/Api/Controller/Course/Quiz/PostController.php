@@ -66,7 +66,7 @@ class PostController extends AbstractController
         $eleve = $eleveRepository->findOneBy(['utilisateur' => $user]);
 
         if ($eleve === null) {
-            throw $this->createAccessDeniedException();
+            throw $this->createAccessDeniedException('Vous devez être connecté !');
         }
 
         $data = $request->toArray();
@@ -76,7 +76,7 @@ class PostController extends AbstractController
         // On verifie si l'élève n'a pas déjà ce cours dans sa liste des cours
         // le cours soit souscrire a un compte premium
         if (!$eleve->getCours()->contains($cours)) {
-            throw $this->createAccessDeniedException();
+            throw $this->createAccessDeniedException("Le cours ne figure pas dans votre liste d'apprentissage");
         }
 
         if ($chapitre !== null) {

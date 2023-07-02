@@ -9,6 +9,7 @@ use App\Repository\EvaluationQuestionRepository;
 use App\Repository\EvaluationResultatRepository;
 use App\Repository\QuizRepository;
 use App\Utils\Dto\EvaluationDto;
+use ArrayObject;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -44,7 +45,7 @@ class PostCorrectionController extends AbstractController
             $quizzes = $data['quizzes'];
             foreach ($quizzes as $quizze) {
                 if (empty($quizze['id'])) {
-                    return new BadRequestException("Données corrompues !");
+                    return new BadRequestException("Données corrompues ! quizze[id] n'existe pas");
                 }
 
                 $quizId = $quizze['id'];
@@ -56,7 +57,7 @@ class PostCorrectionController extends AbstractController
                 }
 
                 if ($quiz === null) {
-                    return new BadRequestException("Corrupted data send");
+                    return new BadRequestException("Données corrompu: Le quiz est null");
                 }
 
                 $isCorrect = false;
@@ -79,7 +80,13 @@ class PostCorrectionController extends AbstractController
             $resultat->setEleve($eleve)->setEvaluation($evaluation)->setContents($resultset)->setNoteObtenue($noteQuiz);
             $this->evaluationResultatRepository->save($resultat, true);
 
-            return ['isOk' => true, 'evaluation' => EvaluationDto::from($evaluation)];
+            return new ArrayObject([
+                'notes' => $noteQuiz, 
+                'resultats' => $resultset,
+                'evaluation' => EvaluationDto::from($evaluation)
+            ]);
         }
+
+        return $this->createNotFoundException("Vous devez poster une évaluation");
     }
 }

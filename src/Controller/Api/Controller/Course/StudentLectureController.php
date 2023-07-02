@@ -25,7 +25,7 @@ class StudentLectureController extends AbstractController
         $eleveConnected = $this->eleveRepository->findOneBy(['utilisateur' => $user]);
 
         if ($eleve !== $eleveConnected || $eleveConnected == null) {
-            throw new BadRequestHttpException("Vous devez être connecté");
+            throw $this->createAccessDeniedException('Vous devez être connecté !');
         }
 
         return $eleveConnected->getLectures();

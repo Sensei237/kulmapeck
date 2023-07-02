@@ -33,7 +33,7 @@ class PayerAbonnementController extends AbstractController
         $eleve = $this->eleveRepository->findOneBy(['utilisateur' => $user]);
 
         if ($eleve == null) {
-            throw new BadRequestHttpException("Vous devez être connecté");
+            throw $this->createAccessDeniedException('Vous devez être connecté !');
         }
 
         if ($request->request->get('initiate_payment')) {

@@ -32,6 +32,10 @@ class ResultatController extends AbstractController
         $user = $this->security->getUser();
         $eleve = $this->eleveRepository->findOneBy(['utilisateur' => $user]);
 
+        if ($eleve == null) {
+            throw $this->createAccessDeniedException('Vous devez être connecté !');
+        }
+
         $resultat = $this->evaluationResultatRepository->findOneBy(['eleve' => $eleve, 'evaluation' => $evaluation]);
         
         $resultats = [];

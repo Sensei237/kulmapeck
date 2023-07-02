@@ -27,6 +27,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new GetCollection(
             uriTemplate: '/sujet/{id}/messages',
             controller: SubjectMessages::class,
+            openapiContext: [
+                'description' => "Cette route permet de recuperer la liste des messages d'un sujet donné !"
+            ],
         ),
         new Put(
             uriTemplate: '/forum_message/{id}/like',

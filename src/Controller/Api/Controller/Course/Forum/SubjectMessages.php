@@ -28,7 +28,7 @@ class SubjectMessages extends AbstractController
         
         return new ArrayObject([
             'sujet' => $sujet,
-            'messges' => $messages
+            'messages' => $messages
         ]);
     }
 }

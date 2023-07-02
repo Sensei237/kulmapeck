@@ -25,7 +25,7 @@ class PostReviewController extends AbstractController
         $user = $this->security->getUser();
         $eleveConnected = $this->eleveRepository->findOneBy(['utilisateur' => $user]);
         if (!$eleveConnected) {
-            throw new BadRequestHttpException("Vous devez être connecté", null, 403);
+            throw $this->createAccessDeniedException('Vous devez être connecté !');
         }
 
         $data = $request->attributes->getIterator()['data'];

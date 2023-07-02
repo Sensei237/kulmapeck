@@ -33,7 +33,7 @@ class PayerCoursController extends AbstractController
         $eleve = $this->eleveRepository->findOneBy(['utilisateur' => $user]);
 
         if ($eleve == null) {
-            throw new BadRequestHttpException("Vous devez être connecté");
+            throw $this->createAccessDeniedException('Vous devez être connecté !');
         }
 
         $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);

@@ -29,7 +29,7 @@ class NetworkController extends AbstractController
         // dd($request->query);
         $user = $this->getUser();
         if ($user === null || !$user instanceof User) {
-            throw new BadRequestHttpException("Vous devez être connecté");
+            throw $this->createAccessDeniedException('Vous devez être connecté !');
         }
 
         return $this->paginatorInterface->paginate($personne->getInvites(), $request->query->getInt('page', 1), 10);

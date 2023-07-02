@@ -26,7 +26,7 @@ class ShowQuizzesController extends AbstractController
         $eleveConnected = $this->eleveRepository->findOneBy(['utilisateur' => $user]);
 
         if ($eleveConnected === null) {
-            throw new BadRequestHttpException("Vous devez être connecté");
+            throw $this->createAccessDeniedException('Vous devez être connecté !');
         }
 
         return $course->getQuizzes();
