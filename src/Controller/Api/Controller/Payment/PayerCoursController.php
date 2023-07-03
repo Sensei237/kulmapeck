@@ -12,6 +12,7 @@ use App\Repository\PaymentRepository;
 use PaymentUtil;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -36,7 +37,26 @@ class PayerCoursController extends AbstractController
             throw $this->createAccessDeniedException('Vous devez être connecté !');
         }
 
-        $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
+        if (!$course->isIsFree()) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas payer ce cours car il est gratuit !');
+        }
+
+        if (!$course->isIsValidated()) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas payer ce cours car il n\'est pas encore publié !');
+        }
+
+        $data = $request->toArray();
+
+        if (empty($data['payment_method'])) {
+            throw new BadRequestException("Vous devez préciser la méthode de paiement !");
+        }
+
+        $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => $data['payment_method']]);
+
+        if ($paymentMethod == null) {
+            throw new BadRequestException("La méthode de paiement envoyée n'existe pas !");
+        }
+
         if (PaymentUtil::initierPayment($course, $paymentMethod)) {
             $eleve->addCour($course);
             $payment = new Payment();

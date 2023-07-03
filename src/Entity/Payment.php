@@ -17,7 +17,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
 #[ApiResource(
     operations: [
-        new Get(),
+        new Get(
+            openapiContext: [
+                'security' => [['bearerAuth' => []]]
+            ]
+        ),
         new GetCollection(),
         new GetCollection(
             uriTemplate: '/student/{id}/payments',
@@ -34,7 +38,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             write: false,
             openapiContext: [
                 'security' => [['bearerAuth' => []]],
-                'description' => "Cette route permet à un élève de payer un cours. Ici ID = id de l'abonnement. Dans le corps de la requête HTTP, il faut envoyé la propriété payment_method contenant la methode de paiement et initiate_payment qui est juste un booleen"
+                'description' => "Cette route permet à un élève de payer un abonnement. Ici ID = id de l'abonnement. Dans le corps de la requête HTTP, il faut envoyé la propriété payment_method contenant la methode de paiement et initiate_payment qui est juste un booleen"
             ]
         ),
         new Post(
