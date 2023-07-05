@@ -55,10 +55,12 @@ class RegistrationController extends AbstractController
     #[Route('/register/{id}', name: 'app_admin_registration_edit_register', methods: ['POST', 'GET'])]
     public function register(User $user = null, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, FileUploader $fileUploader, PersonneRepository $personneRepository): Response
     {
+        $isCreationMode = false;
 
         if ($user === null) {
             $user = new User();
             $user->parentCode = $request->get('invitation');
+            $isCreationMode = true;
         }
         
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -94,19 +96,21 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation(
-                'app_verify_email',
-                $user,
-                (new TemplatedEmail())
-                    ->from('no-reply@kulmapeck.com')
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
+            if ($isCreationMode) {
+                // generate a signed url and email it to the user
+                $this->emailVerifier->sendEmailConfirmation(
+                    'app_verify_email',
+                    $user,
+                    (new TemplatedEmail())
+                        ->from('no-reply@kulmapeck.com')
+                        ->to($user->getEmail())
+                        ->subject('Please Confirm your Email')
+                        ->htmlTemplate('registration/confirmation_email.html.twig')
+                );
+            }
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_admin_registration');
         }
 
         return $this->render('admin/registration/register.html.twig', [
