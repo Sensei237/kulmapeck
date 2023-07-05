@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use App\Controller\Api\Controller\Evaluation\EvaluationsEleve;
 use App\Controller\Api\Controller\Evaluation\InscriptionController;
 use App\Controller\Api\Controller\Evaluation\ListController;
 use App\Controller\Api\Controller\Evaluation\PostCorrectionController;
@@ -27,6 +28,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
             openapiContext: [
                 'security' => [['bearerAuth' => []]],
                 'description' => 'ID = Id de eleve'
+            ],
+            normalizationContext: [
+                'groups' => ['read:evaluation:collection']
+            ],
+            read: false
+        ),
+        new GetCollection(
+            uriTemplate: '/evaluations/student/{id}',
+            controller: EvaluationsEleve::class,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]],
+                'description' => "Permet de recuperer la liste des évaluations d'un élève"
             ],
             normalizationContext: [
                 'groups' => ['read:evaluation:collection']

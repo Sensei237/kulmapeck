@@ -63,7 +63,7 @@ class FrontController extends AbstractController
         $contactForm->handleRequest($request);
         if ($contactForm->isSubmitted() && $contactForm->isValid()) {
             $siteSettings = $session->get('siteSettings');
-            $supportEmail = 'support@mail.com';
+            $supportEmail = 'no-reply@kulmapeck.com';
             if ($siteSettings instanceof SiteSetting) {
                 $supportEmail = $siteSettings->getSupportEmail();
             }
@@ -129,7 +129,7 @@ class FrontController extends AbstractController
         if ($contactForm->isSubmitted() && $contactForm->isValid()) {
             $session = $request->getSession();
             $siteSettings = $session->get('siteSettings');
-            $supportEmail = 'support@mail.com';
+            $supportEmail = 'no-reply@kulmapeck.com';
             if ($siteSettings instanceof SiteSetting) {
                 $supportEmail = $siteSettings->getSupportEmail();
             }

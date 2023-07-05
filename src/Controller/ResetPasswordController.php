@@ -160,7 +160,7 @@ class ResetPasswordController extends AbstractController
         }
 
         $siteSettings = $session->get('siteSettings');
-        $supportEmail = 'support@mail.com';
+        $supportEmail = 'no-reply@kulmapeck.com';
         $siteName = 'Kulmapeck';
         if ($siteSettings instanceof SiteSetting) {
             $supportEmail = $siteSettings->getSupportEmail();

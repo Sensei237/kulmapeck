@@ -21,6 +21,9 @@ use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -136,5 +139,24 @@ class HomeController extends AbstractController
         $em->flush();
 
         return $this->redirectToRoute('app_front');
+    }
+
+    #[Route('/send-mail', name: 'app_home_send_mail')]
+    public function sendMail(MailerInterface $mailerInterface)
+    {
+        $email = (new Email())
+            ->from('no-reply@kulmapeck.com')
+            ->to('emmaberanger2@gmail.com')
+            ->subject('Un test')
+            ->text('Je verifie juste si les mails sont correctement transmis !')
+            ->html("<p>Je verifie juste si les mails sont correctement transmis ! HTML</p>");
+
+        try {
+            dump($mailerInterface->send($email));
+        } catch (TransportExceptionInterface $e) {
+            dd($e);
+        }
+
+        dd("Message envoyé !");
     }
 }

@@ -107,7 +107,7 @@ class EnseignantController extends AbstractController
         $enseignantRepository->save($enseignant, true);
 
         $email = (new Email())
-                    ->from('kulmapeck@mail.com')
+                    ->from('no-reply@kulmapeck.com')
                     ->to($enseignant->getUtilisateur()->getEmail())
                     ->subject("Demande rejeter")
                     ->text($motif)

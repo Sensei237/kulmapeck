@@ -49,7 +49,7 @@ class QuestionnaireController extends AbstractController
         }
 
         if ($this->evaluationResultatRepository->findOneBy(['eleve' => $eleve, 'evaluation' => $evaluation])) {
-            $this->createAccessDeniedException("Vous avez déjà passé ce test. Vous ne pouvez plus le refaire ! Consulter votre tableau de bord pour voir la correction");
+            throw $this->createAccessDeniedException("Vous avez déjà passé ce test. Vous ne pouvez plus le refaire ! Consulter votre tableau de bord pour voir la correction");
         }
 
         $epreuve = [];
