@@ -84,11 +84,17 @@
 								<!-- Table data -->
 								<td>
 									<a href="{{ path('app_admin_registration_edit_register', {id: user.id}) }}" class="btn btn-sm btn-success-soft me-1 mb-1 mb-md-0">Edit</a>
-                                    {% if not user.isBlocked %}
-                                        <a href="{{ path('app_admin_registration_block', {id: user.id}) }}" class="btn btn-sm btn-warning-soft me-1 mb-1 mb-md-0">Block</a>
-                                    {% else %}
-                                        <a href="{{ path('app_admin_registration_unblock', {id: user.id}) }}" class="btn btn-sm btn-warning-soft me-1 mb-1 mb-md-0">Unlock</a>    
-                                    {% endif %}
+									{% if not user.isVerified %}
+										{% set token = csrf_token('active' ~ user.id) %}
+										<a href="{{ path('app_admin_registration_active_user', {id: user.id, _token: token}) }}" class="btn btn-sm btn-primary-soft me-1 mb-1 mb-md-0">activer</a>
+									{% else %}
+										{% if not user.isBlocked %}
+											<a href="{{ path('app_admin_registration_block', {id: user.id}) }}" class="btn btn-sm btn-warning-soft me-1 mb-1 mb-md-0">Block</a>
+										{% else %}
+											<a href="{{ path('app_admin_registration_unblock', {id: user.id}) }}" class="btn btn-sm btn-warning-soft me-1 mb-1 mb-md-0">Open</a>    
+										{% endif %}
+									{% endif %}
+                                    
                                     {{ include('admin/includes/_delete_form.html.twig', {path: path('app_admin_registration_delete', {id: user.id}) , token: csrf_token('delete' ~ user.id), classes: 'btn btn-danger-soft btn-sm'}) }}
 								</td>
 							</tr>

@@ -190,4 +190,15 @@ class RegistrationController extends AbstractController
 
         return $this->redirectToRoute('app_admin_registration', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/{id}/activated', name: 'app_admin_registration_active_user', methods: ['GET'])]
+    public function activer(User $user, UserRepository $userRepository, Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('active' . $user->getId(), $request->query->get('_token'))) {
+            $user->setIsVerified(true)->setIsBlocked(false);
+            $userRepository->save($user, true);
+        }
+
+        return $this->redirectToRoute('app_admin_registration', [], Response::HTTP_SEE_OTHER);
+    }
 }
