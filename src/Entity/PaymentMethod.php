@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\PaymentMethodRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,24 +11,32 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PaymentMethodRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection()
+    ],
+    normalizationContext: [
+        'groups' => ['read:payment_method:collection']
+    ]
+)]
 class PaymentMethod
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:course:item', 'read:payment:collection'])]
+    #[Groups(['read:course:item', 'read:payment:collection', 'read:payment_method:collection'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:course:item', 'read:payment:collection'])]
+    #[Groups(['read:course:item', 'read:payment:collection', 'read:payment_method:collection'])]
     private ?string $label = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['read:course:item', 'read:payment:collection'])]
+    #[Groups(['read:course:item', 'read:payment:collection', 'read:payment_method:collection'])]
     private ?string $code = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:course:item', 'read:payment:collection'])]
+    #[Groups(['read:course:item', 'read:payment:collection', 'read:payment_method:collection'])]
     private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'paymentMethod', targetEntity: Payment::class)]
