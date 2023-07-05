@@ -1,4 +1,4 @@
-
+{{ form_start(registrationForm) }}
     {% if registrationForm.parentCode is defined %}
         <div class="mb-4">
             <label for="exampleInputEmail1" class="form-label">{{ form_label(registrationForm.parentCode) }}</label>
@@ -97,10 +97,13 @@
             </div>
         </div>
     {% endif %}
+
+    {{ form_rest(registrationForm) }}
     
     <!-- Button -->
     <div class="align-items-center mt-0">
         <div class="d-grid">
-            <button class="btn btn-primary mb-0" type="submit">Sign Up</button>
+            <button class="btn btn-primary mb-0" type="submit">Enregistrer</button>
         </div>
     </div>
+{{ form_end(registrationForm) }}
