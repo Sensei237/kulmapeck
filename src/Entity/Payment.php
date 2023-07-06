@@ -6,6 +6,8 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model\Operation;
+use ApiPlatform\OpenApi\Model\RequestBody;
 use App\Controller\Api\Controller\Payment\PayerAbonnementController;
 use App\Controller\Api\Controller\Payment\PayerCoursController;
 use App\Controller\Api\Controller\Payment\StudentPaymentController;
@@ -36,10 +38,25 @@ use Symfony\Component\Serializer\Annotation\Groups;
             controller: PayerAbonnementController::class,
             read: false,
             write: false,
-            openapiContext: [
-                'security' => [['bearerAuth' => []]],
-                'description' => "Cette route permet à un élève de payer un abonnement. Ici ID = id de l'abonnement. Dans le corps de la requête HTTP, il faut envoyé la propriété payment_method contenant la methode de paiement et initiate_payment qui est juste un booleen"
-            ]
+            openapi: new Operation(
+                requestBody: new RequestBody(
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'payment_method' => [
+                                        'type' => 'string',
+                                    ],
+                                ]
+                            ]
+                        ]
+                    ])
+                ),
+                security: [['bearerAuth' => []]],
+                description: "Cette route permet à un élève de payer un abonnement. Ici ID = id de l'abonnement. Dans le corps de la requête HTTP, il faut envoyé la propriété payment_method contenant la methode de paiement et initiate_payment qui est juste un booleen",
+                summary: "Cette route permet à un élève de payer un abonnement. Ici ID = id de l'abonnement. Dans le corps de la requête HTTP, il faut envoyé la propriété payment_method contenant la methode de paiement et initiate_payment qui est juste un booleen"
+            ),
         ),
         new Post(
             uriTemplate: '/cours/{id}/paied',

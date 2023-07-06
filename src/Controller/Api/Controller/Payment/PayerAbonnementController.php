@@ -28,13 +28,17 @@ class PayerAbonnementController extends AbstractController
     ) {
     }
 
-    public function __invoke(Abonnement $abonnement, Request $request): Collection
+    public function __invoke(Abonnement $abonnement, Request $request): \ArrayObject
     {
         $user = $this->security->getUser();
         $eleve = $this->eleveRepository->findOneBy(['utilisateur' => $user]);
 
         if ($eleve == null) {
             throw $this->createAccessDeniedException('Vous devez être connecté !');
+        }
+
+        if ($this->paymentRepository->findOneBy(['isExpired'=>false, 'eleve'=>$eleve]) !== null) {
+            throw $this->createAccessDeniedException('Vous avez un abonnement actif ! Vous ne pouvez plus souscrire à un nouvel abonnement');
         }
 
         $data = $request->toArray();
@@ -75,7 +79,10 @@ class PayerAbonnementController extends AbstractController
             throw new BadRequestHttpException("Impossible d'initier le payment");
         }
         
-
-        return $eleve->getPayments();
+        return new \ArrayObject([
+            'isPaied' => true,
+            'message' => 'Votre paiement a été aprouvé ! Vous êtes désormais premium. Pensez à renouveler votre abonnement avant le ' . date_format($payment->getExpiredAt(), 'dd/mm/yyyy'),
+            'paiements' => $eleve->getPayments(),
+        ]);
     }
 }

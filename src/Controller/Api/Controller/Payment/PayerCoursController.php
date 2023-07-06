@@ -28,7 +28,7 @@ class PayerCoursController extends AbstractController
     ) {
     }
 
-    public function __invoke(Cours $course, Request $request): Collection
+    public function __invoke(Cours $course, Request $request)
     {
         $user = $this->security->getUser();
         $eleve = $this->eleveRepository->findOneBy(['utilisateur' => $user]);
@@ -37,7 +37,7 @@ class PayerCoursController extends AbstractController
             throw $this->createAccessDeniedException('Vous devez être connecté !');
         }
 
-        if (!$course->isIsFree()) {
+        if ($course->isIsFree()) {
             throw $this->createAccessDeniedException('Vous ne pouvez pas payer ce cours car il est gratuit !');
         }
 
@@ -71,6 +71,10 @@ class PayerCoursController extends AbstractController
             throw new BadRequestHttpException("Impossible d'effectuer le paiement");
         }
 
-        return $eleve->getPayments();
+        return new \ArrayObject([
+            'isPaied' => true,
+            'message' => 'Votre paiement a été aprouvé !',
+            'paiements' => $eleve->getPayments(),
+        ]);
     }
 }
