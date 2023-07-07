@@ -36,21 +36,21 @@ class ListController extends AbstractController
             // dump($nbHeures, 24*6, $evaluation->getStartAt()->diff($currentDateTime));die;
             if (!$eleve->getEvaluations()->contains($evaluation) && $nbHeures <= 7*24 && $nbHeures > 0) {
             //    die;
-                $annonces = [
+                $annonce = [
                     'evaluation' => EvaluationDto::from($evaluation),
                     'nombreInscris' => $evaluation->getEleves()->count(),
                     'matiere' => $evaluation->getMatiere()->getName(),
                 ];
                 $cmp = 1;
-                $annonces['eleves'] = [];
+                $annonce['eleves'] = [];
                 foreach ($evaluation->getEleves() as $e) {
-                    $annonces['eleves'][] = $e->getUtilisateur()->getPersonne()->getAvatarPath(); 
+                    $annonce['eleves'][] = $e->getUtilisateur()->getPersonne()->getAvatarPath(); 
                     $cmp++;
                     if ($cmp > 4) {
                         break;
                     }
                 }
-                break;
+                $annonces[] = $annonce;
             }
         }
 
