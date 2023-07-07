@@ -41,15 +41,15 @@ class ListController extends AbstractController
                     'nombreInscris' => $evaluation->getEleves()->count(),
                     'matiere' => $evaluation->getMatiere()->getName(),
                 ];
-                $cmp = 1;
-                $annonce['eleves'] = [];
-                foreach ($evaluation->getEleves() as $e) {
-                    $annonce['eleves'][] = $e->getUtilisateur()->getPersonne()->getAvatarPath(); 
-                    $cmp++;
-                    if ($cmp > 4) {
-                        break;
-                    }
-                }
+                // $cmp = 1;
+                // $annonce['eleves'] = [];
+                // foreach ($evaluation->getEleves() as $e) {
+                //     $annonce['eleves'][] = $e->getUtilisateur()->getPersonne()->getAvatarPath(); 
+                //     $cmp++;
+                //     if ($cmp > 4) {
+                //         break;
+                //     }
+                // }
                 $annonces[] = $annonce;
             }
         }
