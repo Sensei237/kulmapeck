@@ -15,6 +15,7 @@ class EvaluationDto {
             'startAt' => $evaluation->getStartAt(),
             'endAt' => $evaluation->getEndAt(),
             'duree' => $evaluation->getDuree(),
+            'questionnaire' => $evaluation->getEvaluationQuestions()
         ];
     }
 }

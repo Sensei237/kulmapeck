@@ -50,7 +50,7 @@ class QuizRepository extends ServiceEntityRepository
             )
             ->setParameter('categorie', $evaluation->getMatiere())
             ->setParameter('isValidated', true)
-            ->setMaxResults(20)
+            ->setMaxResults(10)
             ->execute();
     }
 

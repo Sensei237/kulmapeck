@@ -63,7 +63,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 'description' => 'id = evaluation_id'
             ],
             normalizationContext: [
-                'groups' => ['read:evaluation:question']
+                'groups' => ['read:evaluation:question', 'read:evaluation:item']
             ],
             read: false
         ),
@@ -136,6 +136,7 @@ class Evaluation
     private ?bool $isGeneratedRandomQuestions = null;
 
     #[ORM\OneToMany(mappedBy: 'evaluation', targetEntity: EvaluationQuestion::class, orphanRemoval: true)]
+    #[Groups(['read:evaluation:item'])]
     private Collection $evaluationQuestions;
 
     #[ORM\Column(length: 255)]

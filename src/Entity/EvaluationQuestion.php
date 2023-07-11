@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\EvaluationQuestionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EvaluationQuestionRepository::class)]
 class EvaluationQuestion
@@ -12,24 +13,31 @@ class EvaluationQuestion
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:evaluation:item'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['read:evaluation:item'])]
     private ?string $question = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['read:evaluation:item'])]
     private ?string $proposition1 = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['read:evaluation:item'])]
     private ?string $propoition2 = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['read:evaluation:item'])]
     private ?string $proposition3 = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['read:evaluation:item'])]
     private ?string $proposition4 = null;
 
     #[ORM\Column(type: Types::ARRAY)]
+    #[Groups(['read:evaluation:item'])]
     private array $propositionJuste = [];
 
     #[ORM\ManyToOne(inversedBy: 'evaluationQuestions')]
