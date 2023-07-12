@@ -7,6 +7,7 @@ use App\Repository\EvaluationResultatRepository;
 use App\Repository\QuizRepository;
 use App\Utils\Dto\EvaluationDto;
 use ArrayObject;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -50,6 +51,11 @@ class QuestionnaireController extends AbstractController
 
         if ($this->evaluationResultatRepository->findOneBy(['eleve' => $eleve, 'evaluation' => $evaluation])) {
             throw $this->createAccessDeniedException("Vous avez déjà passé ce test. Vous ne pouvez plus le refaire ! Consulter votre tableau de bord pour voir la correction");
+        }
+
+        $currentDate = new DateTime();
+        if ($evaluation->getStartAt() > $currentDate) {
+            throw $this->createAccessDeniedException("L'évaluation n'est pas encore disponible !");
         }
 
         $epreuve = [];

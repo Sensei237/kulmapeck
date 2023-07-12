@@ -17,7 +17,7 @@
                 <!-- Main content START -->
                 <div class="col-12 alert alert-success">
                     <h3>{{ evaluation.titre }}</h3>
-                    <p>{{ evaluation.description }}</p>
+                    <p>{{ evaluation.description|raw }}</p>
                     <div class="d-flex">
                         <p>Matière : {{ evaluation.matiere.name }}</p>
                         <p>Durée : {{ evaluation.duree }} heures</p>

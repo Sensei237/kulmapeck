@@ -35,18 +35,18 @@
                         <h6 class="accordion-header" id="headingOne{{ quiz.id }}">
                             <button class="accordion-button rounded" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne{{ quiz.id }}" aria-expanded="true" aria-controls="collapseOne{{ quiz.id }}">
                                 <span class="text-secondary fw-bold me-3">{{ cmp < 10 ? '0' ~ cmp : cmp }}</span>  
-                                <span class="fw-bold">{{ quiz.question }}</span> 
+                                <span class="fw-bold">{{ quiz.question|raw }}</span> 
                             </button>
                         </h6>
                         <div id="collapseOne{{ quiz.id }}" class="accordion-collapse collapse" aria-labelledby="headingOne{{ quiz.id }}" data-bs-parent="#accordionExample">
                             <div class="accordion-body mt-3">
                                 <!-- Answer options -->
-                                <p class="mb-3"><b class="text-dark">A</b> {{ quiz.proposition1 }}</p>
-                                <p class="mb-3"><b class="text-dark">B</b> {{ quiz.proposition2 }}</p>
-                                <p class="mb-3"><b class="text-dark">C</b> {{ quiz.proposition3 }}</p>
-                                <p class="mb-3"><b class="text-dark">D</b> {{ quiz.proposition4 }}</p>
+                                <p class="mb-3"><b class="text-dark">A</b> {{ quiz.proposition1|raw }}</p>
+                                <p class="mb-3"><b class="text-dark">B</b> {{ quiz.proposition2|raw }}</p>
+                                <p class="mb-3"><b class="text-dark">C</b> {{ quiz.proposition3|raw }}</p>
+                                <p class="mb-3"><b class="text-dark">D</b> {{ quiz.proposition4|raw }}</p>
                                 <!-- Button -->
-                                <a href="#" class="btn btn-sm btn-success-soft mb-0" data-bs-toggle="modal" data-bs-target="#editQuestion{{ quiz.id }}">Edit</a>
+                                {# <a href="#" class="btn btn-sm btn-success-soft mb-0" data-bs-toggle="modal" data-bs-target="#editQuestion{{ quiz.id }}">Edit</a> #}
                                 <a href="{{ url("app_instructor_courses_quiz_remove", {reference: quiz.reference, _token: csrf_token('deletequiz' ~ quiz.id), redirect_uri: deleteRedirectUri}) }}" class="btn btn-danger-soft btn-sm mb-0">Delete</a>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
 
     <!-- Add course modal START -->
     <div class="modal fade" id="addQuiz" tabindex="-1" aria-labelledby="addQuizLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
             {{ form_start(form) }}
                 <div class="modal-content">
                     <div class="modal-header bg-dark">
@@ -81,19 +81,19 @@
                             </div>
 
                             <!-- Answer options START -->
-                            <div class="col-6">
+                            <div class="col-12">
                                 {{ form_row(form.proposition1) }}
                             </div>
 
-                            <div class="col-6">
+                            <div class="col-12">
                                 {{ form_row(form.proposition2) }}
                             </div>
 
-                            <div class="col-6">
+                            <div class="col-12">
                                 {{ form_row(form.proposition3) }}
                             </div>
 
-                            <div class="col-6">
+                            <div class="col-12">
                                 {{ form_row(form.proposition4) }}
                             </div>
 
@@ -114,8 +114,8 @@
     </div>
     <!-- Add course modal START -->
 
-    {% for quiz in quizzes %}
+    {# {% for quiz in quizzes %}
         {{ include('instructor/courses/quiz/_edit_quiz_modal.html.twig') }}
-    {% endfor %}
+    {% endfor %} #}
 
 {% endblock %}

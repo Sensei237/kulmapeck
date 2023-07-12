@@ -60,8 +60,8 @@ class RegistrationController extends AbstractController
             
             $codeInvitation = self::generateInvitationCode($personneRepository);
             $invitationLink = json_encode([
-                'trainer' => $this->generateUrl('app_front_register', ['type' => 'trainer', 'invitation' => $codeInvitation]),
-                'student' => $this->generateUrl('app_front_register', ['type' => 'student', 'invitation' => $codeInvitation])
+                'trainer' => 'https://kulmapeck.com' . $this->generateUrl('app_front_register', ['type' => 'trainer', 'invitation' => $codeInvitation]),
+                'student' => 'https://kulmapeck.com' . $this->generateUrl('app_front_register', ['type' => 'student', 'invitation' => $codeInvitation])
             ]);
             $user->getPersonne()->setInvitationCode($codeInvitation)
                 ->setInvitationLink($invitationLink)
