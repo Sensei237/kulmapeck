@@ -8,11 +8,11 @@ pipeline {
             }
         }
 
-        stage('Installer les dépendances') {
-            steps {
-                //bat 'composer install'
-            }
-        }
+        // stage('Installer les dépendances') {
+        //     steps {
+        //         //bat 'composer install'
+        //     }
+        // }
 
         stage('Build et tests') {
             steps {
