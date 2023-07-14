@@ -8,11 +8,17 @@ pipeline {
             }
         }
 
-        // stage('Installer les dépendances') {
-        //     steps {
-        //         //bat 'composer install'
-        //     }
-        // }
+        stage('Installer les dépendances') {
+            steps {
+                bat 'composer install'
+            } 
+        }
+
+         stage('Enable symfony runtime') {
+            steps {
+                bat 'composer require symfony/runtime'
+            } 
+        }
 
         stage('Build et tests') {
             steps {
