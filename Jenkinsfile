@@ -8,15 +8,15 @@ pipeline {
             }
         }
 
-        stage('Installer les dépendances') {
+        stage('Installer les dependances') {
             steps {
                 bat 'composer install'
             } 
         }
 
-         stage('Enable symfony runtime') {
+         stage('Enable update package') {
             steps {
-                bat 'composer require symfony/runtime'
+                bat 'composer update'
             } 
         }
 
@@ -27,7 +27,7 @@ pipeline {
             }
         }
 
-        stage('Déploiement FTP') {
+        stage('Deploiement FTP') {
             steps {
                 bat 'curl -T -u kulma2146700:sP2*9sB4s96XUz$ -ftp-ssl ftp://ftp.kulmapeck.com/'
             }
