@@ -36,7 +36,8 @@ pipeline {
 
         stage('Deploiement FTP and push to Lws Server') {
             steps {
-                bat 'curl -T -u kulma2146700:sP2*9sB4s96XUz$ -ftp-ssl ftp://ftp.kulmapeck.com/'
+                bat 'curl -T -u kulma2146700:sP2*9sB4s96XUz$ --ftp-ssl ftp://ftp.kulmapeck.com/'
+
             }
         }
     }
