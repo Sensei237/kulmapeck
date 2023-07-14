@@ -10,20 +10,20 @@ pipeline {
 
         stage('Installer les dépendances') {
             steps {
-                sh 'composer install'
+                bat 'composer install'
             }
         }
 
         stage('Build et tests') {
             steps {
-                sh 'php bin/console cache:clear'
-                sh 'php bin/phpunit'
+                bat 'php bin/console cache:clear'
+                bat 'php bin/phpunit'
             }
         }
 
         stage('Déploiement FTP') {
             steps {
-                sh 'curl -T -u kulma2146700:sP2*9sB4s96XUz$ -ftp-ssl ftp://ftp.kulmapeck.com/'
+                bat 'curl -T -u kulma2146700:sP2*9sB4s96XUz$ -ftp-ssl ftp://ftp.kulmapeck.com/'
             }
         }
     }
