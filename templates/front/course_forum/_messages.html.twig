@@ -48,7 +48,7 @@
                                         {% if not sujet.isSolved and membre is not same as null %}
                                             <li class="nav-item"> <a class="text-primary-hover {{ heIsMembre and not sujet.isSolved ? 'reply-forum-message' : '' }}" data-forum-message="{{ message.id }}" data-membre="{{ membre.id }}" data-append-response="#reply-forum-message-{{ message.id }}" {{ heIsMembre and not sujet.isSolved ? 'data-bs-toggle="modal" data-bs-target="#replyForumMessage"' : '' }} href="#"><i class="fas fa-reply"></i> {% trans %}REPLY_KEY{% endtrans %}</a> </li>
                                             {% if membre is same as sujet.membre %}
-                                                <li class="nav-item"> <a onclick="return confirm('{% trans %}RESOVEDCONFIRM_KEY{% trans %}')" data-bs-toggle="tooltip" title="{% trans %}RESOLVEDBY_KEY{% trans %}" class="text-primary-hover text-success" href="{{ url("app_course_solve_forum_message", {id: message.id}) }}"><i class="fas fa-check"></i> {% trans %}RESOLVED_KEY{% endtrans %}</a> </li>
+                                                <li class="nav-item"> <a onclick="return confirm('{% trans %}RESOVEDCONFIRM_KEY{% endtrans %}')" data-bs-toggle="tooltip" title="{% trans %}RESOLVEDBY_KEY{% endtrans %}" class="text-primary-hover text-success" href="{{ url("app_course_solve_forum_message", {id: message.id}) }}"><i class="fas fa-check"></i> {% trans %}RESOLVED_KEY{% endtrans %}</a> </li>
                                             {% endif %}
                                             {% if heIsMembre and not sujet.isSolved and  (membre.utilisateur.eleve is same as null or message.membre is same as membre) %}
                                                 <li class="nav-item"> 

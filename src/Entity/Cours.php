@@ -197,6 +197,7 @@ class Cours
     private ?Media $media = null;
 
     #[ORM\OneToOne(mappedBy: 'cours', cascade: ['persist', 'remove'])]
+    #[Groups(['read:course:collection'])]
     private ?Forum $forum = null;
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: FAQ::class, cascade: ['persist', 'remove'], orphanRemoval: true)]

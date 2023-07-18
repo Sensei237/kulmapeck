@@ -28,7 +28,7 @@ class Forum
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:forum:item'])]
+    #[Groups(['read:forum:item', 'read:course:collection'])]
     private ?int $id = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
