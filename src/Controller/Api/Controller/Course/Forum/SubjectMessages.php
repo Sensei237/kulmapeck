@@ -31,7 +31,7 @@ class SubjectMessages extends AbstractController
                     'photo' => $rep->getMembre()->getUtilisateur()->getPersonne()->getAvatarPath(),
                 ];
             }
-            $msgItem['messages'] = $reponses;
+            $msgItem['reponses'] = $reponses;
             $messages[] = $msgItem;
         }
         
