@@ -20,10 +20,19 @@ class SubjectMessages extends AbstractController
         $messagesListe = $this->forumMessageRepository->findBy(['sujet' => $sujet, 'isAnswer' => false]);
         $messages = [];
         foreach ($messagesListe as $m) {
-            $messages[] = [
-                'messages' => $m,
-                'responses' => $this->forumMessageRepository->findBy(['sujet' => $sujet, 'isAnswer' => false, 'forumMessage' => $m])
-            ];
+            $msgItem['messages'] = $m;
+            $reponses = [];
+            foreach ($this->forumMessageRepository->findBy(['sujet' => $sujet, 'isAnswer' => false, 'forumMessage' => $m]) as $rep) {
+                $reponses[] = [
+                    'reponse' => $rep->getContent(),
+                    'isAnswer' => $rep->isIsAnswer(),
+                    'isResponse' => $rep->isIsResponse(),
+                    'name' => $rep->getMembre()->getUtilisateur()->getPersonne()->getNomComplet(),
+                    'photo' => $rep->getMembre()->getUtilisateur()->getPersonne()->getAvatarPath(),
+                ];
+            }
+            $msgItem['messages'] = $reponses;
+            $messages[] = $msgItem;
         }
         
         return new ArrayObject([
