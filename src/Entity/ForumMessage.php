@@ -30,6 +30,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             openapiContext: [
                 'description' => "Cette route permet de recuperer la liste des messages d'un sujet donné !"
             ],
+            normalizationContext: ['groups' => ['read:forum:messsage:collection']]
         ),
         new Put(
             uriTemplate: '/forum_message/{id}/like',
@@ -101,6 +102,7 @@ class ForumMessage
     private ?self $forumMessage = null;
 
     #[ORM\OneToMany(mappedBy: 'forumMessage', targetEntity: self::class, cascade: ['persist', 'remove'])]
+    #[Groups(['read:sujet:item', 'read:forum:messsage:collection'])]
     private Collection $forumMessages;
 
     #[ORM\Column(nullable: true)]
