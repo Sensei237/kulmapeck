@@ -3,15 +3,11 @@
 namespace App\Controller\Api\Controller\Course\Forum;
 
 use App\Entity\ForumMessage;
-use App\Entity\Sujet;
 use App\Repository\EleveRepository;
 use App\Repository\MembreRepository;
-use Cassandra\Exception\UnauthorizedException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AnswerForumMessage extends AbstractController
 {
@@ -28,14 +24,14 @@ class AnswerForumMessage extends AbstractController
     {
         $user = $this->security->getUser();
         if (!$user) {
-            throw new BadRequestHttpException("Vous devez être connecté", null, 403);
+            throw $this->createAccessDeniedException("Vous devez être connecté");
         }
 
         $sujet = $forumMessage->getSujet();
         $forum = $sujet->getForum();
         $membre = $this->membreRepository->findOneBy(['utilisateur' => $user]);
         if (!$membre || !$membre->getForums()->contains($forum)) {
-            throw new BadRequestException("Vous ne pouvez pas écrire dans ce forum");
+            throw $this->createAccessDeniedException("Vous ne pouvez pas écrire dans ce forum");
         }
 
         $data = $request->attributes->getIterator()['data'];

@@ -29,13 +29,13 @@ class SujetResoluController extends AbstractController
     {
         $user = $this->security->getUser();
         if (!$user) {
-            throw new BadRequestHttpException("Vous devez être connecté", null, 403);
+            throw $this->createAccessDeniedException("Vous devez être connecté");
         }
         $sujet = $forumMessage->getSujet();
         $forum = $sujet->getForum();
         $membre = $this->membreRepository->findOneBy(['utilisateur' => $user]);
         if (!$membre || !$membre->getForums()->contains($forum) || $sujet->getMembre() !== $membre) {
-            throw new UnauthorizedException("Vous ne pouvez pas changer le statut de ce sujet");
+            throw $this->createAccessDeniedException("Vous ne pouvez pas changer le statut de ce sujet");
         }
 
         $sujet->setIsSolved(true);
