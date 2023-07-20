@@ -34,16 +34,20 @@ class AnswerForumMessage extends AbstractController
             throw $this->createAccessDeniedException("Vous ne pouvez pas écrire dans ce forum");
         }
 
-        $data = $request->attributes->getIterator()['data'];
-        if ($data instanceof ForumMessage) {
-            $data->setSujet($sujet)
-                ->setMembre($membre)
-                ->setForumMessage($forumMessage)
-                ->setIsAnswer(true)
-            ;
-            return $data;
+        if ($forumMessage->isIsAnswer()) {
+            throw $this->createAccessDeniedException("Vous ne pouvez pas répondre à une réponse");
         }
 
-        return null;
+        $data = $request->toArray();
+        $content = $data['content'];
+        $fm = new ForumMessage();
+        $fm->setMembre($membre)
+            ->setSujet($sujet)
+            ->setForumMessage($forumMessage)
+            ->setIsAnswer(true)
+            ->setIsResponse(false)
+            ->setContent($content);
+
+        return $fm;
     }
 }
