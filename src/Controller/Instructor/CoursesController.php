@@ -408,7 +408,7 @@ class CoursesController extends AbstractController
         }
         foreach ($cours->getChapitres() as $chap) {
             if (count($chap->getQuizzes()) < 5) {
-                $this->addFlash("danger", "Aaction impossible !!!<br>Le chapitre ". $chap->getTitle(). " n'a pas d'évaluation. Vous devez mettre au moins 5 questions.");
+                $this->addFlash("danger", "Action impossible !!!<br>Le chapitre ". $chap->getTitle(). " n'a pas d'évaluation. Vous devez mettre au moins 5 questions.");
                 $isValid = false;
             }
         }

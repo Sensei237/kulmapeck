@@ -1,0 +1,6 @@
+framework:
+  ckeditor:
+    install: true
+    enabled: true
+    extraPlugins: math, chemistry
+    default_plugins: ["math", "chemistry"]
