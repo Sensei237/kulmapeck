@@ -2,7 +2,6 @@
 
 namespace App\Controller\Instructor;
 
-
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Chapitre;
 use App\Entity\Cours;
@@ -146,8 +145,6 @@ ForumRepository $forumRepository, CoursRepository $coursRepository, EnseignantRe
                     $lesson->setUpdatedAt(new \DateTimeImmutable());
                     $lesson->setChapitre($chapitre);
                     $lessonRepository->save($lesson);
-                    var_dump("===================>" , $lesson->getContent());
-
                 }
             }
             die();

@@ -18,11 +18,8 @@
 	<script src="{{ asset('assets/vendor/stepper/js/bs-stepper.min.js') }}"></script>
 
 	<script>
-		$(function (){
-{% if isEditionMode %}
-$('#cours_media_imageFileUpload').attr('required', false){% endif %}
-
-let faq_question = document.getElementById('faq_question');
+		$(function (){{ % if isEditionMode %}
+$('#cours_media_imageFileUpload').attr('required', false){% endif %}let faq_question = document.getElementById('faq_question');
 let faq_answer = document.getElementById('faq_answer')
 
 const removeLesson = (e) => {
@@ -465,6 +462,7 @@ btn.addEventListener("click", showEditLessonModal)
 });
 })
 	</script>
+
 {% endblock %}
 
 {% block profileBlock %}{% endblock %}
@@ -476,7 +474,7 @@ btn.addEventListener("click", showEditLessonModal)
 {% block instructorBanner %}
 
 	<!-- =======================
-	    Page Banner START -->
+					    Page Banner START -->
 	<section
 		class="py-0 bg-blue h-100px align-items-center d-flex h-200px rounded-0" style="background:url({{ asset('assets/images/pattern/04.png') }}) no-repeat center center; background-size:cover;">
 		<!-- Main banner background image -->
@@ -491,14 +489,14 @@ btn.addEventListener("click", showEditLessonModal)
 		</div>
 	</section>
 	<!-- =======================
-	    Page Banner END -->
+					    Page Banner END -->
 
 {% endblock %}
 
 {% block pageContent %}
 
 	<!-- =======================
-	    Steps START -->
+					    Steps START -->
 	<section>
 		<div class="container">
 			<div class="row">
@@ -841,7 +839,7 @@ btn.addEventListener("click", showEditLessonModal)
 		</div>
 	</section>
 	<!-- =======================
-	    Steps END -->
+					    Steps END -->
 
 
 	<div class="modal fade modal-lg" id="addLecture" tabindex="-1" aria-labelledby="addLectureLabel" aria-hidden="true">
@@ -972,7 +970,7 @@ btn.addEventListener("click", showEditLessonModal)
 						<button type="button" data-index="" data-chapiter="" data-prototype-container="" class="btn btn-success my-0 add_lesson_btn" id="saveLessonBtn">Save lesson</button>
 						<button type="submit" data-index="" data-title-reference="" data-chapiter="" data-prototype-container="" class="btn btn-success my-0 " style="display: none;" id="editLessonBtn">Update lesson</button>
 						<!--  <button type="submit" data-index="" data-title-reference="" data-chapiter="" data-prototype-container="" class="btn btn-success my-0 edit_lesson_btn" style="display: none;" id="editLessonBtn">Update lesson</button>
-						        -->
+																														        -->
 					</div>
 				</form>
 			</div>
