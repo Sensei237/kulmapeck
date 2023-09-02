@@ -107,8 +107,6 @@ class CoursesController extends AbstractController
      
 ForumRepository $forumRepository, CoursRepository $coursRepository, EnseignantRepository $enseignantRepository, FileUploader $fileUploader): Response
     {
-        dump("===================> ","QQQQQQQQ");
-
         $enseignant = $enseignantRepository->findOneBy(['utilisateur' => $this->getUser()]);
         if ($enseignant === null || !$enseignant->isIsCertified() || ($cours !== null && $enseignant->getId() !== $cours->getEnseignant()->getId())) {
             throw $this->createAccessDeniedException();
