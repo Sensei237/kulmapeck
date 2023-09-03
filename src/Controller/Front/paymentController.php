@@ -12,6 +12,7 @@ use App\Repository\NetworkConfigRepository;
 use App\Repository\PaymentMethodRepository;
 use App\Repository\PaymentRepository;
 use App\Repository\UserRepository;
+use App\Utils\Keys;
 use App\Utils\ManageNetwork;
 use Doctrine\ORM\EntityManagerInterface;
 use PaymentUtil;
@@ -23,6 +24,11 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/payment')]
 class paymentController extends AbstractController
 {
+    public function __construct(private Keys $keys)
+    {
+        
+    }
+
     #[Route('/', name: 'app_front_payment')]
     public function index(): Response
     {
@@ -46,7 +52,7 @@ class paymentController extends AbstractController
             if ($this->isCsrfTokenValid('payment' . $course->getId(), $request->request->get('_token'))) {
                 // En fonction de la methode de payment choisie on fait appel à l'API indiquée
                 $paymentMethod = $paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
-                if (PaymentUtil::initierPayment($course, $paymentMethod)) {
+                if (PaymentUtil::initierPayment($eleve->getUtilisateur(), $course, $paymentMethod, $this->keys)) {
                     $eleve->addCour($course);
                     $payment = new Payment();
                     $payment->setEleve($eleve)
@@ -99,7 +105,7 @@ class paymentController extends AbstractController
             if ($this->isCsrfTokenValid('payment' . $abonnement->getId(), $request->request->get('_token'))) {
                 // En fonction de la methode de payment choisie on fait appel à l'API indiquée
                 $paymentMethod = $paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
-                if (PaymentUtil::initierPaymentPlan($abonnement, $paymentMethod)) {
+                if (PaymentUtil::initierPaymentPlan($eleve->getUtilisateur(), $abonnement, $paymentMethod, $this->keys)) {
 
                     $payment = new Payment();
                     $today = date_format(new \DateTimeImmutable(), 'Y-m-d');

@@ -49,8 +49,6 @@ class PaymentController extends AbstractController
             $nbJoursEcoules = floor($diff/86400);
         }
 
-        
-
         return $this->render('student/payment/subscriptions.html.twig', [
             'isSubscriptions' => true,
             'student' => $eleve,

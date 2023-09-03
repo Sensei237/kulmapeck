@@ -8,6 +8,7 @@ use App\Repository\EnseignantRepository;
 use App\Repository\NetworkConfigRepository;
 use App\Repository\RetraitRepository;
 use App\Repository\UserRepository;
+use App\Utils\Keys;
 use App\Utils\ManageNetwork;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,6 +18,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class NetworkController extends AbstractController
 {
+    public function __construct(private Keys $keys)
+    {
+        
+    }
+    
     #[Route('/instructor/network', name: 'app_instructor_network')]
     public function index(Request $request, NetworkConfigRepository $networkConfigRepository, EnseignantRepository $enseignantRepository, PaginatorInterface $paginatorInterface): Response
     {
@@ -57,9 +63,10 @@ class NetworkController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $retrait->setUser($enseignant->getUtilisateur());
             $retraitRepository->save($retrait);
-            $msg = ManageNetwork::convertInMoney($enseignant->getUtilisateur(), $retrait->getMontant(), $retrait->getNumeroTelephone(), $networkConfig, $userRepository);
+
+            $msg = ManageNetwork::convertInMoney($enseignant->getUtilisateur(), $retrait->getMontant(), $retrait->getNumeroTelephone(), $networkConfig, $userRepository, $this->keys);
             
-            $this->addFlash('info', $msg['message']);
+            $this->addFlash('success', $msg['message']);
             
             return $this->redirectToRoute('app_instructor_network_retrait');
         }

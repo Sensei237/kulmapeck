@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use ArrayObject;
 use Doctrine\ORM\EntityManagerInterface;
+use MobileApiService;
 
 class ManageNetwork
 {
@@ -80,7 +81,7 @@ class ManageNetwork
     /**
      * Cette methode permet de faire le retrait des points en xaf
      */
-    public static function convertInMoney(User $user, float $montantARetirer, int $numeroTelephone, NetworkConfig $networkConfig, UserRepository $userRepository)
+    public static function convertInMoney(User $user, float $montantARetirer, int $numeroTelephone, NetworkConfig $networkConfig, UserRepository $userRepository, Keys $keys)
     {
         $points = $user->getPoints();
         $money = $user->getEspeces();
@@ -104,9 +105,31 @@ class ManageNetwork
         $user->setEspeces($money - $montantARetirer);
 
         // On fait appel à l'API pour effectuer le retrait
-        $retraitEffectue = true;
-        if ($retraitEffectue) {
+        $requestData['transaction_amount'] = $montantARetirer;
+        $requestData['transaction_currency'] = 'XAF';
+        $requestData['transaction_reason'] = 'Retrait';
+        $requestData['app_transaction_ref'] = time();
+        $requestData['customer_phone_number'] = $numeroTelephone; //client
+        $requestData['customer_name'] = $user->getPersonne()->getNomComplet();
+        $requestData['customer_email'] = $user->getEmail();
+        $requestData['customer_lang'] = 'fr';
+        $requestData['transaction_receiver'] = $numeroTelephone; //client
+
+        $response = MobileApiService::sendPayout(
+            $requestData, 
+            $keys->getApiUrl(), 
+            $keys->getPrivateKey(), 
+            $keys->getCacert()
+        );
+
+        if (!$response['error']) {
             $userRepository->save($user, true);
+        }else {
+            return [
+                'hasDone' => false,
+                'message' => "Une erreur est survenue.",
+                'response' => $response
+            ];
         }
         
         return [
