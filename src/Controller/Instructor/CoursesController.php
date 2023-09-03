@@ -2,6 +2,7 @@
 
 namespace App\Controller\Instructor;
 
+use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Chapitre;
 use App\Entity\Cours;
 use App\Entity\FAQ;
@@ -37,6 +38,13 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route('/instructor/courses')]
 class CoursesController extends AbstractController
 {
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     #[Route('/', name: 'app_instructor_courses')]
     public function index(Request $request, EnseignantRepository $enseignantRepository, CoursRepository $coursRepository, PaginatorInterface $paginatorInterface): Response
     {
@@ -76,6 +84,11 @@ class CoursesController extends AbstractController
         ]);
     }
 
+    
+
+  
+  
+
     #[Route('/{slug}/preview', name: 'app_instructor_courses_preview')]
     public function coursePreview(Cours $cours, Request $request): Response
     {
@@ -89,7 +102,10 @@ class CoursesController extends AbstractController
 
     #[Route('/{slug}/edit', name: 'app_instructor_courses_edit')]
     #[Route('/new', name: 'app_instructor_courses_new')]
-    public function edit(Cours $cours = null, NotificationTypeRepository $notificationTypeRepository, UserRepository $userRepository, Request $request, SluggerInterface $slugger, ForumRepository $forumRepository, CoursRepository $coursRepository, EnseignantRepository $enseignantRepository, FileUploader $fileUploader): Response
+    public function edit(LessonRepository $lessonRepository, Cours $cours = null, NotificationTypeRepository $notificationTypeRepository,
+     UserRepository $userRepository, Request $request, SluggerInterface $slugger,
+     
+ForumRepository $forumRepository, CoursRepository $coursRepository, EnseignantRepository $enseignantRepository, FileUploader $fileUploader): Response
     {
         $enseignant = $enseignantRepository->findOneBy(['utilisateur' => $this->getUser()]);
         if ($enseignant === null || !$enseignant->isIsCertified() || ($cours !== null && $enseignant->getId() !== $cours->getEnseignant()->getId())) {
@@ -126,9 +142,10 @@ class CoursesController extends AbstractController
                     }
                     $lesson->setUpdatedAt(new \DateTimeImmutable());
                     $lesson->setChapitre($chapitre);
+                    $lessonRepository->save($lesson);
                 }
             }
-
+            die();
             $cours->setUpdatedAt(new \DateTimeImmutable());
             $coursRepository->save($cours, true);
             $admins = $userRepository->findBy(['isAdmin' => true, 'isBlocked' => false, 'isVerified' => true]);
@@ -167,7 +184,8 @@ class CoursesController extends AbstractController
     }
 
     #[Route('/{slug}/quizzes', name: 'app_instructor_courses_quizzes', methods: ['POST', 'GET'])]
-    public function newQuiz(Chapitre $chapitre, Request $request, QuizRepository $quizRepository)
+    public function newQuiz(Chapitre $chapitre, Request $request,
+     QuizRepository $quizRepository)
     {
         if ($chapitre->getCours()->isIsValidated()) {
             throw $this->createAccessDeniedException("Vous ne pouvez plus modofier ce cours");
@@ -183,7 +201,7 @@ class CoursesController extends AbstractController
                 ->setReference(time()+$quiz->getId());
             
             $quizRepository->save($quiz, true);
-
+            $this->addFlash('info', "Quiz Chapitre - ".$chapitre->getTitle());
             return $this->redirectToRoute('app_instructor_courses_quizzes', ['slug' => $chapitre->getSlug()]);
         }
 
@@ -192,8 +210,9 @@ class CoursesController extends AbstractController
             'form' => $form->createView(),
             'instructorCourses' => true,
             'imageFile' => $chapitre->getCours()->getMedia()->getImageFile(),
-            'title' => $chapitre->getCours()->getIntitule(),
-            'quizzes' => $chapitre->getCours()->getQuizzes(),
+            'title' => "Quiz - ".$chapitre->getTitle(),
+            'quizzes' => $this->entityManager->getRepository(Quiz::class)->findBy(['chapitre' => $chapitre]),
+           // 'quizzes' => $chapitre->getCours()->getQuizzes(),
             'deleteRedirectUri' => $this->generateUrl('app_instructor_courses_quizzes_final', ['slug' => $chapitre->getSlug()])
         ]);
     }
@@ -215,6 +234,7 @@ class CoursesController extends AbstractController
                 ->setChapitre(null);
 
             $quizRepository->save($quiz, true);
+            $this->addFlash('info', "Quiz Evaluation finale - ".$cours->getIntitule());
 
             return $this->redirectToRoute('app_instructor_courses_quizzes_final', ['slug' => $cours->getSlug()]);
         }
@@ -224,8 +244,10 @@ class CoursesController extends AbstractController
             'form' => $form->createView(),
             'instructorCourses' => true,
             'imageFile' => $cours->getMedia()->getImageFile(),
-            'title' => $cours->getIntitule(),
-            'quizzes' => $cours->getQuizzes(),
+            'title' =>"Evaluation finale - ". $cours->getIntitule(),
+            //'quizzes' => $cours->getQuizzes(),
+            'quizzes' => $this->entityManager->getRepository(Quiz::class)->findBy(['chapitre' => null
+            ,'cours'=>$cours]),
             'deleteRedirectUri' => $this->generateUrl('app_instructor_courses_quizzes_final', ['slug' => $cours->getSlug()])
         ]);
     }
@@ -247,9 +269,9 @@ class CoursesController extends AbstractController
     {
         $quiz->setQuestion($request->request->get('question'))
             ->setProposition1($request->request->get('proposition1'))
-            ->setProposition1($request->request->get('proposition2'))
-            ->setProposition1($request->request->get('proposition3'))
-            ->setProposition1($request->request->get('proposition4'))
+            ->setProposition2($request->request->get('proposition2'))
+            ->setProposition3($request->request->get('proposition3'))
+            ->setProposition4($request->request->get('proposition4'))
             ->setPropositionJuste([$request->request->get('propositionJuste')]);
 
         $quizRepository->save($quiz, true);
@@ -386,13 +408,16 @@ class CoursesController extends AbstractController
             $this->addFlash('danger', "Action Impossible !!!<br>Le nombre de leçons rédigées ne correspond pas au nombre que vous avez declaré dans la configuration du cours");
         }
 
-        if (count($cours->getQuizzes()) < 5) {
+       $finalEvalQuiz = $this->entityManager->getRepository(Quiz::class)->findBy(['chapitre' => null
+        ,'cours'=>$cours]);
+        
+        if (count($finalEvalQuiz) < 5) {
             $isValid = false;
             $this->addFlash('danger', "Action impossible !!!<br>Vous avez ommis de mettre une évaluation de fin pour votre cours. Vous devez mettre au moins 5 questions");
         }
         foreach ($cours->getChapitres() as $chap) {
             if (count($chap->getQuizzes()) < 5) {
-                $this->addFlash("danger", "Aaction impossible !!!<br>Le chapitre ". $chap->getTitle(). " n'a pas d'évaluation. Vous devez mettre au moins 5 questions.");
+                $this->addFlash("danger", "Action impossible !!!<br>Le chapitre ". $chap->getTitle(). " n'a pas d'évaluation. Vous devez mettre au moins 5 questions.");
                 $isValid = false;
             }
         }

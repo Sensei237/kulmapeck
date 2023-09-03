@@ -11,7 +11,7 @@
     </div>
     <!-- Edit and cancel button -->
     <div>
-        <a data-bs-toggle="modal" data-bs-target="#addTopic" href="#" data-index="{{ index }}" data-title-reference="lesson_{{ index }}_chapitre_{{ chapIndex }}_title" data-chap-index="{{ chapIndex }}" class="btn btn-sm btn-success-soft btn-round me-1 mb-1 mb-md-0 edit-lesson-btn"><i class="far fa-fw fa-edit"></i></a>
+        <a data-bs-toggle="modal" data-bs-target="#addTopic" href="#" data-index="{{ index }}" data-id={{lesson.id}} data-title-reference="lesson_{{ index }}_chapitre_{{ chapIndex }}_title" data-chap-index="{{ chapIndex }}" class="btn btn-sm btn-success-soft btn-round me-1 mb-1 mb-md-0 edit-lesson-btn"><i class="far fa-fw fa-edit"></i></a>
         <button type="button" data-delete-url="{{ lesson.id is defined ? path('app_instructor_delete_lesson', {id: lesson.id}) : '' }}" data-id="{{ lesson.id|default('') }}" data-index="{{ index }}" data-title-reference="lesson_{{ index }}_chapitre_{{ chapIndex }}_title" data-chap-index="{{ chapIndex }}" class="btn btn-sm btn-danger-soft btn-round mb-0 delete-lesson-btn"><i class="fas fa-fw fa-times"></i></button>
     </div>
 </div>
