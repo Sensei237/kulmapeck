@@ -43,8 +43,8 @@ class NetworkController extends AbstractController
         ]);
     }
 
-    #[Route('/instructor/retrait', name: 'app_instructor_network_retrait', methods: ['POST', 'GET'])]
-    public function retrait(Request $request, EnseignantRepository $enseignantRepository, RetraitRepository $retraitRepository, NetworkConfigRepository $networkConfigRepository, UserRepository $userRepository): Response
+    #[Route('/instructor/retrait/new', name: 'app_instructor_network_retrait', methods: ['POST', 'GET'])]
+    public function retirer(Request $request, EnseignantRepository $enseignantRepository, RetraitRepository $retraitRepository, NetworkConfigRepository $networkConfigRepository, UserRepository $userRepository): Response
     {
         $enseignant = $enseignantRepository->findOneBy(['utilisateur' => $this->getUser()]);
         if ($enseignant === null) {
@@ -78,4 +78,31 @@ class NetworkController extends AbstractController
             'networkConfig' => $networkConfig,
         ]);
     }
+
+    #[Route('/instructor/retraits', name: 'app_instructor_network_retraits', methods: ['GET'])]
+    public function retraits(EnseignantRepository $enseignantRepository, NetworkConfigRepository $networkConfigRepository): Response
+    {
+        $enseignant = $enseignantRepository->findOneBy(['utilisateur' => $this->getUser()]);
+        if ($enseignant === null) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $networkConfig = $networkConfigRepository->findOneBy([]);
+        
+        $retraits = $enseignant->getUtilisateur()->getRetraits();
+        $montantTotal = 0;
+        foreach ($retraits as $retrait) {
+            $montantTotal += $retrait->getMontant();
+        }
+
+        return $this->render('instructor/network/retrait.html.twig', [
+            'isNetwork' => true,
+            'enseignant' => $enseignant,
+            'networkConfig' => $networkConfig,
+            'retraits' => $retraits,
+            'showHistorique' => true,
+            'montantTotal' => $montantTotal,
+        ]);
+    }
+
 }
