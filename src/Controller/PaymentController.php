@@ -167,7 +167,7 @@ class PaymentController extends AbstractController
      * Fonction de rappel permettant de mettre a jour le statut de la transaction effetuée
      * elle est exécutée automatiquement par le serveur distant à intervalle regulier de 5 min
      */
-    #[Route('/recall', name: 'app_payment_callback', methods: 'GET')]
+    #[Route('/callback', name: 'app_payment_callback', methods: 'GET')]
     public function handleCallback(Request $request)
     {
         // Check if Kulmapeck  sender's IP address

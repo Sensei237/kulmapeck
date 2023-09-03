@@ -4,7 +4,7 @@ namespace App\Utils;
 class Utils {
 
     public static function checkNumberOperator($number) {
-    
+
         
         // Remove leading '+' or '0237' from the number
         $cleanedNumber = preg_replace('/^(\+237|0237)/', '', $number);
