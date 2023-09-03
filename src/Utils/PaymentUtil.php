@@ -12,7 +12,7 @@ use App\Utils\Keys;
 class PaymentUtil
 {
     
-    public static function initierPaymentPlan(User $user, Abonnement $abonnement, ?PaymentMethod $paymentMethod, Keys $keys): bool
+    public static function initierPaymentPlan(User $user, Abonnement $abonnement, ?PaymentMethod $paymentMethod, Keys $keys, string $referencePayment): array
     {
         $isPaied = false;
 
@@ -21,7 +21,7 @@ class PaymentUtil
         $requestData['transaction_amount'] = $abonnement->getMontant();
         $requestData['transaction_currency'] = 'XAF';
         $requestData['transaction_reason'] = 'Subscription';
-        $requestData['app_transaction_ref'] = time();
+        $requestData['app_transaction_ref'] = $referencePayment;
         $requestData['customer_phone_number'] = $numeroTelephone; //client
         $requestData['customer_name'] = $user->getPersonne()->getNomComplet();
         $requestData['customer_email'] = $user->getEmail();
@@ -39,10 +39,13 @@ class PaymentUtil
             $isPaied = true;
         }
 
-        return $isPaied;
+        return [
+            'isPaied' => $isPaied, 
+            'responseData' => $response['responseData'],
+        ];
     }
 
-    public static function initierPayment(User $user, Cours $course, ?PaymentMethod $paymentMethod, Keys $keys): bool
+    public static function initierPayment(User $user, Cours $course, ?PaymentMethod $paymentMethod, Keys $keys, string $referencePayment): array
     {
         $isPaied = false;
 
@@ -51,7 +54,7 @@ class PaymentUtil
         $requestData['transaction_amount'] = $course->getMontantAbonnement();
         $requestData['transaction_currency'] = 'XAF';
         $requestData['transaction_reason'] = 'Achat Cours';
-        $requestData['app_transaction_ref'] = time();
+        $requestData['app_transaction_ref'] = $referencePayment;
         $requestData['customer_phone_number'] = $numeroTelephone; //client
         $requestData['customer_name'] = $user->getPersonne()->getNomComplet();
         $requestData['customer_email'] = $user->getEmail();
@@ -69,6 +72,9 @@ class PaymentUtil
             $isPaied = true;
         }
 
-        return $isPaied;
+        return [
+            'isPaied' => $isPaied, 
+            'responseData' => $response['responseData'],
+        ];
     }
 }

@@ -61,14 +61,23 @@ class NetworkController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $retrait->setUser($enseignant->getUtilisateur());
-            $retraitRepository->save($retrait);
+            $reference = 'RT-' . (time() + rand(1000, 1000000000000));
+            $response = ManageNetwork::convertInMoney($enseignant->getUtilisateur(), $retrait->getMontant(), $retrait->getNumeroTelephone(), $networkConfig, $userRepository, $this->keys, $reference);
+            
+            if ($response['hasDone']) {
+                $this->addFlash('success', $response['message']);
+            
+                return $this->redirectToRoute('app_instructor_network_retrait');
+            }
 
-            $msg = ManageNetwork::convertInMoney($enseignant->getUtilisateur(), $retrait->getMontant(), $retrait->getNumeroTelephone(), $networkConfig, $userRepository, $this->keys);
+            $retrait->setUser($enseignant->getUtilisateur())
+                ->setTransactionReference($response['responseData']['transaction_ref'])
+                ->setStatus($response['responseData']['status']);
+            $retraitRepository->save($retrait, true);
+
+            $this->addFlash('success', $response['message']);
             
-            $this->addFlash('success', $msg['message']);
-            
-            return $this->redirectToRoute('app_instructor_network_retrait');
+            return $this->redirectToRoute('app_instructor_network_retraits');
         }
 
         return $this->render('instructor/network/retrait.html.twig', [

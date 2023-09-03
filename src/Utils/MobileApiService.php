@@ -46,17 +46,17 @@ final class MobileApiService
 
         if (curl_errno($ch)) {
             $error = curl_error($ch);
-            return new JsonResponse(['errorList' => $error, 'error' => true]);
+            return ['errorList' => $error, 'error' => true];
         }
         curl_close($ch);
 
         $responseData = json_decode($response, true);
 
         if ($httpCode === 201) {
-            return new JsonResponse(['responseData' => $responseData, 'error' => false]);
+            return ['responseData' => $responseData, 'error' => false];
 
         } else {
-            return new JsonResponse(['responseData' => $responseData, 'error' => true]);
+            return ['responseData' => $responseData, 'error' => true];
         }
 
     }
@@ -100,9 +100,9 @@ final class MobileApiService
         $responseData = json_decode($response, true);
 
         if ($httpCode === 201) {
-            return new JsonResponse(['responseData' => $responseData, 'error' => false]);
+            return ['responseData' => $responseData, 'error' => false];
         } else {
-            return new JsonResponse(['responseData' => $responseData, 'error' => true]);
+            return ['responseData' => $responseData, 'error' => true];
         }
     }
 }

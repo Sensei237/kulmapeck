@@ -81,7 +81,7 @@ class ManageNetwork
     /**
      * Cette methode permet de faire le retrait des points en xaf
      */
-    public static function convertInMoney(User $user, float $montantARetirer, int $numeroTelephone, NetworkConfig $networkConfig, UserRepository $userRepository, Keys $keys)
+    public static function convertInMoney(User $user, float $montantARetirer, int $numeroTelephone, NetworkConfig $networkConfig, UserRepository $userRepository, Keys $keys, string $reference)
     {
         $points = $user->getPoints();
         $money = $user->getEspeces();
@@ -108,7 +108,7 @@ class ManageNetwork
         $requestData['transaction_amount'] = $montantARetirer;
         $requestData['transaction_currency'] = 'XAF';
         $requestData['transaction_reason'] = 'Retrait';
-        $requestData['app_transaction_ref'] = time();
+        $requestData['app_transaction_ref'] = $reference;
         $requestData['customer_phone_number'] = $numeroTelephone; //client
         $requestData['customer_name'] = $user->getPersonne()->getNomComplet();
         $requestData['customer_email'] = $user->getEmail();
@@ -128,13 +128,15 @@ class ManageNetwork
             return [
                 'hasDone' => false,
                 'message' => "Une erreur est survenue.",
-                'response' => $response
+                'response' => $response,
+                'responseData' =>  null,
             ];
         }
         
         return [
             'hasDone' => true,
-            'message' => "Votre retrait a été approuvé et confirmé."
+            'message' => "Votre retrait a été approuvé et confirmé.",
+            'responseData' => $response['responseData'],
         ];
     }
 }

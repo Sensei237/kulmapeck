@@ -118,6 +118,12 @@ class Payment
     #[Groups(['read:payment:collection'])]
     private ?float $amount = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $status = null;
+
+    #[ORM\Column(length: 150, nullable: true)]
+    private ?string $transactionReference = null;
+
     public function __construct()
     {
         $this->paidAt = new DateTimeImmutable();
@@ -232,6 +238,30 @@ class Payment
     public function setAmount(?float $amount): self
     {
         $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getTransactionReference(): ?string
+    {
+        return $this->transactionReference;
+    }
+
+    public function setTransactionReference(?string $transactionReference): static
+    {
+        $this->transactionReference = $transactionReference;
 
         return $this;
     }
