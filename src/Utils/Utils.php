@@ -1,5 +1,6 @@
 <?php
 namespace App\Utils;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class Utils {
 
@@ -28,6 +29,45 @@ class Utils {
             return 'CM_MOMO';
         } else {
             throw new \InvalidArgumentException('Invalid number prefix');
+        }
+    }
+
+    public function emailSender($cacert,$receiver,$content,$subject)
+    {
+        $mail = new PHPMailer();
+
+        $mail->isSMTP();
+        $mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => true,
+                'verify_peer_name' => true,
+                'allow_self_signed' => false,
+                'cafile' => $cacert, 
+            ),
+        );
+        $mail->Host = 'vps96969.serveur-vps.net'; // Replace with your SMTP server address
+        $mail->SMTPAuth = true;
+        $mail->Username = 'no-reply@kulmapeck.com'; // Replace with your SMTP username
+        $mail->Password = 'tZ5$1DcmSUXXYUY'; // Replace with your SMTP password
+        $mail->SMTPSecure = 'tls'; // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` for SSL
+        $mail->Port = 587; // TCP port to connect to
+        $mail->SMTPDebug = 0;
+
+        // Sender and Recipient
+        $mail->setFrom('no-reply@kulmapeck.com', 'no-reply-Kulmapeck'); // Replace with your sender's email and name
+        $mail->addAddress($receiver, 'Recipient Benito'); // Replace with the recipient's email and name
+
+        // Email Content
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body = $content;
+        $mail->AltBody = $content;
+
+        // Send the email
+        if ($mail->send()) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

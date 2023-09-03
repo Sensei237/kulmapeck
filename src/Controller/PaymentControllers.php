@@ -10,12 +10,14 @@ use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
 
 
 #[Route('/api/pay')]
-class PaymentController extends AbstractController
+class PaymentControllers extends AbstractController
 {
 
     private $privateKey;
@@ -175,7 +177,7 @@ class PaymentController extends AbstractController
         $expectedIp = '192.162.71.169';
 
         if ($senderIp !== $expectedIp) {
-            throw new InvalidArgumentException("Unauthorized sender IP : ".$senderIp);
+            throw new InvalidArgumentException("Unauthorized sender IP : " . $senderIp);
         }
 
         // Get parameters from the URL
@@ -187,4 +189,22 @@ class PaymentController extends AbstractController
         // Return a response if needed
         return new Response('Callback received successfully');
     }
+    #[Route('/email', name: 'balance', methods: ['POST'])]
+    public function emailSender(MailerInterface $mailer)
+    {
+        $email = (new Email())
+            ->from('no-reply@kulmapeck.com')
+            ->to("ondouabenoit392@gmail.com")
+            ->subject("Demande rejeter")
+            ->text("motif")
+            ->html("<p>" . "motif" . "</p>");
+
+        // Send the email
+        if ($mailer->send($email)) {
+            return new JsonResponse('Email sent successfully!');
+        } else {
+            return new JsonResponse('Email could not be sent. Mailer Error: ');
+        }
+    }
+
 }
