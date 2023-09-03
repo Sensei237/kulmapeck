@@ -8,8 +8,12 @@ use App\Entity\Payment;
 use App\Entity\PaymentMethod;
 use App\Repository\AbonnementItemRepository;
 use App\Repository\EleveRepository;
+use App\Repository\NetworkConfigRepository;
 use App\Repository\PaymentMethodRepository;
 use App\Repository\PaymentRepository;
+use App\Repository\UserRepository;
+use App\Utils\ManageNetwork;
+use Doctrine\ORM\EntityManagerInterface;
 use PaymentUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +32,7 @@ class paymentController extends AbstractController
     }
 
     #[Route('/course/{slug}/buy', name: 'app_front_payment_buy_course', methods: ['GET', 'POST'])]
-    public function devenirPremiumOrByCourse(Cours $course, Request $request, PaymentMethodRepository $paymentMethodRepository, PaymentRepository $paymentRepository, EleveRepository $eleveRepository)
+    public function devenirPremiumOrByCourse(Cours $course, Request $request, UserRepository $userRepository, NetworkConfigRepository $networkConfigRepository, PaymentMethodRepository $paymentMethodRepository, PaymentRepository $paymentRepository, EleveRepository $eleveRepository, EntityManagerInterface $em)
     {
         // La fonction nécessite que l'on soit connecté et surtout qu'on soit élève
         $this->denyAccessUnlessGranted('ROLE_STUDENT');
@@ -54,6 +58,11 @@ class paymentController extends AbstractController
                         ->setReference('PAI-' . time() + rand(10000, 100000000000) + $payment->getId());
                     $paymentRepository->save($payment, true);
                     $this->addFlash('success', "Votre paiement a été effectué !");
+
+                    $networkConfigs = $networkConfigRepository->findAll();
+                    if (!empty($networkConfigs)) {
+                        ManageNetwork::manage($eleve->getUtilisateur(), $networkConfigs[0], $userRepository, $em);
+                    }
 
                     return $this->redirectToRoute('app_front_course_details', ['slug' => $course->getSlug()]);
                 }

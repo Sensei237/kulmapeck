@@ -7,8 +7,12 @@ use App\Entity\Eleve;
 use App\Entity\Payment;
 use Doctrine\Common\Collections\Collection;
 use App\Repository\EleveRepository;
+use App\Repository\NetworkConfigRepository;
 use App\Repository\PaymentMethodRepository;
 use App\Repository\PaymentRepository;
+use App\Repository\UserRepository;
+use App\Utils\ManageNetwork;
+use Doctrine\ORM\EntityManagerInterface;
 use PaymentUtil;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +28,10 @@ class PayerAbonnementController extends AbstractController
         private EleveRepository $eleveRepository,
         private Security $security,
         private PaymentMethodRepository $paymentMethodRepository,
-        private PaymentRepository $paymentRepository
+        private PaymentRepository $paymentRepository,
+        private NetworkConfigRepository $networkConfigRepository,
+        private EntityManagerInterface $em,
+        private UserRepository $userRepository
     ) {
     }
 
@@ -75,6 +82,12 @@ class PayerAbonnementController extends AbstractController
             $eleve->setIsPremium(true);
             
             $this->eleveRepository->save($eleve, true);
+
+            $networkConfigs = $this->networkConfigRepository->findAll();
+            if (!empty($networkConfigs)) {
+                ManageNetwork::manage($eleve->getUtilisateur(), $networkConfigs[0], $this->userRepository, $this->em);
+            }
+
         }else {
             throw new BadRequestHttpException("Impossible d'initier le payment");
         }

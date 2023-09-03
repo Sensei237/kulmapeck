@@ -1,0 +1,33 @@
+{% extends "instructor/base.html.twig" %}
+
+{% block pageContent %}
+
+    <div class="card bg-transparent border rounded-3">
+        <div class="card-body">
+            <div class="alert alert-info">
+                <p>
+                    <label>Montant Disponible : </label>
+                    <i>{{ enseignant.utilisateur.especes }} XAF</i>
+                </p>
+                <p>
+                    <label>Minimun retirable : </label>
+                    <i> {{ networkConfig.minimumRetirable }} XAF</i>
+                </p>
+            </div>
+            <div>
+                {% if networkConfig.minimumRetirable < enseignant.utilisateur.especes %}
+                    {{ form_start(form) }}
+                        {{ form_widget(form) }}
+                        <hr>
+                        <button type="submit" class="btn btn-primary-soft">Retirer</button>
+                    {{ form_end(form) }}
+                {% else %}
+                    <div class="alert alert-danger">
+                        <p>Action impossible. Vous n'avez pas le minimun retirable</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

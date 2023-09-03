@@ -130,6 +130,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Filiere::class, inversedBy: 'users')]
     private Collection $filieres;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $points = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Retrait::class, orphanRemoval: true)]
+    private Collection $retraits;
+
+    #[ORM\Column]
+    private ?float $especes = null;
+
     public function __construct()
     {
         $this->notifications = new ArrayCollection();
@@ -137,6 +146,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->exams = new ArrayCollection();
         $this->notificationSettings = new ArrayCollection();
         $this->filieres = new ArrayCollection();
+        $this->retraits = new ArrayCollection();
+        $this->especes = 0;
     }
 
     public function getId(): ?int
@@ -438,6 +449,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeFiliere(Filiere $filiere): self
     {
         $this->filieres->removeElement($filiere);
+
+        return $this;
+    }
+
+    public function getPoints(): ?float
+    {
+        return $this->points;
+    }
+
+    public function setPoints(?float $points): static
+    {
+        $this->points = $points;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Retrait>
+     */
+    public function getRetraits(): Collection
+    {
+        return $this->retraits;
+    }
+
+    public function addRetrait(Retrait $retrait): static
+    {
+        if (!$this->retraits->contains($retrait)) {
+            $this->retraits->add($retrait);
+            $retrait->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRetrait(Retrait $retrait): static
+    {
+        if ($this->retraits->removeElement($retrait)) {
+            // set the owning side to null (unless already changed)
+            if ($retrait->getUser() === $this) {
+                $retrait->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getEspeces(): ?float
+    {
+        return $this->especes;
+    }
+
+    public function setEspeces(float $especes): static
+    {
+        $this->especes = $especes;
 
         return $this;
     }

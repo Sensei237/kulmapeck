@@ -1,0 +1,20 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Network Config{% endblock %}
+
+{% block actionBtn %}
+    <a href="{{ path('app_admin_network_config_index') }}">back to list</a>
+{% endblock %}
+
+{% block script %}
+    
+{% endblock %}
+
+{% block mainContent %}
+    <div class="card bg-transparent border">
+        <!-- Card body START -->
+        <div class="card-body">
+            {{ include('admin/network_config/_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}

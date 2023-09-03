@@ -48,11 +48,15 @@ class PaymentMethod
     #[ORM\ManyToMany(targetEntity: Abonnement::class, mappedBy: 'paymentMethods')]
     private Collection $abonnements;
 
+    #[ORM\OneToMany(mappedBy: 'paymentMethod', targetEntity: Retrait::class, orphanRemoval: true)]
+    private Collection $retraits;
+
     public function __construct()
     {
         $this->payments = new ArrayCollection();
         $this->cours = new ArrayCollection();
         $this->abonnements = new ArrayCollection();
+        $this->retraits = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -175,6 +179,36 @@ class PaymentMethod
     {
         if ($this->abonnements->removeElement($abonnement)) {
             $abonnement->removePaymentMethod($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Retrait>
+     */
+    public function getRetraits(): Collection
+    {
+        return $this->retraits;
+    }
+
+    public function addRetrait(Retrait $retrait): static
+    {
+        if (!$this->retraits->contains($retrait)) {
+            $this->retraits->add($retrait);
+            $retrait->setPaymentMethod($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRetrait(Retrait $retrait): static
+    {
+        if ($this->retraits->removeElement($retrait)) {
+            // set the owning side to null (unless already changed)
+            if ($retrait->getPaymentMethod() === $this) {
+                $retrait->setPaymentMethod(null);
+            }
         }
 
         return $this;

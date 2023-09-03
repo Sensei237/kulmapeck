@@ -3,6 +3,37 @@
 
 {% block pageContent %}
 
+	<div class="row g-4 mb-5">
+		<!-- Counter item -->
+		<div class="col-sm-6 col-lg-4">
+			<div class="d-flex justify-content-center align-items-center p-4 bg-warning bg-opacity-15 rounded-3">
+				<span class="display-6 text-warning mb-0"><i class="fas fa-tv fa-fw"></i></span>
+				<div class="ms-4">
+					<div class="d-flex">
+						<h5 class="purecounter mb-0 fw-bold" data-purecounter-start="0" data-purecounter-end="{{ enseignant.utilisateur.points }}"	data-purecounter-delay="200">0</h5>
+					</div>
+					<span class="mb-0 h6 fw-light">Total Des points</span>
+				</div>
+			</div>
+		</div>
+		<!-- Counter item -->
+		<div class="col-sm-6 col-lg-4">
+			<div class="d-flex justify-content-center align-items-center p-4 bg-purple bg-opacity-10 rounded-3">
+				<span class="display-6 text-purple mb-0"><i class="fas fa-dollar-sign fa-fw"></i></span>
+				<div class="ms-4">
+					<div class="d-flex">
+						<h5 class="purecounter mb-0 fw-bold" data-purecounter-start="0" data-purecounter-end="{{ enseignant.utilisateur.especes }}"	data-purecounter-delay="200">0</h5>
+						{# <span class="mb-0 h5">K+</span> #}
+					</div>
+					<span class="mb-0 h6 fw-light">Montant en espèce</span>
+					<br>
+					<a href="{{ url("app_instructor_network_retrait") }}">Faire le retrait</a>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+
     <div class="card bg-transparent border rounded-3">
 		<!-- Card header START -->
 		<div class="card-header bg-transparent border-bottom">
