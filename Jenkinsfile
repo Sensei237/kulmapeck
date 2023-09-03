@@ -14,7 +14,7 @@ pipeline {
             } 
         }
 
-         stage('Enable update package') {
+        stage('Enable update package') {
             steps {
                 bat 'composer update'
             } 
@@ -27,7 +27,7 @@ pipeline {
             }
         }
 
-         stage('Run test') {
+        stage('Run test') {
             
             steps {
                 bat 'php bin/phpunit'
