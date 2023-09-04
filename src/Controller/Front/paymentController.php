@@ -24,10 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/payment')]
 class PaymentController extends AbstractController
 {
-    public function __construct(private Keys $keys)
-    {
-        
-    }
+
 
     #[Route('/', name: 'app_front_payment')]
     public function index(): Response
