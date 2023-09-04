@@ -13,6 +13,7 @@ class Keys
     {
         $this->parameterBag = $parameterBag;
     }
+
     public function getPrivateKey()
     {
         $private = $this->parameterBag->get('kernel.project_dir') . '/config/Keys/private.pem';
@@ -22,9 +23,15 @@ class Keys
         }
         return $privateContent;
     }
+
     public function getCacert()
     {
         return $this->parameterBag->get('kernel.project_dir') . '/config/Keys/cacert.pem';
 
+    }
+
+    public function getApiUrl(): string
+    {
+        return 'https://pay-kulmapeck.online/api/pay/';
     }
 }

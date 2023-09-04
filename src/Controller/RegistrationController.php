@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegistrationStudentType;
 use App\Form\RegistrationTeacherType;
+use App\Repository\NetworkConfigRepository;
 use App\Repository\PersonneRepository;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Service\FileUploader;
+use App\Utils\ManageNetwork;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -105,7 +107,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, UserRepository $userRepository, TranslatorInterface $translator): Response
+    public function verifyUserEmail(Request $request, UserRepository $userRepository, TranslatorInterface $translator, NetworkConfigRepository $networkConfigRepository, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         if ($user === null) {
@@ -126,6 +128,12 @@ class RegistrationController extends AbstractController
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
+
+        // if ($user instanceof User) {
+        //     if ($user->getEnseignant()) {
+                ManageNetwork::manage($user, $networkConfigRepository->findOneBy([]), $userRepository, $entityManager);
+        //     }
+        // }
 
         return $this->redirectToRoute('app_home');
     }

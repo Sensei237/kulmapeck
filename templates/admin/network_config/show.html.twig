@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<title>NetworkConfig</title>
+
+{% block body %}
+    <h1>NetworkConfig</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ network_config.id }}</td>
+            </tr>
+            <tr>
+                <th>NombreDePointsParInvitaton</th>
+                <td>{{ network_config.nombreDePointsParInvitaton }}</td>
+            </tr>
+            <tr>
+                <th>PourcentageDistributionEnseignant</th>
+                <td>{{ network_config.pourcentageDistributionEnseignant }}</td>
+            </tr>
+            <tr>
+                <th>PourcentageDistributionEleve</th>
+                <td>{{ network_config.pourcentageDistributionEleve }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_network_config_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_network_config_edit', {'id': network_config.id}) }}">edit</a>
+
+    {{ include('admin/network_config/_delete_form.html.twig') }}
+{% endblock %}

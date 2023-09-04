@@ -151,7 +151,8 @@ class PayIn
             "customer_name" => $this->customerName,
             "customer_email" => $this->customerEmail,
             "customer_lang" => $this->customerLang,
-            "transaction_receiver" => $this->transaction_receiver
+            "transaction_receiver" => $this->transaction_receiver,
+            "transaction_operator" => $this->number_operator
 
         ];
 

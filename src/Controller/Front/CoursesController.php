@@ -9,6 +9,7 @@ use App\Entity\Forum;
 use App\Entity\ForumMessage;
 use App\Entity\Lecture;
 use App\Entity\Lesson;
+use App\Entity\LikeMessageForum;
 use App\Entity\Membre;
 use App\Entity\QuizLost;
 use App\Entity\QuizResult;
@@ -26,6 +27,7 @@ use App\Repository\ForumMessageRepository;
 use App\Repository\ForumRepository;
 use App\Repository\LectureRepository;
 use App\Repository\LessonRepository;
+use App\Repository\LikeMessageForumRepository;
 use App\Repository\MembreRepository;
 use App\Repository\PaymentRepository;
 use App\Repository\QuizLostRepository;
@@ -220,9 +222,25 @@ class CoursesController extends AbstractController
     }
 
     #[Route('/course/{id}/like-forum-message', name: 'app_course_like_forum_message', methods: ['POST'])]
-    public function likeForumMessage(ForumMessage $forumMessage, Request $request, ForumMessageRepository $forumMessageRepository): Response
+    public function likeForumMessage(ForumMessage $forumMessage, Request $request, EntityManagerInterface $em, LikeMessageForumRepository $likeMessageForumRepository, ForumMessageRepository $forumMessageRepository, MembreRepository $membreRepository): Response
     {
-        $forumMessageRepository->save($forumMessage->setLikes($forumMessage->getLikes()+1), true);
+        $user = $this->getUser();
+        if ($user === null) {
+            throw $this->createAccessDeniedException("Vous n'êtes pas connecté");
+        }
+
+        $membre = $membreRepository->findOneBy(['user' => $user]);
+        if ($membre === null || !$membre->getForums()->contains($forumMessage->getSujet()->getForum())) {
+            throw $this->createAccessDeniedException("Action impossible !");
+        }
+
+        if ($likeMessageForumRepository->findOneBy(['membre' => $membre, 'forumMessage' => $forumMessage]) === null) {
+            $forumMessageRepository->save($forumMessage->setLikes($forumMessage->getLikes()+1));
+            $lmf = new LikeMessageForum();
+            $lmf->setMembre($membre)->setForumMessage($forumMessage);
+            $likeMessageForumRepository->save($lmf);
+            $em->flush();
+        }
         
         if (!$request->isXmlHttpRequest()) {
             return $this->redirectToRoute('app_front_course_forum_subject_message', ['slug' => $forumMessage->getSujet()->getForum()->getCours()->getSlug(), 'reference' => $forumMessage->getSujet()->getReference()]);

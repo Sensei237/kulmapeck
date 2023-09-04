@@ -8,8 +8,13 @@ use App\Entity\Payment;
 use App\Entity\PaymentMethod;
 use App\Repository\AbonnementItemRepository;
 use App\Repository\EleveRepository;
+use App\Repository\NetworkConfigRepository;
 use App\Repository\PaymentMethodRepository;
 use App\Repository\PaymentRepository;
+use App\Repository\UserRepository;
+use App\Utils\Keys;
+use App\Utils\ManageNetwork;
+use Doctrine\ORM\EntityManagerInterface;
 use PaymentUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +24,11 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/payment')]
 class paymentController extends AbstractController
 {
+    public function __construct(private Keys $keys)
+    {
+        
+    }
+
     #[Route('/', name: 'app_front_payment')]
     public function index(): Response
     {
@@ -28,7 +38,7 @@ class paymentController extends AbstractController
     }
 
     #[Route('/course/{slug}/buy', name: 'app_front_payment_buy_course', methods: ['GET', 'POST'])]
-    public function devenirPremiumOrByCourse(Cours $course, Request $request, PaymentMethodRepository $paymentMethodRepository, PaymentRepository $paymentRepository, EleveRepository $eleveRepository)
+    public function devenirPremiumOrByCourse(Cours $course, Request $request, UserRepository $userRepository, NetworkConfigRepository $networkConfigRepository, PaymentMethodRepository $paymentMethodRepository, PaymentRepository $paymentRepository, EleveRepository $eleveRepository, EntityManagerInterface $em)
     {
         // La fonction nécessite que l'on soit connecté et surtout qu'on soit élève
         $this->denyAccessUnlessGranted('ROLE_STUDENT');
@@ -42,18 +52,30 @@ class paymentController extends AbstractController
             if ($this->isCsrfTokenValid('payment' . $course->getId(), $request->request->get('_token'))) {
                 // En fonction de la methode de payment choisie on fait appel à l'API indiquée
                 $paymentMethod = $paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
-                if (PaymentUtil::initierPayment($course, $paymentMethod)) {
+                $reference = 'CO-' . (time() + rand(10000, 100000000000));
+                $apiResponse = PaymentUtil::initierPayment($eleve->getUtilisateur(), $course, $paymentMethod, $this->keys, $reference);
+                
+                if ($apiResponse['isPaied'] && isset($apiResponse['responseData']['payment_url']) && isset($apiResponse['responseData']['transaction_ref']) && isset($apiResponse['responseData']['status'])) {
                     $eleve->addCour($course);
                     $payment = new Payment();
                     $payment->setEleve($eleve)
                         ->setPaymentMethod($paymentMethod)
-                        ->setCours($course)->setPaidAt(new \DateTimeImmutable())
-                        ->setIsExpired(false)
-                        ->setAmount($course
-                        ->getMontantAbonnement())
-                        ->setReference('PAI-' . time() + rand(10000, 100000000000) + $payment->getId());
+                        ->setCours($course)
+                        ->setPaidAt(new \DateTimeImmutable())
+                        ->setIsExpired(true)
+                        ->setTransactionReference($apiResponse['responseData']['transaction_ref'])
+                        ->setStatus($apiResponse['responseData']['status'])
+                        ->setAmount($course->getMontantAbonnement())
+                        ->setReference($reference);
                     $paymentRepository->save($payment, true);
-                    $this->addFlash('success', "Votre paiement a été effectué !");
+                    $this->addFlash('success', "Votre paiement a été initié !");
+
+                    return $this->redirect($apiResponse['responseData']['payment_url']);
+
+                    $networkConfigs = $networkConfigRepository->findAll();
+                    if (!empty($networkConfigs)) {
+                        ManageNetwork::manage($eleve->getUtilisateur(), $networkConfigs[0], $userRepository, $em);
+                    }
 
                     return $this->redirectToRoute('app_front_course_details', ['slug' => $course->getSlug()]);
                 }
@@ -90,27 +112,33 @@ class paymentController extends AbstractController
             if ($this->isCsrfTokenValid('payment' . $abonnement->getId(), $request->request->get('_token'))) {
                 // En fonction de la methode de payment choisie on fait appel à l'API indiquée
                 $paymentMethod = $paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
-                if (PaymentUtil::initierPaymentPlan($abonnement, $paymentMethod)) {
-
+                $reference = 'AB-' . (time() + rand(10000, 100000000000));
+                $apiResponse = PaymentUtil::initierPaymentPlan($eleve->getUtilisateur(), $abonnement, $paymentMethod, $this->keys, $reference);
+                if ($apiResponse['isPaied'] && isset($apiResponse['responseData']['payment_url']) && isset($apiResponse['responseData']['transaction_ref']) && isset($apiResponse['responseData']['status'])) {
+                    
                     $payment = new Payment();
                     $today = date_format(new \DateTimeImmutable(), 'Y-m-d');
                     $expiredAt = strtotime($today . ' +' . $abonnement->getDuree() . ' day');
                     $payment->setEleve($eleve)
                         ->setAbonnement($abonnement)
-                        ->setIsExpired(false)
+                        ->setIsExpired(true)
                         ->setPaymentMethod($paymentMethod)
                         ->setReference(time()+$eleve->getId())
                         ->setAmount($abonnement->getMontant())
+                        ->setTransactionReference($apiResponse['responseData']['transaction_ref'])
+                        ->setStatus($apiResponse['responseData']['status'])
                         ->setExpiredAt(new \DateTimeImmutable(date('Y-m-d H:i:s', $expiredAt)));
                     
                     $paymentRepository->save($payment);
 
-                    $eleve->setIsPremium(true);
+                    $eleve->setIsPremium(false);
                     
                     $eleveRepository->save($eleve, true);
-                    $this->addFlash('success', "Votre paiement a été effectué !");
+                    $this->addFlash('success', "Votre paiement a été initié !");
 
-                    return $this->redirectToRoute('app_home');
+                    return $this->redirect($apiResponse['responseData']['payment_url']);
+
+                    // return $this->redirectToRoute('app_home');
                 }
 
                 throw $this->createAccessDeniedException("Impossible d'effectuer le paiement !");

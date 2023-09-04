@@ -35,6 +35,10 @@
 
 {% endblock %}
 
+{% block headJS %}
+    <script src="{{ asset('bundles/ckeditor_wiris/integration/WIRISplugins.js') }}?viewer=image"></script>
+{% endblock %}
+
 {% block script %}
     <script>
         $('#newForumMessageForm, #replyForumMessage form, #newForumSubjectFormContainer form').on('submit', function(e){

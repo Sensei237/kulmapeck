@@ -31,11 +31,15 @@ class Membre
     #[Groups(['read:sujet:collection', 'read:sujet:item', 'read:forum:messsage:collection'])]
     private ?User $utilisateur = null;
 
+    #[ORM\OneToMany(mappedBy: 'membre', targetEntity: LikeMessageForum::class, orphanRemoval: true)]
+    private Collection $likeMessageForums;
+
     public function __construct()
     {
         $this->forums = new ArrayCollection();
         $this->forumMessages = new ArrayCollection();
         $this->sujets = new ArrayCollection();
+        $this->likeMessageForums = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -135,6 +139,36 @@ class Membre
     public function setUtilisateur(User $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LikeMessageForum>
+     */
+    public function getLikeMessageForums(): Collection
+    {
+        return $this->likeMessageForums;
+    }
+
+    public function addLikeMessageForum(LikeMessageForum $likeMessageForum): static
+    {
+        if (!$this->likeMessageForums->contains($likeMessageForum)) {
+            $this->likeMessageForums->add($likeMessageForum);
+            $likeMessageForum->setMembre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLikeMessageForum(LikeMessageForum $likeMessageForum): static
+    {
+        if ($this->likeMessageForums->removeElement($likeMessageForum)) {
+            // set the owning side to null (unless already changed)
+            if ($likeMessageForum->getMembre() === $this) {
+                $likeMessageForum->setMembre(null);
+            }
+        }
 
         return $this;
     }
