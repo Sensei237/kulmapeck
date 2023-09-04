@@ -50,7 +50,7 @@ class HomeController extends AbstractController
         $categories = $categorieRepository->findAll();
         $paymentsMethods = $paymentMethodRepository->findAll();
 
-        for ($i = 0; $i < 200; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $cours = new Cours();
             $intitule = $faker->sentence(6);
             $media = new Media();

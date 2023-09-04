@@ -56,18 +56,17 @@ class ManageNetwork
             
             $nombreDePoint = ($nombreDePoint * $pourcentage) / 100;
 
-            $nombreDePoint = $parent->getUtilisateur()->getPoints() + $nombreDePoint;
+            $newNombreDePoint = $parent->getUtilisateur()->getPoints() + $nombreDePoint;
 
-            $parent->getUtilisateur()->setPoints($nombreDePoint);
+            $parent->getUtilisateur()->setPoints($newNombreDePoint);
 
-            $especes = $nombreDePoint * $networkConfig->getTauxDeChange();
+            $especes = $newNombreDePoint * $networkConfig->getTauxDeChange();
             $parent->getUtilisateur()->setEspeces($especes);
 
             $userRepository->save($parent->getUtilisateur());
 
             $personne = $personne->getParent();
             $cmp++;
-
         }
 
         $em->flush();
@@ -127,7 +126,7 @@ class ManageNetwork
         }else {
             return [
                 'hasDone' => false,
-                'message' => "Une erreur est survenue.",
+                'message' => "Une erreur est survenue. Impossible de poursuivre l'opération. Reessayz plus tard SVP !",
                 'response' => $response,
                 'responseData' =>  null,
             ];

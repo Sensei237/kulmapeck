@@ -43,6 +43,7 @@ final class MobileApiService
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        dd($response);
 
         if (curl_errno($ch)) {
             $error = curl_error($ch);
@@ -94,12 +95,11 @@ final class MobileApiService
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
         curl_close($ch);
 
         $responseData = json_decode($response, true);
 
-        if ($httpCode === 201) {
+        if ($httpCode === 202) {
             return ['responseData' => $responseData, 'error' => false];
         } else {
             return ['responseData' => $responseData, 'error' => true];

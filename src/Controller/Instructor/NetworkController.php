@@ -63,8 +63,8 @@ class NetworkController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $reference = 'RT-' . (time() + rand(1000, 1000000000000));
             $response = ManageNetwork::convertInMoney($enseignant->getUtilisateur(), $retrait->getMontant(), $retrait->getNumeroTelephone(), $networkConfig, $userRepository, $this->keys, $reference);
-            
-            if ($response['hasDone']) {
+            // dd($response);
+            if (!$response['hasDone']) {
                 $this->addFlash('success', $response['message']);
             
                 return $this->redirectToRoute('app_instructor_network_retrait');
