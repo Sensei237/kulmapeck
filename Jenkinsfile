@@ -5,7 +5,7 @@ pipeline {
         FTP_SERVER = 'ftp.kulmapeck.com'
         FTP_USER = 'kulma2146700'
         FTP_PASSWORD = 'sP2*9sB4s96XUz$'
-        REMOTE_DIRECTORY = 'CICD'
+        REMOTE_DIRECTORY = '/CICD'
     }
 
     stages {
