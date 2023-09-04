@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         FTP_SERVER = 'vps96969.serveur-vps.net'
-        FTP_USER = 'defaultBenito'
+        FTP_USER = 'defaultbenito'
         FTP_PASSWORD = 'Benito@2000'
         REMOTE_DIRECTORY = '/CICD'
     }
@@ -41,14 +41,14 @@ pipeline {
 
        stage('Zip project') {
           steps {
-        powershell 'Compress-Archive -Path .\\* -DestinationPath deployments.zip'
+        powershell 'Compress-Archive -Path .\\* -DestinationPath deploy.zip'
            }
        }
 
 
         stage('Deployment FTP and push to Lws Server') {
             steps {
-                bat "curl --ftp-create-dirs -T deployments.zip -u ${FTP_USER}:${FTP_PASSWORD} ftp://${FTP_SERVER}${REMOTE_DIRECTORY}/"
+                bat "curl --ftp-create-dirs -T deploy.zip -u ${FTP_USER}:${FTP_PASSWORD} ftp://${FTP_SERVER}${REMOTE_DIRECTORY}/"
             }
         }
 
