@@ -41,14 +41,14 @@ pipeline {
 
        stage('Zip project') {
           steps {
-        powershell 'Compress-Archive -Path .\\* -DestinationPath deployment.zip'
+        powershell 'Compress-Archive -Path .\\* -DestinationPath deployments.zip'
            }
        }
 
 
         stage('Deployment FTP and push to Lws Server') {
             steps {
-                bat "curl --ftp-create-dirs -T deployment.zip -u ${FTP_USER}:${FTP_PASSWORD} ftp://${FTP_SERVER}${REMOTE_DIRECTORY}/"
+                bat "curl --ftp-create-dirs -T deployments.zip -u ${FTP_USER}:${FTP_PASSWORD} ftp://${FTP_SERVER}${REMOTE_DIRECTORY}/"
             }
         }
 
