@@ -41,7 +41,8 @@ pipeline {
 
         stage('Zip project') {
             steps {
-                bat 'zip -r deployment.zip .'
+                bat 'Compress-Archive -Path .\* -DestinationPath deployment.zip
+'
             }
         }
 
@@ -51,11 +52,7 @@ pipeline {
             }
         }
 
-         stage('Rmmove Zip project') {
-            steps {
-                bat 'rm deployment.zip '
-            }
-        }
+        
 
     }
 }
