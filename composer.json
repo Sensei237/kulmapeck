@@ -9,7 +9,6 @@
         "ext-iconv": "*",
         "api-platform/core": "^3.1",
         "beberlei/doctrineextensions": "dev-master",
-        "ckeditor/ckeditor": "*",
         "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/doctrine-migrations-bundle": "^3.2",
@@ -88,8 +87,7 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "elfinder:install": "symfony-cmd"
+            "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"

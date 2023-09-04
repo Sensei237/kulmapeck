@@ -69,7 +69,7 @@
             "ref": "f5ad42002183a6881962683e6d84bbb25cdfce5d"
         },
         "files": [
-            "config/packages/fos_ckeditor.yaml"
+            "./config/packages/fos_ckeditor.yaml"
         ]
     },
     "friendsofsymfony/jsrouting-bundle": {

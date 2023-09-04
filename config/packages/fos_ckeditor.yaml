@@ -10,12 +10,7 @@ fos_ck_editor:
             toolbar: my_toolbar_1
             filebrowserBrowseRoute: elfinder
             filebrowserBrowseRouteParameters: []
-            extraPlugins: "ckeditor_wiris"
     toolbars:
         configs:
             my_toolbar_1: [ [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ], [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ], [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ], [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ], [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat' ], [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ], [ 'Link', 'Unlink', 'Anchor' ], [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ], [ 'Styles', 'Format', 'Font', 'FontSize' ], [ 'TextColor', 'BGColor' ], [ 'Maximize', 'ShowBlocks' ], [ "ckeditor_wiris_formulaEditor", "ckeditor_wiris_formulaEditorChemistry" ]  ]
             my_toolbar_2: [ [ "Source" ], "/", [ "Anchor" ], "/", [ "Maximize" ] ]
-    plugins:
-        ckeditor_wiris:
-            path:     "/bundles/ckeditor_wiris/" # with trailing slash
-            filename: "plugin.js"
