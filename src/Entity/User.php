@@ -101,7 +101,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $likes;
 
     #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    private ?bool $isVerified = false;
 
     #[Groups(['post:user:item'])]
     public ?string $parentCode = null;
@@ -148,6 +148,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->filieres = new ArrayCollection();
         $this->retraits = new ArrayCollection();
         $this->especes = 0;
+        $this->points = 0;
+        $this->isBlocked = false;
+        $this->isVerified = false;
+        $this->isAdmin = false;
     }
 
     public function getId(): ?int

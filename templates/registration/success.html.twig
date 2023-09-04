@@ -1,0 +1,50 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Confirmation de création de compte !{% endblock %}
+
+{# {% block header %}{% endblock %}
+
+{% block footer %}{% endblock %} #}
+
+{% block mainContent %}
+
+<section class="pt-4 pt-sm-5">
+<div class="container">
+    <div class="row g-4 g-md-5 justify-content-between">
+
+        <div class="col-lg-12 mb-5">
+            {% if not activatedConfirmation is defined or activatedConfirmation is null  %}
+                <div>
+                    <h3 class="mb-5 mt-3 text-white text-center">Confirmation de création de compte !</h3>
+                    <p>
+                        Félicitation ! 
+                    </p>
+                    <p>
+                        Nous vous informons que votre compte a été créé avec succès. <br>
+                        Pour confirmer la creation de compte, veuillez cliquer sur le lien qui vous a
+                        été envoyé par mail.
+                    </p>
+                    <p>
+                        Une fois que vous aurez cliqué sur le lien, votre compte sera activé et vous 
+                        pourrez vous connecter.
+                    </p>
+                </div>
+            {% else %}
+            <div>
+                <h3 class="mb-5 mt-3 text-white text-center">Confirmation : compte activé</h3>
+                <p>
+                    Félicitation ! 
+                </p>
+                <p>
+                    Votre compte a bien été activé. Vous pouvez dès lors vous connecter et profiter de 
+                    notre plateforme.
+                </p>
+                <p>Merci de votre confiance et surtout bonne lecture.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</section>
+
+{% endblock %}

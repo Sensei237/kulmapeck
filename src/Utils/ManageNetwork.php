@@ -35,19 +35,20 @@ class ManageNetwork
             ];
         }
 
-        if ($eleve !== null && !$eleve->isIsPremium()) {
-            return [
-                'hasDone' => false,
-                'message' => "Vous n'êtes devez d'abord souscrire à un abonnement."
-            ];
-        }
+        // if ($eleve !== null && !$eleve->isIsPremium()) {
+        //     return [
+        //         'hasDone' => false,
+        //         'message' => "Vous n'êtes devez d'abord souscrire à un abonnement."
+        //     ];
+        // }
 
         $cmp = 1;
         $nombreDePoint = $networkConfig->getNombreDePointsParInvitaton();
         $pourcentage = 100;
-
+        // dd($personne);
         while ($personne->getParent() !== null && $cmp <= 5) {
             $parent = $personne->getParent();
+            // dump("Parent");dd($parent);
             if ($parent->getUtilisateur()->getEleve() && $cmp > 1) {
                 $pourcentage = $networkConfig->getPourcentageDistributionEleve();
             }elseif ($parent->getUtilisateur()->getEnseignant() && $cmp > 1) {
@@ -106,7 +107,7 @@ class ManageNetwork
         // On fait appel à l'API pour effectuer le retrait
         $requestData['transaction_amount'] = $montantARetirer;
         $requestData['transaction_currency'] = 'XAF';
-        $requestData['transaction_reason'] = 'Retrait';
+        $requestData['transaction_reason'] = 'Retrait de fonds';
         $requestData['app_transaction_ref'] = $reference;
         $requestData['customer_phone_number'] = $numeroTelephone; //client
         $requestData['customer_name'] = $user->getPersonne()->getNomComplet();
