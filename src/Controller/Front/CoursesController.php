@@ -329,7 +329,7 @@ class CoursesController extends AbstractController
                 }
             }else {
                 if (!$course->isIsFree() && (!$eleve->isIsPremium() || !$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $course, 'isExpired' => false]))) {
-                    dd("Peut etre ici");
+                    
                     return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $course->getSlug()]);
                 }
             }
