@@ -41,7 +41,7 @@ pipeline {
 
        stage('Zip project') {
           steps {
-              powershell('Compress-Archive -Path .\* -DestinationPath deployment.zip')
+        powershell 'Compress-Archive -Path .\\* -DestinationPath deployment.zip'
            }
        }
 
