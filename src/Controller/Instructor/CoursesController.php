@@ -2,18 +2,13 @@
 
 namespace App\Controller\Instructor;
 
-use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Chapitre;
 use App\Entity\Cours;
 use App\Entity\FAQ;
-use App\Entity\Forum;
 use App\Entity\Lesson;
 use App\Entity\Notification;
-use App\Entity\NotificationType;
 use App\Entity\Quiz;
-use App\Entity\User;
 use App\Form\CoursType;
-use App\Form\FAQType;
 use App\Form\LessonFormType;
 use App\Form\QuizType;
 use App\Repository\ChapitreRepository;
@@ -27,6 +22,7 @@ use App\Repository\QuizRepository;
 use App\Repository\UserRepository;
 use App\Service\FileUploader;
 use App\Utils\NotificationCodes;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

@@ -13,6 +13,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -179,8 +180,7 @@ class CoursType extends AbstractType
                     'data-placeholder-Val' => "Enter tags", 
                     'data-max-item-count' => "14", 
                     'data-remove-item-button' => "true"
-                ],
-                'required' => false,
+                ]
             ])
             ->add('paymentMethods', EntityType::class, [
                 'class' => PaymentMethod::class,
@@ -195,7 +195,6 @@ class CoursType extends AbstractType
                 'label_attr' => [
                     'class' => 'form-label'
                 ],
-                'required' => false,
             ])
             ->add('skillLevel', EntityType::class, [
                 'class' => SkillLevel::class,

@@ -325,7 +325,6 @@ class CoursesController extends AbstractController
                     
                 }else {
                     // On lui demande de soit ajouter payer le cours soit devenir premium
-                    dd("C'est ici");
                     return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $course->getSlug()]);
                 }
             }else {

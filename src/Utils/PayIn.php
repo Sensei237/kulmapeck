@@ -153,7 +153,6 @@ class PayIn
             "customer_lang" => $this->customerLang,
             "transaction_receiver" => $this->transaction_receiver,
             "transaction_operator" => $this->number_operator
-
         ];
 
         return json_encode($data);

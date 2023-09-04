@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use ApiPlatform\OpenApi\Model\Response;
+use App\Repository\EleveRepository;
 use App\Repository\PaymentRepository;
 use App\Repository\RetraitRepository;
 use App\Utils\Keys;
@@ -170,7 +171,7 @@ class PaymentControllers extends AbstractController
      * elle est exécutée automatiquement par le serveur distant à intervalle regulier de 5 min
      */
     #[Route('/callback', name: 'app_payment_callback', methods: 'GET')]
-    public function handleCallback(Request $request, PaymentRepository $paymentRepository, RetraitRepository $retraitRepository)
+    public function handleCallback(Request $request, EleveRepository $eleveRepository, PaymentRepository $paymentRepository, RetraitRepository $retraitRepository)
     {
         // Check if Kulmapeck  sender's IP address
         $senderIp = $request->getClientIp();
@@ -187,7 +188,12 @@ class PaymentControllers extends AbstractController
 
         $payment = $paymentRepository->findOneBy(['transactionReference' => $transactionRef]);
         if ($payment !== null) {
-            $payment->setStatus($status);
+            $payment->setStatus($status)
+                ->setIsExpired(false);
+            if ($payment->getAbonnement() !== null) {
+                $payment->getEleve()->setIsPremium(true);
+                $eleveRepository->save($payment->getEleve());
+            }
             $paymentRepository->save($payment, true);
         }else {
             $retrait = $retraitRepository->findOneBy(['transactionReference' => $transactionRef]);
