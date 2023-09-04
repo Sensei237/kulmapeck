@@ -14,28 +14,7 @@
 			<div class="container">
 				<div class="row g-4 g-md-5 justify-content-between">
 
-					<!-- Content START -->
-					<div class="col-lg-6 mb-5 mb-lg-0">
-						<!-- Title -->
-						<h1>Create un account</h1>
-						<p class="mb-5">Let's find out the demo. The 1-hour demo will provide Happiness prosperous impression had conviction For every delay in their Extremity now, strangers</p>
-						
-						<!-- Sub tittle -->
-						<h4 class="mb-3">What you will get inside ?</h4>
-						<!-- List -->
-						<ul class="list-group list-group-borderless mt-3 mb-sm-5">
-							<li class="list-group-item h6 fw-light d-flex"><i class="fas fa-check-circle fa-fw text-success me-2"></i>An overview of the platform and its features</li>
-							<li class="list-group-item h6 fw-light d-flex"><i class="fas fa-check-circle fa-fw text-success me-2"></i>Share few success stories with you</li>
-							<li class="list-group-item h6 fw-light d-flex"><i class="fas fa-check-circle fa-fw text-success me-2"></i>Actionable learning functionality</li>
-							<li class="list-group-item h6 fw-light d-flex"><i class="fas fa-check-circle fa-fw text-success me-2"></i>No communication gap</li>
-							<li class="list-group-item h6 fw-light d-flex"><i class="fas fa-check-circle fa-fw text-success me-2"></i>Better addressable of group level issue</li>
-							<li class="list-group-item h6 fw-light d-flex"><i class="fas fa-check-circle fa-fw text-success me-2"></i>Unlimited access to 5K+ Courses</li>
-						</ul>
-
-					</div>
-					<!-- Content END -->
-
-					<div class="col-lg-6 mb-5">
+					<div class="col-lg-12 mb-5">
 						<div class="bg-dark rounded-3 p-4 p-sm-5 position-relative">
 
 							<!-- SVG decoration -->
@@ -116,9 +95,16 @@
 							</div>
 
 							<!-- Title -->
-							<h3 class="mb-3 text-white">Fill out the form below</h3>
-							
-							<div style="max-height: 450px; overflow: auto;" class="p-4 custom-scrollbar">
+							<h1 class="mb-3 mt-3 text-white text-center">Create un account</h1>
+							<p class="mb-2">
+								Créer votre compte en remplissant correctement le formulaire ci-dessous. 
+								Pensez à remplir tous les champs obligatoires. Ne communiquez pas votre mot
+								de passe
+							</p>
+							<div class="alert alert-info">
+								<p>Une fois votre compte créé, un mail vous sera envoyé pour activer votre compte en confirmant votre adresse mail.</p>
+							</div>
+							<div class="p-4 custom-scrollbar">
 								{{ include('registration/_form.html.twig') }}
 							</div>
 

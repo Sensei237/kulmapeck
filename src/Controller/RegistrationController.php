@@ -35,7 +35,9 @@ class RegistrationController extends AbstractController
         $userType = $request->get('type');
 
         $user = new User();
-        $user->parentCode = $request->get('invitation');
+        if ($request->query->get('invitation')) {
+            $user->parentCode = $request->query->get('invitation');
+        }
         $accountType = 0;
 
         if (strtolower($userType) === 'student') {
@@ -94,9 +96,8 @@ class RegistrationController extends AbstractController
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
-            $this->addFlash('success', "Un lien a été envoyer dans votre adresse mail pour activer votre compte");
 
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_registration_success');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -106,36 +107,43 @@ class RegistrationController extends AbstractController
         ]);
     }
 
+    #[Route('/registration/success', name: 'app_registration_success')]
+    public function confirmation(Request $request)
+    {
+        return $this->render('registration/success.html.twig', ['activatedConfirmation' => $request->query->get('activated')]);
+    }
+
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, UserRepository $userRepository, TranslatorInterface $translator, NetworkConfigRepository $networkConfigRepository, EntityManagerInterface $entityManager): Response
     {
+        
         $user = $this->getUser();
         if ($user === null) {
             $id = $request->query->get('id');
             $user = $userRepository->find($id);
         }
-        
+        // dd($user);
         if ($user === null) {
             return $this->redirectToRoute('app_home');
         }
         
         try {
-            $this->emailVerifier->handleEmailConfirmation($request, $user);
+            $user = $this->emailVerifier->handleEmailConfirmation($request, $user);
+            // dd("ICI 2");
         } catch (VerifyEmailExceptionInterface $exception) {
+            dd($exception->getReason());
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
-            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('app_login');
         }
-
+        // dd("ICI 3");
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        // if ($user instanceof User) {
-        //     if ($user->getEnseignant()) {
-                ManageNetwork::manage($user, $networkConfigRepository->findOneBy([]), $userRepository, $entityManager);
-        //     }
-        // }
+        ManageNetwork::manage($user, $networkConfigRepository->findOneBy([]), $userRepository, $entityManager);
 
-        return $this->redirectToRoute('app_home');
+        // dd("ICI 4");
+
+        return $this->redirect($this->generateUrl('app_registration_success').'?activated=activated');
     }
 
     private function uploadImagesFiles(User $user, FileUploader $fileUploader, $path = 'images/enseignants/kyc')
