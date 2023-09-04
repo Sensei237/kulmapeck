@@ -41,8 +41,7 @@ pipeline {
 
         stage('Zip project') {
             steps {
-                bat 'Compress-Archive -Path .\* -DestinationPath deployment.zip
-'
+                bat 'Compress-Archive -Path .\* -DestinationPath deployment.zip'
             }
         }
 
