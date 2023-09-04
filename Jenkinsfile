@@ -39,11 +39,12 @@ pipeline {
             }
         }
 
-        stage('Zip project') {
-            steps {
-                bat 'Compress-Archive -Path .\* -DestinationPath deployment.zip'
-            }
-        }
+       stage('Zip project') {
+          steps {
+              powershell('Compress-Archive -Path .\* -DestinationPath deployment.zip')
+           }
+       }
+
 
         stage('Deployment FTP and push to Lws Server') {
             steps {
