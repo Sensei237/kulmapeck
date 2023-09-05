@@ -27,9 +27,9 @@ pipeline {
             } 
         }
 
-        stage('Clear symfony cache') {
+        stage('Clear Symfony Cache') {
             steps {
-                bat 'php bin/console cache:clear'
+                sh 'php bin/console cache:clear --env=prod'
             }
         }
 
