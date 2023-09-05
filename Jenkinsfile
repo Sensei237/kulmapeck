@@ -41,14 +41,27 @@ pipeline {
 
        stage('Zip project') {
           steps {
-        powershell 'Compress-Archive -Path .\\* -DestinationPath deploy.zip'
+        powershell 'Compress-Archive -Path .\\* -DestinationPath depl.zip'
            }
        }
 
 
         stage('Deployment FTP and push to Lws Server') {
             steps {
-                bat "curl --ftp-create-dirs -T deploy.zip -u ${FTP_USER}:${FTP_PASSWORD} ftp://${FTP_SERVER}${REMOTE_DIRECTORY}/"
+                bat "curl --ftp-create-dirs -T depl.zip -u ${FTP_USER}:${FTP_PASSWORD} ftp://${FTP_SERVER}${REMOTE_DIRECTORY}/"
+            }
+        }
+
+        stage('Decompress project on remote server') {
+            steps {
+                // Use curl or any other appropriate method to decompress the uploaded ZIP file on the remote server
+                bat "ssh ${FTP_USER}@${FTP_SERVER} 'unzip -o ${REMOTE_DIRECTORY}/depl.zip -d ${REMOTE_DIRECTORY}'"
+                
+                // Remove the ZIP file on the remote server
+                bat "ssh ${FTP_USER}@${FTP_SERVER} 'rm ${REMOTE_DIRECTORY}/depl.zip'"
+                
+                // Remove the ZIP file locally
+                bat 'rm depl.zip'
             }
         }
 
