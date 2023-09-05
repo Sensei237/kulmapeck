@@ -41,7 +41,9 @@ pipeline {
 
        stage('Zip project') {
           steps {
-        powershell 'Compress-Archive -Path .\\* -DestinationPath depl.zip'
+            bat 'rm depl.zip'
+
+            powershell 'Compress-Archive -Path .\\* -DestinationPath depl.zip'
            }
        }
 
@@ -61,7 +63,6 @@ pipeline {
                 bat "ssh ${FTP_USER}@${FTP_SERVER} 'rm ${REMOTE_DIRECTORY}/depl.zip'"
                 
                 // Remove the ZIP file locally
-                bat 'rm depl.zip'
             }
         }
 
