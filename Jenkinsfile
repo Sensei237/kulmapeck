@@ -5,7 +5,7 @@ pipeline {
         FTP_SERVER = 'vps96969.serveur-vps.net'
         FTP_USER = 'defaultpayment'
         FTP_PASSWORD = 'Benito@2000'
-        REMOTE_DIRECTORY = '/CICD/'
+        REMOTE_DIRECTORY = '/var/www/clients/client0/web16/CICD/'
     }
 
     stages {
@@ -29,7 +29,7 @@ pipeline {
 
         stage('Clear Symfony Cache') {
             steps {
-                sh 'php bin/console cache:clear --env=prod'
+                bat 'php bin/console cache:clear --env=prod'
             }
         }
 
