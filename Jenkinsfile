@@ -41,7 +41,7 @@ pipeline {
 
        stage('Zip project') {
           steps {
-            bat 'rm depl.zip'
+            bat 'del depl.zip'
 
             powershell 'Compress-Archive -Path .\\* -DestinationPath depl.zip'
            }
