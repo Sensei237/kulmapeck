@@ -5,7 +5,7 @@ pipeline {
         FTP_SERVER = 'vps96969.serveur-vps.net'
         FTP_USER = 'defaultpayment'
         FTP_PASSWORD = 'Benito@2000'
-        REMOTE_DIRECTORY = '/CICD'
+        REMOTE_DIRECTORY = '/web/CICD'
     }
 
     stages {
