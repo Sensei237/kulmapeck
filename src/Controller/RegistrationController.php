@@ -139,7 +139,7 @@ class RegistrationController extends AbstractController
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        ManageNetwork::manage($user, $networkConfigRepository->findOneBy([]), $userRepository, $entityManager);
+        // ManageNetwork::manage($user, $networkConfigRepository->findOneBy([]), $userRepository, $entityManager);
 
         // dd("ICI 4");
 

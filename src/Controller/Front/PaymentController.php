@@ -72,12 +72,12 @@ class PaymentController extends AbstractController
 
                     return $this->redirect($apiResponse['responseData']['payment_url']);
 
-                    $networkConfigs = $networkConfigRepository->findAll();
-                    if (!empty($networkConfigs)) {
-                        ManageNetwork::manage($eleve->getUtilisateur(), $networkConfigs[0], $userRepository, $em);
-                    }
+                    // $networkConfigs = $networkConfigRepository->findAll();
+                    // if (!empty($networkConfigs)) {
+                    //     ManageNetwork::manage($eleve->getUtilisateur(), $networkConfigs[0], $userRepository, $em);
+                    // }
 
-                    return $this->redirectToRoute('app_front_course_details', ['slug' => $course->getSlug()]);
+                    // return $this->redirectToRoute('app_front_course_details', ['slug' => $course->getSlug()]);
                 }
 
                 throw $this->createAccessDeniedException("Impossible d'effectuer le paiement !");
@@ -134,7 +134,7 @@ class PaymentController extends AbstractController
                     $eleve->setIsPremium(false);
                     
                     $eleveRepository->save($eleve, true);
-                    $this->addFlash('success', "Votre paiement a été initié !");
+                    // $this->addFlash('success', "Votre paiement a été initié !");
 
                     return $this->redirect($apiResponse['responseData']['payment_url']);
 
