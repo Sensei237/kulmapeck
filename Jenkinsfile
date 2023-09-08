@@ -6,6 +6,11 @@ pipeline {
         FTP_USER = '2146700mi44Et'
         FTP_PASSWORD = 'Staging@2023'
         REMOTE_DIRECTORY = ''
+
+        FTP_SERVER_Prod = 'vps96969.serveur-vps.net'
+        FTP_USER_Prod = 'defaultpayment'
+        FTP_PASSWORD_Prod = 'Benito@2000'
+        REMOTE_DIRECTORY_Prod = '/web/CICD'
     }
 
     stages {
