@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        FTP_SERVER = 'vps96969.serveur-vps.net'
-        FTP_USER = 'defaultpayment'
-        FTP_PASSWORD = 'Benito@2000'
-        REMOTE_DIRECTORY = '/web/CICD'
+        FTP_SERVER = 'ftp.kulmapeck.com'
+        FTP_USER = '2146700mi44Et'
+        FTP_PASSWORD = 'Staging@2023'
+        REMOTE_DIRECTORY = ''
     }
 
     stages {
