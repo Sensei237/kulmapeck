@@ -12,11 +12,11 @@ use App\Utils\Keys;
 class PaymentUtil
 {
     
-    public static function initierPaymentPlan(User $user, Abonnement $abonnement, ?PaymentMethod $paymentMethod, Keys $keys, string $referencePayment): array
+    public static function initierPaymentPlan(User $user, Abonnement $abonnement, ?PaymentMethod $paymentMethod, Keys $keys, string $referencePayment, string $phoneNumber): array
     {
         $isPaied = false;
 
-        $numeroTelephone = $user->getPersonne()->getTelephone();
+        $numeroTelephone = $phoneNumber;
 
         $requestData['transaction_amount'] = $abonnement->getMontant();
         $requestData['transaction_currency'] = 'XAF';

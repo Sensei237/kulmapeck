@@ -45,7 +45,7 @@ class PaymentController extends AbstractController
 
         $eleve = $eleveRepository->findOneBy(['utilisateur' => $this->getUser()]);
         if ($eleve === null) {
-            throw $this->createAccessDeniedException();
+            throw $this->createAccessDeniedException("Vous devez être élève !");
         }
 
         if ($request->request->get('initiate_payment')) {
@@ -113,7 +113,8 @@ class PaymentController extends AbstractController
                 // En fonction de la methode de payment choisie on fait appel à l'API indiquée
                 $paymentMethod = $paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
                 $reference = 'AB-' . (time() + rand(10000, 100000000000));
-                $apiResponse = PaymentUtil::initierPaymentPlan($eleve->getUtilisateur(), $abonnement, $paymentMethod, $this->keys, $reference);
+                $phoneNumber = $request->request->get('phone');
+                $apiResponse = PaymentUtil::initierPaymentPlan($eleve->getUtilisateur(), $abonnement, $paymentMethod, $this->keys, $reference, $phoneNumber);
                 if ($apiResponse['isPaied'] && isset($apiResponse['responseData']['payment_url']) && isset($apiResponse['responseData']['transaction_ref']) && isset($apiResponse['responseData']['status'])) {
                     
                     $payment = new Payment();
