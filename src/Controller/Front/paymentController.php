@@ -5,6 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\Abonnement;
 use App\Entity\Cours;
 use App\Entity\Payment;
+use App\Entity\PaymentMethod;
 use App\Repository\AbonnementItemRepository;
 use App\Repository\EleveRepository;
 use App\Repository\NetworkConfigRepository;
@@ -12,6 +13,7 @@ use App\Repository\PaymentMethodRepository;
 use App\Repository\PaymentRepository;
 use App\Repository\UserRepository;
 use App\Utils\Keys;
+use App\Utils\ManageNetwork;
 use Doctrine\ORM\EntityManagerInterface;
 use PaymentUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,11 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/payment')]
 class PaymentController extends AbstractController
 {
-    public function __construct(private Keys $keys)
-    {
-        
-    }
-
+   
     #[Route('/', name: 'app_front_payment')]
     public function index(): Response
     {
@@ -51,7 +49,7 @@ class PaymentController extends AbstractController
                 // En fonction de la methode de payment choisie on fait appel à l'API indiquée
                 $paymentMethod = $paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
                 $reference = 'CO-' . (time() + rand(10000, 100000000000));
-                $apiResponse = \App\Utils\PaymentUtil::initierPayment($eleve->getUtilisateur(), $course, $paymentMethod, $this->keys, $reference);
+                $apiResponse = PaymentUtil::initierPayment($eleve->getUtilisateur(), $course, $paymentMethod, $this->keys, $reference);
                 // dd($apiResponse);
                 if ($apiResponse['isPaied'] && isset($apiResponse['responseData']['payment_url']) && isset($apiResponse['responseData']['transaction_ref']) && isset($apiResponse['responseData']['status'])) {
                     $eleve->addCour($course);
@@ -111,7 +109,7 @@ class PaymentController extends AbstractController
                 // En fonction de la methode de payment choisie on fait appel à l'API indiquée
                 $paymentMethod = $paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
                 $reference = 'AB-' . (time() + rand(10000, 100000000000));
-                $apiResponse = \App\Utils\PaymentUtil::initierPaymentPlan($eleve->getUtilisateur(), $abonnement, $paymentMethod, $this->keys, $reference);
+                $apiResponse = PaymentUtil::initierPaymentPlan($eleve->getUtilisateur(), $abonnement, $paymentMethod, $this->keys, $reference);
                 if ($apiResponse['isPaied'] && isset($apiResponse['responseData']['payment_url']) && isset($apiResponse['responseData']['transaction_ref']) && isset($apiResponse['responseData']['status'])) {
                     
                     $payment = new Payment();
