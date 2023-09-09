@@ -11,6 +11,10 @@ class Utils {
         
         // Check the cleaned number's length
         if (strlen($cleanedNumber) !== 9) {
+            return [
+                'hasError' => true,
+                'message' => 'Le numero de telophone doit faire 9 caracteres'
+            ];
             throw new \InvalidArgumentException('Number length must be at least 9 digits');
         }
         
@@ -23,10 +27,24 @@ class Utils {
         
         // Check the prefix and return the appropriate value
         if (in_array($prefix, $cmOmPrefixes)) {
+            return [
+                'hasError' => false,
+                'message' => null,
+                'code' => 'CM_OM'
+            ];
             return 'CM_OM';
         } elseif (in_array($prefix, $cmMomoPrefixes)) {
+            return [
+                'hasError' => false,
+                'message' => null,
+                'code' => 'CM_MOMO'
+            ];
             return 'CM_MOMO';
         } else {
+            return [
+                'hasError' => true,
+                'message' => 'Operateur non reconnu'
+            ];
             throw new \InvalidArgumentException('Invalid number prefix');
         }
     }

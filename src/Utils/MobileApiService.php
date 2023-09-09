@@ -20,6 +20,11 @@ final class MobileApiService
             'Content-Type: application/json',
             'X-PRIVATE-KEY: ' . $privateKey,
         ];
+
+        $checkNumber = Utils::checkNumberOperator($requestData['customer_phone_number']);
+        if ($checkNumber['hasError']) {
+            return ['responseData' => null, 'error' => true, 'message' => $checkNumber['message']]; 
+        }
         // Create a PayOut object using the constructor
         $payOut = new PayOut(
             $requestData['transaction_amount'],
@@ -29,7 +34,7 @@ final class MobileApiService
             $requestData['customer_phone_number'], //client
             $requestData['customer_name'],
             $requestData['customer_email'],
-            Utils::checkNumberOperator($requestData['customer_phone_number']),
+            $checkNumber['code'],
             $requestData['customer_lang'],
             $requestData['transaction_receiver'], //client
 
@@ -44,7 +49,6 @@ final class MobileApiService
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        dd($response);
 
         if (curl_errno($ch)) {
             $error = curl_error($ch);
@@ -55,10 +59,10 @@ final class MobileApiService
         $responseData = json_decode($response, true);
 
         if ($httpCode === 201) {
-            return ['responseData' => $responseData, 'error' => false];
+            return ['responseData' => $responseData, 'error' => false, 'message' => 'done'];
 
         } else {
-            return ['responseData' => $responseData, 'error' => true];
+            return ['responseData' => $responseData, 'error' => true, 'message' => null];
         }
 
     }
@@ -73,6 +77,12 @@ final class MobileApiService
             'Content-Type: application/json',
             'X-PRIVATE-KEY: ' . $privateKey,
         ];
+
+        $checkNumber = Utils::checkNumberOperator($requestData['customer_phone_number']);
+        if ($checkNumber['hasError']) {
+            return ['responseData' => null, 'error' => true, 'message' => $checkNumber['message']]; 
+        }
+
         // Create a PayOut object using the constructor
         $payOut = new PayIn(
             $requestData['transaction_amount'],
@@ -84,7 +94,7 @@ final class MobileApiService
             $requestData['customer_email'],
             $requestData['customer_lang'],
             $requestData['transaction_receiver'], //Kulmapeck
-            Utils::checkNumberOperator($requestData['customer_phone_number']),
+            $checkNumber['code'],
         );
 
         $ch = curl_init($apiUrl);
@@ -101,9 +111,9 @@ final class MobileApiService
         $responseData = json_decode($response, true);
 
         if ($httpCode === 202) {
-            return ['responseData' => $responseData, 'error' => false];
+            return ['responseData' => $responseData, 'error' => false, 'message' => 'Done'];
         } else {
-            return ['responseData' => $responseData, 'error' => true];
+            return ['responseData' => $responseData, 'error' => true, 'message' => null];
         }
     }
 }
