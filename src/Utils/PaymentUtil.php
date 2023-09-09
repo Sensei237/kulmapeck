@@ -1,4 +1,5 @@
 <?php
+namespace App\Utils;
 
 use App\Entity\Abonnement;
 use App\Entity\Cours;

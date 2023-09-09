@@ -1,4 +1,5 @@
 <?php
+namespace App\Utils;
 
 use App\Utils\PayIn;
 use App\Utils\PayOut;
