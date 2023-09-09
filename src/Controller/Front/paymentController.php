@@ -53,7 +53,8 @@ class PaymentController extends AbstractController
                 // En fonction de la methode de payment choisie on fait appel à l'API indiquée
                 $paymentMethod = $paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
                 $reference = 'CO-' . (time() + rand(10000, 100000000000));
-                $apiResponse = PaymentUtil::initierPayment($eleve->getUtilisateur(), $course, $paymentMethod, $this->keys, $reference);
+                $phoneNumber = $request->request->get('phone');
+                $apiResponse = PaymentUtil::initierPayment($eleve->getUtilisateur(), $course, $paymentMethod, $this->keys, $reference, $phoneNumber);
                 // dd($apiResponse);
                 if ($apiResponse['isPaied'] && isset($apiResponse['responseData']['payment_url']) && isset($apiResponse['responseData']['transaction_ref']) && isset($apiResponse['responseData']['status'])) {
                     $eleve->addCour($course);

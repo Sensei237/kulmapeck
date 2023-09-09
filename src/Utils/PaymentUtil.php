@@ -45,11 +45,11 @@ class PaymentUtil
         ];
     }
 
-    public static function initierPayment(User $user, Cours $course, ?PaymentMethod $paymentMethod, Keys $keys, string $referencePayment): array
+    public static function initierPayment(User $user, Cours $course, ?PaymentMethod $paymentMethod, Keys $keys, string $referencePayment, string $phoneNumber): array
     {
         $isPaied = false;
 
-        $numeroTelephone = $user->getPersonne()->getTelephone();
+        $numeroTelephone = $phoneNumber;
 
         $requestData['transaction_amount'] = $course->getMontantAbonnement();
         $requestData['transaction_currency'] = 'XAF';
