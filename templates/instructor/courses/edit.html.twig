@@ -18,8 +18,11 @@
 	<script src="{{ asset('assets/vendor/stepper/js/bs-stepper.min.js') }}"></script>
 
 	<script>
-		$(function (){ {% if isEditionMode %}
-$('#cours_media_imageFileUpload').attr('required', false){% endif %}let faq_question = document.getElementById('faq_question');
+		$(function (){
+{% if isEditionMode %}
+$('#cours_media_imageFileUpload').attr('required', false){% endif %}
+
+let faq_question = document.getElementById('faq_question');
 let faq_answer = document.getElementById('faq_answer')
 
 const removeLesson = (e) => {

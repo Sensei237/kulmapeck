@@ -17,15 +17,17 @@ class Utils {
         
         // Extract the first three digits of the number
         $prefix = substr($cleanedNumber, 0, 3);
+        $prefix2 = substr($cleanedNumber, 0, 2);
+
         
         // Define the prefix values for CM_OM and CM_MOMO
         $cmOmPrefixes = ['69', '655', '656', '657', '658', '659'];
         $cmMomoPrefixes = ['67', '651', '652', '653', '654'];
         
         // Check the prefix and return the appropriate value
-        if (in_array($prefix, $cmOmPrefixes)) {
+        if (in_array($prefix, $cmOmPrefixes)||$prefix2 =='69') {
             return 'CM_OM';
-        } elseif (in_array($prefix, $cmMomoPrefixes)) {
+        } elseif (in_array($prefix, $cmMomoPrefixes)||$prefix2 =='67'||$prefix2 =='68') {
             return 'CM_MOMO';
         } else {
             throw new \InvalidArgumentException('Invalid number prefix');

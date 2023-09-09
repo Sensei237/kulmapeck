@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        FTP_SERVER = 'ftp.kulmapeck.com'
-        FTP_USER = '2146700mi44Et'
-        FTP_PASSWORD = 'Staging@2023'
+        FTP_SERVER = ' ftp.staging-kulmapeck.online'
+        FTP_USER = 'admin_staging-kulmapeck.online'
+        FTP_PASSWORD = 'zbHa*Z$)jBH)Q'
         REMOTE_DIRECTORY = ''
 
         FTP_SERVER_Prod = 'vps96969.serveur-vps.net'
@@ -61,13 +61,12 @@ pipeline {
 
         stage('Decompress project on remote server') {
             steps {
-                // Use curl or any other appropriate method to decompress the uploaded ZIP file on the remote server
+
                 bat "ssh -p 5804 ${FTP_USER}@${FTP_SERVER} 'unzip -o ${REMOTE_DIRECTORY}/depl.zip -d ${REMOTE_DIRECTORY}'"
                 
                 // Remove the ZIP file on the remote server
                 bat "ssh -p 5804 ${FTP_USER}@${FTP_SERVER} 'rm ${REMOTE_DIRECTORY}/depl.zip'"
                 
-                // Remove the ZIP file locally
             }
         }
 

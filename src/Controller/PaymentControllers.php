@@ -3,9 +3,13 @@ namespace App\Controller;
 
 use ApiPlatform\OpenApi\Model\Response;
 use App\Repository\EleveRepository;
+use App\Repository\NetworkConfigRepository;
 use App\Repository\PaymentRepository;
 use App\Repository\RetraitRepository;
+use App\Repository\UserRepository;
 use App\Utils\Keys;
+use App\Utils\ManageNetwork;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -171,7 +175,7 @@ class PaymentControllers extends AbstractController
      * elle est exécutée automatiquement par le serveur distant à intervalle regulier de 5 min
      */
     #[Route('/callback', name: 'app_payment_callback', methods: 'GET')]
-    public function handleCallback(Request $request, EleveRepository $eleveRepository, PaymentRepository $paymentRepository, RetraitRepository $retraitRepository)
+    public function handleCallback(Request $request, UserRepository $userRepository, NetworkConfigRepository $networkConfigRepository, EleveRepository $eleveRepository, PaymentRepository $paymentRepository, RetraitRepository $retraitRepository, EntityManagerInterface $em)
     {
         // Check if Kulmapeck  sender's IP address
         $senderIp = $request->getClientIp();
@@ -195,6 +199,21 @@ class PaymentControllers extends AbstractController
                 $eleveRepository->save($payment->getEleve());
             }
             $paymentRepository->save($payment, true);
+
+            // On gère la distribution des points pour le reseau
+            $eleve = $payment->getEleve();
+            if ($eleve !== null) {
+                // On cherche tous les payments effectués par l'eleve et qui ont abouti
+                $payments = $paymentRepository->findBy(['eleve' => $eleve, 'status' => $status]);
+                // S'il a moins de deux payments abouti alors on cherche à partager les points
+                if (count($payments) < 2) {
+                    $networkConfig = $networkConfigRepository->findOneBy([]);
+                    if ($networkConfig !== null) {
+                        ManageNetwork::manage($eleve->getUtilisateur(), $networkConfig, $userRepository, $em);
+                    }
+                }
+            }
+            
         }else {
             $retrait = $retraitRepository->findOneBy(['transactionReference' => $transactionRef]);
             if ($retrait !== null) {
