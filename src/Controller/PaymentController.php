@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-use ApiPlatform\OpenApi\Model\Response;
 use App\Repository\EleveRepository;
 use App\Repository\NetworkConfigRepository;
 use App\Repository\PaymentRepository;
@@ -17,11 +16,12 @@ use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
 
-#[Route('/api/pay')]
+#[Route('/pay')]
 class PaymentController extends AbstractController
 {
 
@@ -37,7 +37,7 @@ class PaymentController extends AbstractController
         $this->privateKey = $apiKeys->getPrivateKey();
         $this->cacert = $apiKeys->getCacert();
         //$this->apiUrl = $_ENV['API_PAY_URL'];
-        $this->apiUrl = 'https://pay-kulmapeck.online/api/pay/';
+        $this->apiUrl = 'https://pay-kulmapeck.online/pay/';
 
     }
 
@@ -192,7 +192,7 @@ class PaymentController extends AbstractController
         // Now you can use $transactionRef and $status as needed
 
         $payment = $paymentRepository->findOneBy(['transactionReference' => $transactionRef]);
-        if ($payment !== null) {
+        if ($payment !== null && strtoupper($status) == 'SUCCESS') {
             $payment->setStatus($status)
                 ->setIsExpired(false);
             if ($payment->getAbonnement() !== null) {
@@ -217,7 +217,7 @@ class PaymentController extends AbstractController
             
         }else {
             $retrait = $retraitRepository->findOneBy(['transactionReference' => $transactionRef]);
-            if ($retrait !== null) {
+            if ($retrait !== null && strtoupper($status) == 'SUCCESS') {
                 $retrait->setStatus($status);
                 $retraitRepository->save($retrait, true);
             }

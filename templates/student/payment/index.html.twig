@@ -45,7 +45,8 @@
                             <th scope="col" class="border-0">Order ID</th>
                             <th scope="col" class="border-0">Date</th>
                             <th scope="col" class="border-0">Amount</th>
-                            <th scope="col" class="border-0 rounded-end">Payment</th>
+                            <th scope="col" class="border-0">Payment</th>
+                            <th scope="col" class="border-0 rounded-end">Statut</th>
                         </tr>
                     </thead>
 
@@ -88,6 +89,7 @@
 
                                 <!-- Table data -->
                                 <td>{{ payment.paymentMethod.code }}</td>
+                                <td>{{ payment.status }}</td>
                             </tr>
                         {% else %}  
                             <tr><td colspan="5"><h5 class="text-center">No payments found</h5></td></tr>

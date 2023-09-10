@@ -1,0 +1,4 @@
+<form method="post" class="{{ form_class|default('') }}" action="{{ path('app_instructor_chapitre_delete', {'slugChap': chapitre.slug, 'slug': cours.slug}) }}" onsubmit="return confirm('Vous êtes sure de vouloir supprimer définitivement ce chapitre?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ chapitre.id) }}">
+    <button class="btn btn-sm btn-danger-soft">Supprimer</button>
+</form>

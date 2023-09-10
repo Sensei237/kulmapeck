@@ -21,7 +21,7 @@ class PaymentUtil
 
         $requestData['transaction_amount'] = $abonnement->getMontant();
         $requestData['transaction_currency'] = 'XAF';
-        $requestData['transaction_reason'] = 'Subscription';
+        $requestData['transaction_reason'] = 'Subscription : ' . $abonnement->getLabel();
         $requestData['app_transaction_ref'] = $referencePayment;
         $requestData['customer_phone_number'] = $numeroTelephone; //client
         $requestData['customer_name'] = $user->getPersonne()->getNomComplet();
@@ -43,6 +43,7 @@ class PaymentUtil
         return [
             'isPaied' => $isPaied, 
             'responseData' => $response['responseData'],
+            'response' => $response,
         ];
     }
 
@@ -54,7 +55,7 @@ class PaymentUtil
 
         $requestData['transaction_amount'] = $course->getMontantAbonnement();
         $requestData['transaction_currency'] = 'XAF';
-        $requestData['transaction_reason'] = 'Achat Cours';
+        $requestData['transaction_reason'] = 'Achat Cours : ' . $course->getIntitule();
         $requestData['app_transaction_ref'] = $referencePayment;
         $requestData['customer_phone_number'] = $numeroTelephone; //client
         $requestData['customer_name'] = $user->getPersonne()->getNomComplet();

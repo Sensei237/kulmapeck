@@ -66,7 +66,7 @@ class PaymentController extends AbstractController
                         ->setPaidAt(new \DateTimeImmutable())
                         ->setIsExpired(true)
                         ->setTransactionReference($apiResponse['responseData']['transaction_ref'])
-                        ->setStatus($apiResponse['responseData']['status'])
+                        ->setStatus('en cours')
                         ->setAmount($course->getMontantAbonnement())
                         ->setReference($reference);
                     $paymentRepository->save($payment, true);
@@ -133,7 +133,7 @@ class PaymentController extends AbstractController
                         ->setReference(time()+$eleve->getId())
                         ->setAmount($abonnement->getMontant())
                         ->setTransactionReference($apiResponse['responseData']['transaction_ref'])
-                        ->setStatus($apiResponse['responseData']['status'])
+                        ->setStatus('en cours')
                         ->setExpiredAt(new \DateTimeImmutable(date('Y-m-d H:i:s', $expiredAt)));
                     
                     $paymentRepository->save($payment);

@@ -19,7 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CoursType extends AbstractType
+class Cours1Type extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -93,14 +93,14 @@ class CoursType extends AbstractType
                 ],
             ])
             ->add('content', CKEditorType::class, [
-                'label' => 'Longue description',
+                'label' => 'Course content',
                 'required' => false,
                 'label_attr' => [
                     'class' => 'form-label'
                 ],
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'Courte description',
+                'label' => 'Short description',
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => "Enter keywords",
@@ -133,7 +133,7 @@ class CoursType extends AbstractType
             ])
             ->add('numberOfLessons', IntegerType::class, [
                 'required' => false,
-                'label' => 'Nombre de leçons',
+                'label' => 'Course lessons',
                 'label_attr' => [
                     'class' => 'form-label'
                 ],
@@ -143,6 +143,14 @@ class CoursType extends AbstractType
                 ],
             ])
             ->add('media', MediaType::class)
+            ->add('chapitres', CollectionType::class, [
+                'entry_type' => Chapitre1Type::class,
+                'entry_options' => ['label'=>false],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => false
+            ])
             ->add('fAQs', CollectionType::class, [
                 'entry_type' => FAQType::class,
                 'entry_options' => ['label'=>false],

@@ -25,7 +25,7 @@
                         <p class="mb-0">Please complete the form to initiate payment</p>
                         <!-- Form START -->
                         <form method="POST" class="mt-3 mt-sm-4 text-start">
-                            {% if errorMessage is not defined and errorMessage is null %}
+                            {% if errorMessage is defined and not errorMessage is null %}
                                 <div class="alert alert-danger">
                                     <h3>Erreur Survenue !</h3>
                                     <hr>
