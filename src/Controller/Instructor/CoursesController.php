@@ -80,11 +80,6 @@ class CoursesController extends AbstractController
         ]);
     }
 
-    
-
-  
-  
-
     #[Route('/{slug}/preview', name: 'app_instructor_courses_preview')]
     public function coursePreview(Cours $cours, Request $request): Response
     {
@@ -249,8 +244,24 @@ ForumRepository $forumRepository, CoursRepository $coursRepository, EnseignantRe
     }
 
     #[Route('/{slug}/delete', name: 'app_instructor_courses_delete', methods: ['POST', 'GET'])]
-    public function deleteCourse(Cours $cours, CoursRepository $coursRepository, Request $request): Response
+    public function deleteCourse(Cours $cours, ChapitreRepository $chapitreRepository, LessonRepository $lessonRepository, EnseignantRepository $enseignantRepository, CoursRepository $coursRepository, Request $request): Response
     {
+        $enseignant = $enseignantRepository->findOneBy(['utilisateur' => $this->getUser()]);
+        if ($enseignant === null || !($enseignant === $cours->getEnseignant())) {
+            throw $this->createAccessDeniedException();
+        }
+
+        if ($cours->isIsPublished()) {
+            throw $this->createAccessDeniedException("Opération impossible ! Le cours est déjà publié");
+        }
+
+        foreach ($cours->getChapitres() as $chapitre) {
+            foreach ($chapitre->getLessons() as $lesson) {
+                $lessonRepository->remove($lesson);
+            }
+            $chapitreRepository->remove($chapitre);
+        }
+
         $coursRepository->remove($cours, true);
 
         if ($request->isXmlHttpRequest()) {

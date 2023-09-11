@@ -32,6 +32,6 @@ class Keys
 
     public function getApiUrl(): string
     {
-        return 'https://pay-kulmapeck.online/api/pay/';
+        return 'https://pay-kulmapeck.online/pay/';
     }
 }

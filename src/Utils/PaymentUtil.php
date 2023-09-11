@@ -55,7 +55,7 @@ class PaymentUtil
 
         $requestData['transaction_amount'] = $course->getMontantAbonnement();
         $requestData['transaction_currency'] = 'XAF';
-        $requestData['transaction_reason'] = 'Achat Cours '.$course->getIntitule();
+        $requestData['transaction_reason'] = 'Achat Cours : ' . $course->getIntitule();
         $requestData['app_transaction_ref'] = $referencePayment;
         $requestData['customer_phone_number'] = $numeroTelephone; //client
         $requestData['customer_name'] = $user->getPersonne()->getNomComplet();

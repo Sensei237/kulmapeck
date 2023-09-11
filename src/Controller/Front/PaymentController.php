@@ -24,7 +24,7 @@ class PaymentController extends AbstractController
 {
     public function __construct(private Keys $keys)
     {
-        
+
     }
 
     #[Route('/', name: 'app_front_payment')]
@@ -56,7 +56,7 @@ class PaymentController extends AbstractController
                 $phoneNumber = $request->request->get('phone');
                 $apiResponse = PaymentUtil::initierPayment($eleve->getUtilisateur(), $course, $paymentMethod, $this->keys, $reference, $phoneNumber);
                 // dd($apiResponse);
-                
+
                 if ($apiResponse['isPaied'] && isset($apiResponse['responseData']['payment_url']) && isset($apiResponse['responseData']['transaction_ref']) && isset($apiResponse['responseData']['status'])) {
                     $eleve->addCour($course);
                     $payment = new Payment();
@@ -80,17 +80,15 @@ class PaymentController extends AbstractController
                     // }
 
                     // return $this->redirectToRoute('app_front_course_details', ['slug' => $course->getSlug()]);
-                }
-                elseif (!$apiResponse['isPaied']) {
+                } elseif (!$apiResponse['isPaied']) {
                     $errorMessage = $apiResponse['response']['message'];
                 }
-            }
-            else {
+            } else {
                 throw $this->createAccessDeniedException("Operation impossible");
             }
-            
+
         }
-        
+
         return $this->render('front/payment/buy_course.html.twig', [
             'isCoursePage' => true,
             'course' => $course,
@@ -122,7 +120,7 @@ class PaymentController extends AbstractController
                 $phoneNumber = $request->request->get('phone');
                 $apiResponse = PaymentUtil::initierPaymentPlan($eleve->getUtilisateur(), $abonnement, $paymentMethod, $this->keys, $reference, $phoneNumber);
                 if ($apiResponse['isPaied'] && isset($apiResponse['responseData']['payment_url']) && isset($apiResponse['responseData']['transaction_ref']) && isset($apiResponse['responseData']['status'])) {
-                    
+
                     $payment = new Payment();
                     $today = date_format(new \DateTimeImmutable(), 'Y-m-d');
                     $expiredAt = strtotime($today . ' +' . $abonnement->getDuree() . ' day');
@@ -130,31 +128,29 @@ class PaymentController extends AbstractController
                         ->setAbonnement($abonnement)
                         ->setIsExpired(true)
                         ->setPaymentMethod($paymentMethod)
-                        ->setReference(time()+$eleve->getId())
+                        ->setReference(time() + $eleve->getId())
                         ->setAmount($abonnement->getMontant())
                         ->setTransactionReference($apiResponse['responseData']['transaction_ref'])
                         ->setStatus('En cours')
                         ->setExpiredAt(new \DateTimeImmutable(date('Y-m-d H:i:s', $expiredAt)));
-                    
+
                     $paymentRepository->save($payment);
 
                     $eleve->setIsPremium(false);
-                    
+
                     $eleveRepository->save($eleve, true);
                     // $this->addFlash('success', "Votre paiement a été initié !");
 
                     return $this->redirect($apiResponse['responseData']['payment_url']);
 
                     // return $this->redirectToRoute('app_home');
-                }
-                elseif (!$apiResponse['isPaied']) {
+                } elseif (!$apiResponse['isPaied']) {
                     $errorMessage = $apiResponse['response']['message'];
                 }
-            }
-            else {
+            } else {
                 throw $this->createAccessDeniedException("Operation impossible ! Formulaire potentiellement corrompu.");
             }
-            
+
         }
 
 

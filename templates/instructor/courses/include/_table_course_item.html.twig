@@ -8,7 +8,7 @@
             </div>
             <div class="mb-0 ms-2">
                 <!-- Title -->
-                <h6><a target="_blank" href="{{ path('app_front_course_details', {slug: course.slug}) }}">{{ course.intitule }}</a></h6>
+                <h6 title="{{ course.intitule }}"><a target="_blank" href="{{ path('app_front_course_details', {slug: course.slug}) }}">{{ course.intitule|u.truncate(30, '...') }}</a></h6>
                 <!-- Info -->
                 <div class="d-sm-flex">
                     <p class="h6 fw-light mb-0 small me-3"><i class="fas fa-table text-orange me-2"></i>{{ course.numberOfLessons ~ 'lessons' }}</p>
@@ -40,43 +40,47 @@
     <!-- Action item -->
     <td class="text-center">
         <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Preview" href="{{ path('app_instructor_courses_preview', {slug: course.slug}) }}" class="btn btn-sm btn-primary-soft btn-round me-1 mb-0"><i class="far fa-fw fa-eye"></i></a>
-        {% if course.chapitres|length > 0 %}
-            <div class="dropdown text-end" style="float: right;">
-                <a title="Quizzes" href="#" class="btn btn-sm btn-light btn-round small mb-0" role="button" id="dropdownShare2" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-three-dots fa-fw"></i>
-                </a>
-                <!-- dropdown button -->
-                <ul class="dropdown-menu dropdown-w-sm dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownShare2">
-                    <li class="title">Quizzes</li>
-                    {% for chapitre in course.chapitres|sort((a, b) => a.numero <=> b.numero) %}
-                        <li>
-                            <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="{{chapitre.title}}: Click to add quizzes" title="{{chapitre.title}}: Click to add quizzes" class="dropdown-item" href="{{ path('app_instructor_courses_quizzes', {slug: chapitre.slug}) }}">
-                                <i class="fas fa-arrow-right fa-fw me-2"></i>
-                                Chapter {{ chapitre.numero}}
-                            </a>
-                        </li>
-                    {% endfor %}
+        
+        <div class="dropdown text-end" style="float: right;">
+            <a title="Quizzes" href="#" class="btn btn-sm btn-light btn-round small mb-0" role="button" id="dropdownShare2" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots fa-fw"></i>
+            </a>
+            <!-- dropdown button -->
+            <ul class="dropdown-menu dropdown-w-sm dropdown-menu-end min-w-auto shadow rounded" aria-labelledby="dropdownShare2">
+                <li>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Afficher la liste des chapitres de ce cours" title="Afficher Liste des chapitres de ce cours" class="dropdown-item" href="{{ path('app_instructor_chapitre_index', {slug: course.slug}) }}">
+                        <i class="fas fa-list fa-fw me-2"></i>
+                        Liste des chapitres
+                    </a>
+                </li>
+                <hr>
+                <li>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Ajouter un chapitre" title="Ajouter un chapitre" class="dropdown-item" href="{{ path('app_instructor_chapitre_new', {slug: course.slug}) }}">
+                        <i class="fas fa-plus fa-fw me-2"></i>
+                        Nouveau Chapitre
+                    </a>
+                </li>
+                <hr>
+                <li>
+                    <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="{{course.intitule}}: Click to add quizzes" title="{{course.intitule}}: Click to add quizzes" class="dropdown-item" href="{{ path('app_instructor_courses_quizzes_final', {slug: course.slug}) }}">
+                        <i class="fas fa-arrow-right fa-fw me-2"></i>
+                        Evaluation finale
+                    </a>
+                </li>
+                
+                {% if not course.isValidated %}
                     <hr>
                     <li>
-                        <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="{{course.intitule}}: Click to add quizzes" title="{{course.intitule}}: Click to add quizzes" class="dropdown-item" href="{{ path('app_instructor_courses_quizzes_final', {slug: course.slug}) }}">
-                            <i class="fas fa-arrow-right fa-fw me-2"></i>
-                            Evaluation finale
-                        </a>
+                        <a onclick="return confirm('Etes vous sure de vouloir supprimer ce cours définitivement ?')" href="{{ path('app_instructor_courses_delete', {slug: course.slug}) }}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Delete" title="Delete" class="d-block bg-danger-soft-hover p-2 delete-item"><i class="fas fa-fw fa-trash-alt"></i> Remove</a>
                     </li>
-                    {% if not course.isValidated %}
-                        <hr>
-                        <li>
-                            <a href="{{ path('app_instructor_courses_delete', {slug: course.slug}) }}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Delete" title="Delete" class="d-block bg-danger-soft-hover p-2 delete-item"><i class="fas fa-fw fa-trash-alt"></i> Remove</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        {% endif %}
+                {% endif %}
+            </ul>
+        </div>
         {% if not course.isPublished %}
             <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="published" href="{{ path('app_instructor_courses_published', {slug: course.slug, _token: csrf_token('published' ~ course.id)}) }}" class="btn btn-sm btn-success-soft btn-round me-1 mb-0"><i class="far fa-fw fa-paper-plane"></i></a>
         {% endif %}
         {% if not course.isPublished %}
-            <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit" href="{{ path('app_instructor_courses_edit', {slug: course.slug}) }}" class="btn btn-sm btn-warning-soft btn-round me-1 mb-0"><i class="far fa-fw fa-edit"></i></a>
+            <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit" href="{{ path('app_instructor_cours_edit', {slug: course.slug}) }}" class="btn btn-sm btn-warning-soft btn-round me-1 mb-0"><i class="far fa-fw fa-edit"></i></a>
         {% endif %}
     </td>
 </tr>

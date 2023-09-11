@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<title>Cours</title>
+
+{% block body %}
+    <h1>Cours</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ cour.id }}</td>
+            </tr>
+            <tr>
+                <th>Intitule</th>
+                <td>{{ cour.intitule }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ cour.slug }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ cour.content }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ cour.description }}</td>
+            </tr>
+            <tr>
+                <th>IsPublished</th>
+                <td>{{ cour.isPublished ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>IsFree</th>
+                <td>{{ cour.isFree ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>NiveauDifficulte</th>
+                <td>{{ cour.niveauDifficulte }}</td>
+            </tr>
+            <tr>
+                <th>DureeApprentissage</th>
+                <td>{{ cour.dureeApprentissage }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ cour.createdAt ? cour.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Vues</th>
+                <td>{{ cour.vues }}</td>
+            </tr>
+            <tr>
+                <th>IsValidated</th>
+                <td>{{ cour.isValidated ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>MontantAbonnement</th>
+                <td>{{ cour.montantAbonnement }}</td>
+            </tr>
+            <tr>
+                <th>Language</th>
+                <td>{{ cour.language }}</td>
+            </tr>
+            <tr>
+                <th>NumberOfLessons</th>
+                <td>{{ cour.numberOfLessons }}</td>
+            </tr>
+            <tr>
+                <th>Tags</th>
+                <td>{{ cour.tags }}</td>
+            </tr>
+            <tr>
+                <th>IsRejected</th>
+                <td>{{ cour.isRejected ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Review</th>
+                <td>{{ cour.review }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ cour.updatedAt ? cour.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>PublishedAt</th>
+                <td>{{ cour.publishedAt ? cour.publishedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_instructor_cours_index') }}">back to list</a>
+
+    <a href="{{ path('app_instructor_cours_edit', {'id': cour.id}) }}">edit</a>
+
+    {{ include('instructor/cours/_delete_form.html.twig') }}
+{% endblock %}

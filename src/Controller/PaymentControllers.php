@@ -36,7 +36,7 @@ class PaymentControllers extends AbstractController
         $this->privateKey = $apiKeys->getPrivateKey();
         $this->cacert = $apiKeys->getCacert();
         //$this->apiUrl = $_ENV['API_PAY_URL'];
-        $this->apiUrl = 'https://pay-kulmapeck.online/api/pay/';
+        $this->apiUrl = 'https://pay-kulmapeck.online/pay/';
 
     }
 
@@ -194,7 +194,7 @@ class PaymentControllers extends AbstractController
         if ($payment !== null) {
             $payment->setStatus($status)
                 ->setIsExpired(false);
-            if ($payment->getAbonnement() !== null&& strtoupper($status) == 'SUCCESS') {
+            if ($payment->getAbonnement() !== null && strtoupper($status) == 'SUCCESS') {
                 $payment->getEleve()->setIsPremium(true);
                 $eleveRepository->save($payment->getEleve());
             }
@@ -213,8 +213,8 @@ class PaymentControllers extends AbstractController
                     }
                 }
             }
-            
-        }else {
+
+        } else {
             $retrait = $retraitRepository->findOneBy(['transactionReference' => $transactionRef]);
             if ($retrait !== null) {
                 $retrait->setStatus($status);
@@ -223,7 +223,7 @@ class PaymentControllers extends AbstractController
         }
 
         // Return a response if needed
-        return new Response('Callback received successfully'.$transactionRef.'statut' .$status);
+        return new Response('Callback received successfully' . $transactionRef . 'statut' . $status);
     }
     #[Route('/email', name: 'balance', methods: ['POST'])]
     public function emailSender(MailerInterface $mailer)

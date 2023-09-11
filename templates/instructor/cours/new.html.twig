@@ -1,0 +1,26 @@
+{% extends "instructor/base.html.twig" %}
+
+{% block subTitle %}
+	- Courses
+{% endblock %}
+
+{% block stylesheet %}
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/aos/aos.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/glightbox/css/glightbox.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/quill/css/quill.snow.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/stepper/css/bs-stepper.min.css') }}">
+{% endblock %}
+
+{% block script %}
+	<script src="{{ asset('assets/vendor/aos/aos.js') }}"></script>
+	<script src="{{ asset('assets/vendor/glightbox/js/glightbox.js') }}"></script>
+	<script src="{{ asset('assets/vendor/quill/js/quill.min.js') }}"></script>
+	<script src="{{ asset('assets/vendor/stepper/js/bs-stepper.min.js') }}"></script>
+
+{% endblock %}
+
+{% block btnAction %}{% endblock %}
+
+{% block pageContent %}
+    {{ include('instructor/cours/_form.html.twig') }}
+{% endblock %}
