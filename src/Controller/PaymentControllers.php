@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-use ApiPlatform\OpenApi\Model\Response;
+use Symfony\Component\HttpFoundation\Response;
 use App\Repository\EleveRepository;
 use App\Repository\NetworkConfigRepository;
 use App\Repository\PaymentRepository;
@@ -194,7 +194,7 @@ class PaymentControllers extends AbstractController
         if ($payment !== null) {
             $payment->setStatus($status)
                 ->setIsExpired(false);
-            if ($payment->getAbonnement() !== null) {
+            if ($payment->getAbonnement() !== null&& strtoupper($status) == 'SUCCESS') {
                 $payment->getEleve()->setIsPremium(true);
                 $eleveRepository->save($payment->getEleve());
             }
@@ -223,7 +223,7 @@ class PaymentControllers extends AbstractController
         }
 
         // Return a response if needed
-        return new Response('Callback received successfully');
+        return new Response('Callback received successfully'.$transactionRef.'statut' .$status);
     }
     #[Route('/email', name: 'balance', methods: ['POST'])]
     public function emailSender(MailerInterface $mailer)

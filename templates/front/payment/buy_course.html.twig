@@ -25,7 +25,14 @@
                         <p class="mb-0">Please complete the form to initiate payment</p>
                         <!-- Form START -->
                         <form method="POST" class="mt-3 mt-sm-4 text-start">
-                            <!-- Email -->
+                            {% if errorMessage is  defined and not errorMessage is  null %}
+                                <div class="alert alert-danger">
+                                    <h3>Erreur Survenue !</h3>
+                                    <hr>
+                                    <p>{{ errorMessage }}</p>
+                                </div>
+                            {% endif %}
+                            
                             <div class="mb-3">
                                 <label class="form-label">Course price</label>
                                 <input name="price" type="text" disabled class="form-control" value="{{ course.montantAbonnement }} XAF">

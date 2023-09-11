@@ -41,6 +41,8 @@ class PaymentController extends AbstractController
         // La fonction nécessite que l'on soit connecté et surtout qu'on soit élève
         $this->denyAccessUnlessGranted('ROLE_STUDENT');
 
+        $errorMessage = null;
+
         $eleve = $eleveRepository->findOneBy(['utilisateur' => $this->getUser()]);
         if ($eleve === null) {
             throw $this->createAccessDeniedException("Vous devez être élève !");
@@ -54,6 +56,7 @@ class PaymentController extends AbstractController
                 $phoneNumber = $request->request->get('phone');
                 $apiResponse = PaymentUtil::initierPayment($eleve->getUtilisateur(), $course, $paymentMethod, $this->keys, $reference, $phoneNumber);
                 // dd($apiResponse);
+                
                 if ($apiResponse['isPaied'] && isset($apiResponse['responseData']['payment_url']) && isset($apiResponse['responseData']['transaction_ref']) && isset($apiResponse['responseData']['status'])) {
                     $eleve->addCour($course);
                     $payment = new Payment();
@@ -63,7 +66,7 @@ class PaymentController extends AbstractController
                         ->setPaidAt(new \DateTimeImmutable())
                         ->setIsExpired(true)
                         ->setTransactionReference($apiResponse['responseData']['transaction_ref'])
-                        ->setStatus($apiResponse['responseData']['status'])
+                        ->setStatus('En cours')
                         ->setAmount($course->getMontantAbonnement())
                         ->setReference($reference);
                     $paymentRepository->save($payment, true);
@@ -78,8 +81,9 @@ class PaymentController extends AbstractController
 
                     // return $this->redirectToRoute('app_front_course_details', ['slug' => $course->getSlug()]);
                 }
-
-                throw $this->createAccessDeniedException("Impossible d'effectuer le paiement !");
+                elseif (!$apiResponse['isPaied']) {
+                    $errorMessage = $apiResponse['response']['message'];
+                }
             }
             else {
                 throw $this->createAccessDeniedException("Operation impossible");
@@ -92,6 +96,7 @@ class PaymentController extends AbstractController
             'course' => $course,
             'student' => $eleve,
             'paymentMethods' => $course->getPaymentMethods(),
+            'errorMessage' => $errorMessage,
         ]);
     }
 
@@ -101,6 +106,8 @@ class PaymentController extends AbstractController
 
         // La fonction nécessite que l'on soit connecté et surtout qu'on soit élève
         $this->denyAccessUnlessGranted('ROLE_STUDENT');
+
+        $errorMessage = null;
 
         $eleve = $eleveRepository->findOneBy(['utilisateur' => $this->getUser()]);
         if ($eleve === null) {
@@ -126,7 +133,7 @@ class PaymentController extends AbstractController
                         ->setReference(time()+$eleve->getId())
                         ->setAmount($abonnement->getMontant())
                         ->setTransactionReference($apiResponse['responseData']['transaction_ref'])
-                        ->setStatus($apiResponse['responseData']['status'])
+                        ->setStatus('En cours')
                         ->setExpiredAt(new \DateTimeImmutable(date('Y-m-d H:i:s', $expiredAt)));
                     
                     $paymentRepository->save($payment);
@@ -140,11 +147,12 @@ class PaymentController extends AbstractController
 
                     // return $this->redirectToRoute('app_home');
                 }
-
-                throw $this->createAccessDeniedException("Impossible d'effectuer le paiement !");
+                elseif (!$apiResponse['isPaied']) {
+                    $errorMessage = $apiResponse['response']['message'];
+                }
             }
             else {
-                throw $this->createAccessDeniedException("Operation impossible");
+                throw $this->createAccessDeniedException("Operation impossible ! Formulaire potentiellement corrompu.");
             }
             
         }
@@ -154,6 +162,7 @@ class PaymentController extends AbstractController
             'plan' => $abonnement,
             'student' => $eleve,
             'abonnementItems' => $abonnementItemRepository->findAll(),
+            'errorMessage' => $errorMessage,
         ]);
     }
 
