@@ -62,7 +62,7 @@ final class MobileApiService
             return ['responseData' => $responseData, 'error' => false, 'message' => 'done'];
 
         } else {
-            return ['responseData' => $responseData, 'error' => true, 'message' => null];
+            return ['responseData' => $responseData, 'error' => true, 'message' => 'Impossible de traiter la demande pour le moment !'];
         }
 
     }
@@ -113,7 +113,7 @@ final class MobileApiService
         if ($httpCode === 202) {
             return ['responseData' => $responseData, 'error' => false, 'message' => 'Done'];
         } else {
-            return ['responseData' => $responseData, 'error' => true, 'message' => null];
+            return ['responseData' => $responseData, 'error' => true, 'message' => "Impossible de traiter la demande pour le moment !"];
         }
     }
 }

@@ -12,6 +12,7 @@ use App\Entity\Notification;
 use App\Entity\NotificationType;
 use App\Entity\Quiz;
 use App\Entity\User;
+use App\Form\Cours1Type;
 use App\Form\CoursType;
 use App\Form\FAQType;
 use App\Form\LessonFormType;
@@ -115,7 +116,7 @@ ForumRepository $forumRepository, CoursRepository $coursRepository, EnseignantRe
         } else {
             $pageTitle = "Edit Course <br>" . $cours->getIntitule();
         }
-        $form = $this->createForm(CoursType::class, $cours);
+        $form = $this->createForm(Cours1Type::class, $cours);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -140,7 +141,6 @@ ForumRepository $forumRepository, CoursRepository $coursRepository, EnseignantRe
                     $lessonRepository->save($lesson);
                 }
             }
-            die();
             $cours->setUpdatedAt(new \DateTimeImmutable());
             $coursRepository->save($cours, true);
             $admins = $userRepository->findBy(['isAdmin' => true, 'isBlocked' => false, 'isVerified' => true]);

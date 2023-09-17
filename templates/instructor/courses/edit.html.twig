@@ -19,8 +19,9 @@
 
 	<script>
 		$(function (){ {% if isEditionMode %}
-$('#cours_media_imageFileUpload').attr('required', false){% endif %}let faq_question = document.getElementById('faq_question');
-let faq_answer = document.getElementById('faq_answer')
+$('#cours_media_imageFileUpload').attr('required', false);{% endif %}
+let faq_question = document.getElementById('faq_question');
+let faq_answer = document.getElementById('faq_answer');
 
 const removeLesson = (e) => {
 const chapIndex = e.currentTarget.dataset.chapIndex;
@@ -331,12 +332,12 @@ $('#addQuestion').modal('hide');
 }
 
 const showEditFAQForm = (e) => {
-$('.edit_faq_btn').fadeIn();
-$('.add_faq_btn').fadeOut();
+	$('.edit_faq_btn').fadeIn();
+	$('.add_faq_btn').fadeOut();
 
-faq_question.value = document.getElementById('cours_fAQs_' + e.currentTarget.dataset.index + '_question').value
-faq_answer.value = document.getElementById('cours_fAQs_' + e.currentTarget.dataset.index + '_answer').value
-$('#edit_faq_btn').attr('data-index', e.currentTarget.dataset.index)
+	faq_question.value = document.getElementById('cours_fAQs_' + e.currentTarget.dataset.index + '_question').value;
+	faq_answer.value = document.getElementById('cours_fAQs_' + e.currentTarget.dataset.index + '_answer').value;
+	$('#edit_faq_btn').attr('data-index', e.currentTarget.dataset.index)
 }
 
 const deleteFAQ = (e) => {
