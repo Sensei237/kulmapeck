@@ -76,6 +76,7 @@ class CoursController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             CoursUtils::uploadCourseMedia($cours, $fileUploader);
+            $cours->setUpdatedAt(new \DateTimeImmutable());
             
             $entityManager->flush();
 
