@@ -58,7 +58,7 @@ class PaymentController extends AbstractController
                 // dd($apiResponse);
 
                 if ($apiResponse['isPaied'] && isset($apiResponse['responseData']['payment_url']) && isset($apiResponse['responseData']['transaction_ref']) && isset($apiResponse['responseData']['status'])) {
-                    $eleve->addCour($course);
+                    // $eleve->addCour($course);
                     $payment = new Payment();
                     $payment->setEleve($eleve)
                         ->setPaymentMethod($paymentMethod)

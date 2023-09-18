@@ -36,7 +36,7 @@ class PaymentControllers extends AbstractController
         $this->privateKey = $apiKeys->getPrivateKey();
         $this->cacert = $apiKeys->getCacert();
         //$this->apiUrl = $_ENV['API_PAY_URL'];
-        $this->apiUrl = 'https://pay-kulmapeck.online/pay/';
+        $this->apiUrl = 'https://pay-kulmapeck.online/api/pay/';
 
     }
 
@@ -191,17 +191,20 @@ class PaymentControllers extends AbstractController
         // Now you can use $transactionRef and $status as needed
 
         $payment = $paymentRepository->findOneBy(['transactionReference' => $transactionRef]);
+
         if ($payment !== null) {
+            $eleve = $payment->getEleve();
             $payment->setStatus($status)
                 ->setIsExpired(false);
             if ($payment->getAbonnement() !== null && strtoupper($status) == 'SUCCESS') {
                 $payment->getEleve()->setIsPremium(true);
                 $eleveRepository->save($payment->getEleve());
+            } elseif ($payment->getCours() !== null) {
+                $eleve->addCour($payment->getCours());
             }
             $paymentRepository->save($payment, true);
 
             // On gère la distribution des points pour le reseau
-            $eleve = $payment->getEleve();
             if ($eleve !== null) {
                 // On cherche tous les payments effectués par l'eleve et qui ont abouti
                 $payments = $paymentRepository->findBy(['eleve' => $eleve, 'status' => $status]);
@@ -243,6 +246,6 @@ class PaymentControllers extends AbstractController
         }
     }
 
-    
+
 
 }
