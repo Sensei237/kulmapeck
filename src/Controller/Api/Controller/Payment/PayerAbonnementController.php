@@ -46,9 +46,9 @@ class PayerAbonnementController extends AbstractController
             throw $this->createAccessDeniedException('Vous devez être connecté !');
         }
 
-        if ($this->paymentRepository->findOneBy(['isExpired'=>false, 'eleve'=>$eleve]) !== null) {
-            throw $this->createAccessDeniedException('Vous avez un abonnement actif ! Vous ne pouvez plus souscrire à un nouvel abonnement');
-        }
+        // if ($this->paymentRepository->findOneBy(['isExpired'=>false, 'eleve'=>$eleve]) !== null) {
+        //     throw $this->createAccessDeniedException('Vous avez un abonnement actif ! Vous ne pouvez plus souscrire à un nouvel abonnement');
+        // }
 
         $data = $request->toArray();
 
