@@ -193,16 +193,18 @@ class PaymentController extends AbstractController
 
         $payment = $paymentRepository->findOneBy(['transactionReference' => $transactionRef]);
         if ($payment !== null && strtoupper($status) == 'SUCCESS') {
+            $eleve = $payment->getEleve();
             $payment->setStatus($status)
                 ->setIsExpired(false);
             if ($payment->getAbonnement() !== null) {
                 $payment->getEleve()->setIsPremium(true);
                 $eleveRepository->save($payment->getEleve());
+            }elseif ($payment->getCours() !== null) {
+                $eleve->addCour($payment->getCours());
             }
             $paymentRepository->save($payment, true);
 
             // On gère la distribution des points pour le reseau
-            $eleve = $payment->getEleve();
             if ($eleve !== null) {
                 // On cherche tous les payments effectués par l'eleve et qui ont abouti
                 $payments = $paymentRepository->findBy(['eleve' => $eleve, 'status' => $status]);

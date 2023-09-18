@@ -12,7 +12,9 @@ use App\Utils\Keys;
  */
 class PaymentUtil
 {
-    
+    /**
+     * Cette fonction est appelee lorsque l'eleve veut payer un abonnement
+     */
     public static function initierPaymentPlan(User $user, Abonnement $abonnement, ?PaymentMethod $paymentMethod, Keys $keys, string $referencePayment, string $phoneNumber): array
     {
         $isPaied = false;
@@ -47,6 +49,9 @@ class PaymentUtil
         ];
     }
 
+    /**
+     * Cette fonction est appelée lorsque l'eleve essaie de payer un cours
+     */
     public static function initierPayment(User $user, Cours $course, ?PaymentMethod $paymentMethod, Keys $keys, string $referencePayment, string $phoneNumber): array
     {
         $isPaied = false;
