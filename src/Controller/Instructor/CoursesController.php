@@ -8,7 +8,7 @@ use App\Entity\FAQ;
 use App\Entity\Lesson;
 use App\Entity\Notification;
 use App\Entity\Quiz;
-use App\Form\CoursType;
+use App\Form\Cours1Type;
 use App\Form\LessonFormType;
 use App\Form\QuizType;
 use App\Repository\ChapitreRepository;
@@ -80,11 +80,6 @@ class CoursesController extends AbstractController
         ]);
     }
 
-    
-
-  
-  
-
     #[Route('/{slug}/preview', name: 'app_instructor_courses_preview')]
     public function coursePreview(Cours $cours, Request $request): Response
     {
@@ -116,7 +111,7 @@ ForumRepository $forumRepository, CoursRepository $coursRepository, EnseignantRe
         } else {
             $pageTitle = "Edit Course <br>" . $cours->getIntitule();
         }
-        $form = $this->createForm(CoursType::class, $cours);
+        $form = $this->createForm(Cours1Type::class, $cours);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -141,7 +136,6 @@ ForumRepository $forumRepository, CoursRepository $coursRepository, EnseignantRe
                     $lessonRepository->save($lesson);
                 }
             }
-            die();
             $cours->setUpdatedAt(new \DateTimeImmutable());
             $coursRepository->save($cours, true);
             $admins = $userRepository->findBy(['isAdmin' => true, 'isBlocked' => false, 'isVerified' => true]);
@@ -249,8 +243,24 @@ ForumRepository $forumRepository, CoursRepository $coursRepository, EnseignantRe
     }
 
     #[Route('/{slug}/delete', name: 'app_instructor_courses_delete', methods: ['POST', 'GET'])]
-    public function deleteCourse(Cours $cours, CoursRepository $coursRepository, Request $request): Response
+    public function deleteCourse(Cours $cours, ChapitreRepository $chapitreRepository, LessonRepository $lessonRepository, EnseignantRepository $enseignantRepository, CoursRepository $coursRepository, Request $request): Response
     {
+        $enseignant = $enseignantRepository->findOneBy(['utilisateur' => $this->getUser()]);
+        if ($enseignant === null || !($enseignant === $cours->getEnseignant())) {
+            throw $this->createAccessDeniedException();
+        }
+
+        if ($cours->isIsPublished()) {
+            throw $this->createAccessDeniedException("Opération impossible ! Le cours est déjà publié");
+        }
+
+        foreach ($cours->getChapitres() as $chapitre) {
+            foreach ($chapitre->getLessons() as $lesson) {
+                $lessonRepository->remove($lesson);
+            }
+            $chapitreRepository->remove($chapitre);
+        }
+
         $coursRepository->remove($cours, true);
 
         if ($request->isXmlHttpRequest()) {

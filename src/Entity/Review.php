@@ -7,7 +7,6 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Controller\Api\Controller\Course\Review\CourseReviewController;
 use App\Controller\Api\Controller\Course\Review\PostReviewController;
-use App\Controller\Api\Controller\Course\ShowQuizzesController;
 use App\Repository\ReviewRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;

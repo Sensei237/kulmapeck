@@ -5,11 +5,11 @@ namespace App\Controller\Api\Controller\Payment;
 use App\Entity\Cours;
 use App\Entity\Eleve;
 use App\Entity\Payment;
-use Doctrine\Common\Collections\Collection;
 use App\Repository\EleveRepository;
 use App\Repository\PaymentMethodRepository;
 use App\Repository\PaymentRepository;
-use PaymentUtil;
+use App\Utils\Keys;
+use App\Utils\PaymentUtil;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -24,7 +24,8 @@ class PayerCoursController extends AbstractController
         private EleveRepository $eleveRepository,
         private Security $security,
         private PaymentMethodRepository $paymentMethodRepository,
-        private PaymentRepository $paymentRepository
+        private PaymentRepository $paymentRepository,
+        private Keys $keys
     ) {
     }
 
@@ -47,8 +48,8 @@ class PayerCoursController extends AbstractController
 
         $data = $request->toArray();
 
-        if (empty($data['payment_method'])) {
-            throw new BadRequestException("Vous devez préciser la méthode de paiement !");
+        if (empty($data['payment_method']) || empty($data['phone'])) {
+            throw new BadRequestException("Vous devez préciser la méthode de paiement et le numero de telephone!");
         }
 
         $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => $data['payment_method']]);
@@ -57,7 +58,11 @@ class PayerCoursController extends AbstractController
             throw new BadRequestException("La méthode de paiement envoyée n'existe pas !");
         }
 
-        if (PaymentUtil::initierPayment($course, $paymentMethod)) {
+        $reference = 'CO-' . (time() + rand(10000, 100000000000));
+        $phoneNumber = $data['phone'];
+        $apiResponse = PaymentUtil::initierPayment($eleve->getUtilisateur(), $course, $paymentMethod, $this->keys, $reference, $phoneNumber);
+
+        if ($apiResponse['isPaied'] && isset($apiResponse['responseData']['payment_url']) && isset($apiResponse['responseData']['transaction_ref']) && isset($apiResponse['responseData']['status'])) {
             $eleve->addCour($course);
             $payment = new Payment();
             $payment->setEleve($eleve)
@@ -75,6 +80,7 @@ class PayerCoursController extends AbstractController
             'isPaied' => true,
             'message' => 'Votre paiement a été aprouvé !',
             'paiements' => $eleve->getPayments(),
+            'apiUrl' => $apiResponse['responseData']['payment_url']
         ]);
     }
 }

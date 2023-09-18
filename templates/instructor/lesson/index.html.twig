@@ -1,0 +1,63 @@
+{% extends "instructor/base.html.twig" %}
+
+{% block subTitle %} - Courses {% endblock %}
+
+{% block btnAction %}
+    <a class="btn btn-success mb-0" href="{{ path('app_instructor_lesson_new', {'slug': chapitre.slug}) }}">Nouvelle leçon</a>
+{% endblock %}
+
+{% block pageContent %}
+    
+    <!-- Card START -->
+	<div class="card border bg-transparent rounded-3">
+		<!-- Card header START -->
+		<div class="card-header bg-transparent border-bottom">
+			<h3 class="mb-0">{{ chapitre.title }}</h3>
+            <blockquote>{{ chapitre.description }}</blockquote>
+            <hr>
+            <h4>Liste des leçons</h4>
+		</div>
+		<!-- Card header END -->
+
+		<!-- Card body START -->
+		<div class="card-body">
+			<!-- Course list table START -->
+			<div class="table-responsive border-0">
+				<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+					<!-- Table head -->
+					<thead>
+						<tr>
+							<th scope="col" class="border-0 rounded-start">#</th>
+							<th scope="col" class="border-0">Titre</th>
+							<th scope="col" class="border-0 rounded-end">Action</th>
+						</tr>
+					</thead>
+
+					<!-- Table body START -->
+					<tbody>
+						<!-- Table item -->
+						{% for lesson in lessons %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ lesson.title }}</td>
+                                <td>
+                                    <a data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Modifier" href="{{ path('app_instructor_lesson_edit', {slug: chapitre.slug, 'slugLesson': lesson.slug}) }}" class="btn btn-sm btn-warning-soft btn-round me-1 mb-0"><i class="far fa-fw fa-edit"></i></a>
+                                    {{ include("instructor/lesson/_delete_form.html.twig", {'form_class': 'd-inline-block'}) }}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5">No data found</td>
+                            </tr>
+						{% endfor %}
+					</tbody>
+					<!-- Table body END -->
+				</table>
+			</div>
+			<!-- Course list table END -->
+		</div>
+		<!-- Card body START -->
+	</div>
+	<!-- Card END -->
+
+{% endblock %}
