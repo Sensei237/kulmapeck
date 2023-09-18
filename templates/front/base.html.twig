@@ -700,20 +700,5 @@
 <!-- Template Functions -->
 <script src="{{ asset('assets/js/functions.js') }}"></script>
 
-<script>
-    // Listen for the beforeunload event
-    window.addEventListener('beforeunload', function (event) {
-        // Display a confirmation message
-        event.preventDefault();
-        event.returnValue = ''; // Some browsers require a non-empty string
-    });
-    
-    // Optionally, you can also listen for the unload event to customize the message further
-    window.addEventListener('unload', function () {
-        // Display a custom message when the user actually leaves the page
-        alert('Taking screenshots is not allowed on this page.');
-    })
-</script>
-
 </body>
 </html>
