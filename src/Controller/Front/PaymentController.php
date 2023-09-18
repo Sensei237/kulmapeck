@@ -162,4 +162,18 @@ class PaymentController extends AbstractController
         ]);
     }
 
+    #[Route('/error', name: 'error', methods: ['GET'])]
+    public function error()
+    {
+        return $this->render('error/payment-error.html.twig'
+        );
+    }
+
+    #[Route('/success', name: 'success', methods: ['GET'])]
+    public function success()
+    {
+        return $this->render('error/payment-success.html.twig'
+        );
+    }
+
 }
