@@ -236,7 +236,7 @@ class PaymentController extends AbstractController
         }
         elseif ($payment !== null) {
             $payment->setStatus($status)
-                ->setIsExpired(false);
+                ->setIsExpired(true);
             $paymentRepository->save($payment, true);
         }
         else{
