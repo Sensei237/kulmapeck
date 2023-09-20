@@ -233,7 +233,13 @@ class PaymentController extends AbstractController
                 }
             }
             
-        }else {
+        }
+        elseif ($payment !== null) {
+            $payment->setStatus($status)
+                ->setIsExpired(false);
+            $paymentRepository->save($payment, true);
+        }
+        else{
             $retrait = $retraitRepository->findOneBy(['transactionReference' => $transactionRef]);
             if ($retrait !== null && strtoupper($status) == 'SUCCESS') {
                 $retrait->setStatus($status);
