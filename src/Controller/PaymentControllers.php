@@ -185,7 +185,7 @@ class PaymentControllers extends AbstractController
         $expectedIp = '192.162.71.169';
 
         if ($senderIp !== $expectedIp) {
-            throw new InvalidArgumentException("Unauthorized sender IP : " . $senderIp);
+            throw new InvalidArgumentException("Unauthorized sender IP : ".$senderIp);
         }
 
         // Get parameters from the URL
@@ -194,15 +194,14 @@ class PaymentControllers extends AbstractController
         // Now you can use $transactionRef and $status as needed
 
         $payment = $paymentRepository->findOneBy(['transactionReference' => $transactionRef]);
-
-        if ($payment !== null) {
+        if ($payment !== null && strtoupper($status) == 'SUCCESS') {
             $eleve = $payment->getEleve();
             $payment->setStatus($status)
                 ->setIsExpired(false);
-            if ($payment->getAbonnement() !== null && strtoupper($status) == 'SUCCESS') {
+            if ($payment->getAbonnement() !== null) {
                 $payment->getEleve()->setIsPremium(true);
                 $eleveRepository->save($payment->getEleve());
-            } elseif ($payment->getCours() !== null) {
+            }elseif ($payment->getCours() !== null) {
                 $eleve->addCour($payment->getCours());
             }
             $paymentRepository->save($payment, true);
@@ -233,17 +232,23 @@ class PaymentControllers extends AbstractController
                     }
                 }
             }
-
-        } else {
+            
+        }
+        elseif ($payment !== null) {
+            $payment->setStatus($status)
+                ->setIsExpired(true);
+            $paymentRepository->save($payment, true);
+        }
+        else{
             $retrait = $retraitRepository->findOneBy(['transactionReference' => $transactionRef]);
-            if ($retrait !== null) {
+            if ($retrait !== null && strtoupper($status) == 'SUCCESS') {
                 $retrait->setStatus($status);
                 $retraitRepository->save($retrait, true);
             }
         }
 
         // Return a response if needed
-        return new Response('Callback received successfully' . $transactionRef . 'statut' . $status);
+        return new Response('Callback received successfully');
     }
     #[Route('/email', name: 'balance', methods: ['POST'])]
     public function emailSender(MailerInterface $mailer)
