@@ -5,14 +5,27 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
+use App\Controller\Api\Controller\Notification\StudentNotificationController;
 use App\Repository\NotificationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
 #[ApiResource(
+    normalizationContext: [
+        'groups' => ['read:notification:collection']
+    ],
     operations: [
         new Get(),
+        new GetCollection(
+            uriTemplate: '/nodtifications-student-list',
+            controller: StudentNotificationController::class,
+            openapiContext: [
+                'security' => [['bearerAuth' => []]]
+            ],
+            read: false
+        ),
         new GetCollection()
     ]
 )]
@@ -21,25 +34,31 @@ class Notification
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:notification:collection'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['read:notification:collection'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['read:notification:collection'])]
     private ?string $content = null;
 
     #[ORM\Column]
+    #[Groups(['read:notification:collection'])]
     private ?bool $isRead = null;
 
     #[ORM\ManyToOne(inversedBy: 'notifications')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?user $destinataire = null;
+    private ?User $destinataire = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Groups(['read:notification:collection'])]
     private ?int $type = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:notification:collection'])]
     private ?string $title = null;
 
     public function __construct()
@@ -89,12 +108,12 @@ class Notification
         return $this;
     }
 
-    public function getDestinataire(): ?user
+    public function getDestinataire(): ?User
     {
         return $this->destinataire;
     }
 
-    public function setDestinataire(?user $destinataire): self
+    public function setDestinataire(?User $destinataire): self
     {
         $this->destinataire = $destinataire;
 

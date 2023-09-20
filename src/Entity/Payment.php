@@ -119,9 +119,11 @@ class Payment
     private ?float $amount = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['read:payment:collection'])]
     private ?string $status = null;
 
     #[ORM\Column(length: 150, nullable: true)]
+    #[Groups(['read:payment:collection'])]
     private ?string $transactionReference = null;
 
     public function __construct()
