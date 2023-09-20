@@ -16,7 +16,7 @@ class StudentNotificationController extends AbstractController
     ) {
     }
 
-    public function __invoke(Eleve $eleve): array
+    public function __invoke(): array
     {
         return $this->notificationRepository->findBy([
                 'destinataire' => $this->getUser()
