@@ -7,7 +7,6 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use ArrayObject;
 use Doctrine\ORM\EntityManagerInterface;
-use MobileApiService;
 
 class ManageNetwork
 {

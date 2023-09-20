@@ -1,8 +1,10 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\Notification;
 use App\Repository\EleveRepository;
 use App\Repository\NetworkConfigRepository;
+use App\Repository\NotificationRepository;
 use App\Repository\PaymentRepository;
 use App\Repository\RetraitRepository;
 use App\Repository\UserRepository;
@@ -19,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
+use function PHPSTORM_META\map;
 
 #[Route('/pay')]
 class PaymentController extends AbstractController
@@ -176,7 +178,7 @@ class PaymentController extends AbstractController
      * elle est exécutée automatiquement par le serveur distant à intervalle regulier de 5 min
      */
     #[Route('/callback', name: 'app_payment_callback', methods: 'GET')]
-    public function handleCallback(Request $request, UserRepository $userRepository, NetworkConfigRepository $networkConfigRepository, EleveRepository $eleveRepository, PaymentRepository $paymentRepository, RetraitRepository $retraitRepository, EntityManagerInterface $em)
+    public function handleCallback(Request $request, NotificationRepository $notificationRepository, UserRepository $userRepository, NetworkConfigRepository $networkConfigRepository, EleveRepository $eleveRepository, PaymentRepository $paymentRepository, RetraitRepository $retraitRepository, EntityManagerInterface $em)
     {
         // Check if Kulmapeck  sender's IP address
         $senderIp = $request->getClientIp();
@@ -203,6 +205,20 @@ class PaymentController extends AbstractController
                 $eleve->addCour($payment->getCours());
             }
             $paymentRepository->save($payment, true);
+
+            $notification = new Notification();
+            $notification->setDestinataire($payment->getEleve()->getUtilisateur())
+                ->setTitle("Payment effectué avec succès");
+            if($payment->getCours() !== null) {
+                $content = "Votre paiement pour l'achat du cours intitulé " . $payment->getCours()->getIntitule() . " a été accepté. Le cours figure desormais dans votre tableau de bord et vous pouvez le lire à tout moment.";
+            }elseif ($payment->getAbonnement() !== null) {
+                $content = "Votre souscription au plan " . $payment->getAbonnement()->getLabel() . " a été approuvé. Vous avez ainsi la possibilité de consulter toutes les ressources de notre plateforme pour une durée de " . $payment->getAbonnement()->getDuree() . " mois";
+            }
+            else {
+                $content = "Le payement a été approuvé";
+            }
+            $notification->setContent($content)->setType(1);
+            $notificationRepository->save($notification, true);
 
             // On gère la distribution des points pour le reseau
             if ($eleve !== null) {
