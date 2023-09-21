@@ -242,7 +242,7 @@ class Cours
     private Collection $lectures;
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Quiz::class)]
-    #[Groups(['read:course:item', 'read:quizzes:collection'])]
+    #[Groups(['read:quizzes:collection'])]
     private Collection $quizzes;
 
     #[ORM\Column(nullable: true)]
