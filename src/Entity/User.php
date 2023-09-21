@@ -44,7 +44,7 @@ use Symfony\Component\Validator\Constraints\Valid;
             controller: MeController::class,
             read: false,
             normalizationContext: [
-                'groups' => ['read:user:item', 'post:user:item']
+                'groups' => ['read:user:item', 'post:user:item', 'read:personne:item']
             ],
             openapiContext: [
                 'security' => [['bearerAuth' => []]]
@@ -108,7 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(mappedBy: "utilisateur", cascade: ['persist', 'remove'])]
     #[
-        Groups(['read:course:collection', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection', 'read:exam:collection','post:user:item','read:payment:collection', 'read:quizresult:collection']),
+        Groups(['read:course:collection', 'read:personne:item', 'read:sujet:item', 'read:sujet:collection', 'read:review:collection', 'read:exam:collection','post:user:item','read:payment:collection', 'read:quizresult:collection']),
         Valid()
     ]
     private ?Personne $personne = null;
