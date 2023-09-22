@@ -70,7 +70,9 @@ class PayerCoursController extends AbstractController
                 ->setCours($course)->setPaidAt(new \DateTimeImmutable())
                 ->setIsExpired(false)
                 ->setAmount($course->getMontantAbonnement())
-                ->setReference('PAI-' . time() + rand(10000, 100000000000) + $payment->getId());
+                ->setTransactionReference($apiResponse['responseData']['transaction_ref'])
+                ->setStatus('en cours')
+                ->setReference($reference);
             $this->paymentRepository->save($payment, true);
         }else {
             throw new BadRequestHttpException("Impossible d'effectuer le paiement");

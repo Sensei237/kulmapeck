@@ -77,7 +77,9 @@ class PayerAbonnementController extends AbstractController
                 ->setAbonnement($abonnement)
                 ->setIsExpired(false)
                 ->setPaymentMethod($paymentMethod)
-                ->setReference(time()+$eleve->getId())
+                ->setReference($reference)
+                ->setTransactionReference($apiResponse['responseData']['transaction_ref'])
+                ->setStatus('en cours')
                 ->setAmount($abonnement->getMontant())
                 ->setExpiredAt(new \DateTimeImmutable(date('Y-m-d H:i:s', $expiredAt)));
             
