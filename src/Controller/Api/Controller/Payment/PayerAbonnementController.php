@@ -81,7 +81,7 @@ class PayerAbonnementController extends AbstractController
                 ->setAmount($abonnement->getMontant())
                 ->setExpiredAt(new \DateTimeImmutable(date('Y-m-d H:i:s', $expiredAt)));
             
-            $this->paymentRepository->save($payment);
+            $this->paymentRepository->save($payment, true);
 
             $eleve->setIsPremium(false);
             
