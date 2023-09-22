@@ -30,7 +30,7 @@ class StudentPaymentController extends AbstractController
             throw $this->createAccessDeniedException('Vous devez être connecté !');
         }
 
-        return $this->paymentRepository->findBy(['eleve' => $eleve], ['paidAt' => 'DESC'], 20);
+        return $this->paymentRepository->findBy(['eleve' => $eleve], ['id' => 'DESC'], 20);
         // return $eleveConnected->getPayments();
     }
 }
