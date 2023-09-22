@@ -96,10 +96,7 @@ class RegistrationController extends AbstractController
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
-
-            $networkConfig = $networkConfigRepository->findOneBy([]);
-            ManageNetwork::manage($user, $networkConfig, $userRepository, $entityManager);
-
+            
             return $this->redirectToRoute('app_registration_success');
         }
 
