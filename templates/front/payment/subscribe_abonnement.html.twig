@@ -14,6 +14,22 @@
                         <!-- Title -->
                         <h2 class="mb-0 h3">Payment form</h2>
                         <p class="mb-0">Please complete the form to initiate payment</p>
+                        <div class="card-header p-0">
+                        <!-- Price and Info -->
+                        <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded-2">
+                            <!-- Info -->
+                            <div>
+                                <h5 class="mb-0">{{ plan.label }}</h5>
+                                {% if plan.isRecommended %}
+                                    <div class="badge bg-grad mb-0 rounded-pill">Recommended</div>
+                                {% endif %}
+                            </div>
+                            <!-- Price -->
+                            <div>
+                                <h4 class="text-success mb-0 plan-price" data-monthly-price="{{ plan.montant }} XAF" data-annual-price="{{ plan.montant }} XAF">{{ plan.montant }} XAF</h4>
+                            </div>
+                        </div>
+                    </div>
                         <!-- Form START -->
                         <form method="POST" class="mt-3 mt-sm-4 text-start">
                             {% if errorMessage is defined and not errorMessage is null %}
@@ -57,52 +73,27 @@
                         </form>
                         <!-- Form END -->
                     </div>
+                    <div class="position-relative my-3 text-center">
+                    <hr>
+                    <p class="small position-absolute top-50 start-50 translate-middle bg-body px-3">All plans included</p>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body pt-0">
+                    <ul class="list-unstyled mt-2 mb-0">
+                        {% for item in abonnementItems %}
+                            {% if item in plan.items %}
+                                <li class="mb-3 h6 fw-light"><i class="bi bi-patch-check-fill text-success me-2"></i>{{ item.label }}</li>
+                            {% else %}
+                                <li class="mb-3 h6 fw-light"><i class="bi bi-x-octagon-fill text-danger me-2"></i>{{ item.label }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
                 </div>
 
                 <!-- Content -->
-                <div class="col-lg-6">
-                    <div class="card border rounded-3 p-2 p-sm-4 h-100">
-                            <!-- Card Header -->
-                            <div class="card-header p-0">
-                                <!-- Price and Info -->
-                                <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded-2">
-                                    <!-- Info -->
-                                    <div>
-                                        <h5 class="mb-0">{{ plan.label }}</h5>
-                                        {% if plan.isRecommended %}
-                                            <div class="badge bg-grad mb-0 rounded-pill">Recommended</div>
-                                        {% endif %}
-                                    </div>
-                                    <!-- Price -->
-                                    <div>
-                                        <h4 class="text-success mb-0 plan-price" data-monthly-price="{{ plan.montant }} XAF" data-annual-price="{{ plan.montant }} XAF">{{ plan.montant }} XAF</h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Divider -->
-                            <div class="position-relative my-3 text-center">
-                                <hr>
-                                <p class="small position-absolute top-50 start-50 translate-middle bg-body px-3">All plans included</p>
-                            </div>
-
-                            <!-- Card Body -->
-                            <div class="card-body pt-0">
-                                <ul class="list-unstyled mt-2 mb-0">
-                                    {% for item in abonnementItems %}
-                                        {% if item in plan.items %}
-                                            <li class="mb-3 h6 fw-light"><i class="bi bi-patch-check-fill text-success me-2"></i>{{ item.label }}</li>
-                                        {% else %}
-                                            <li class="mb-3 h6 fw-light"><i class="bi bi-x-octagon-fill text-danger me-2"></i>{{ item.label }}</li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            <!-- Card Footer -->
-                            <div class="card-footer text-center d-grid pb-0">
-                            </div>
-                        </div>
-                </div>
+               
 
             </div> <!-- Row END -->
         </div>
