@@ -21,7 +21,7 @@ class StudentPaymentController extends AbstractController
     ) {
     }
 
-    public function __invoke(Eleve $eleve): Collection
+    public function __invoke(Eleve $eleve): array
     {
         $user = $this->security->getUser();
         $eleveConnected = $this->eleveRepository->findOneBy(['utilisateur' => $user]);
