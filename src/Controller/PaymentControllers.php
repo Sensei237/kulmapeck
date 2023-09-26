@@ -21,8 +21,6 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
-use function PHPSTORM_META\map;
-
 #[Route('/api/pay')]
 class PaymentControllers extends AbstractController
 {
