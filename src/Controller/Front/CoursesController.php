@@ -22,6 +22,7 @@ use App\Repository\ChapitreRepository;
 use App\Repository\ClasseRepository;
 use App\Repository\CoursRepository;
 use App\Repository\EleveRepository;
+use App\Repository\EnseignantRepository;
 use App\Repository\FiliereRepository;
 use App\Repository\ForumMessageRepository;
 use App\Repository\ForumRepository;
@@ -351,7 +352,7 @@ class CoursesController extends AbstractController
     }
 
     #[Route('/course/{slug}/lesson', name: 'app_front_read_lesson', methods: ['GET'])]
-    public function readLesson(Lesson $lesson, Request $request, PaymentRepository $paymentRepository, MembreRepository $membreRepository, EleveRepository $eleveRepository, LectureRepository $lectureRepository)
+    public function readLesson(Lesson $lesson, Request $request, PaymentRepository $paymentRepository, MembreRepository $membreRepository, EleveRepository $eleveRepository, EnseignantRepository $enseignantRepository, LectureRepository $lectureRepository)
     {
         $eleve = $eleveRepository->findOneBy(['utilisateur' => $this->getUser()]);
         if ($this->isGranted('ROLE_STUDENT')) {
@@ -372,6 +373,11 @@ class CoursesController extends AbstractController
             //         return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $lesson->getChapitre()->getCours()->getSlug()]);
             //     }
             // }
+        }else {
+            $enseignant = $enseignantRepository->findOneBy(['utilisateur' => $this->getUser()]);
+            if (!$this->isGranted('ROLE_COURSE_MANAGER') && ($enseignant !== null && !$enseignant->getCours()->contains($lesson->getChapitre()->getCours()))) {
+                throw $this->createAccessDeniedException();
+            }
         }
 
         if ($lesson->getVideoLink() !== null && $request->query->get('view') === null) {
