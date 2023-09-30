@@ -6,6 +6,7 @@ use App\Repository\PersonneRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\AuthenticationEvents;
 use Symfony\Component\Security\Core\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -30,6 +31,11 @@ class LoginSubscriber implements EventSubscriberInterface
 
             if ($personne) {
                 $this->requestStack->getSession()->set('personne', $personne);
+            }
+        }else {
+            $user = $event->getAuthenticationToken()->getUser();
+            if (!in_array('ROLE_STUDENT', $user->getRoles())) {
+                throw new AccessDeniedHttpException('Vous ne pouvez pas vous connecter depuis cette application');
             }
         }
 

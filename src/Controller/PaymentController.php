@@ -199,8 +199,8 @@ class PaymentController extends AbstractController
             $payment->setStatus($status)
                 ->setIsExpired(false);
             if ($payment->getAbonnement() !== null) {
-                $payment->getEleve()->setIsPremium(true);
-                $eleveRepository->save($payment->getEleve());
+                $eleve->setIsPremium(true);
+                $eleveRepository->save($eleve, true);
             }elseif ($payment->getCours() !== null) {
                 $eleve->addCour($payment->getCours());
             }

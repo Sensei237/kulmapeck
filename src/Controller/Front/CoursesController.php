@@ -329,7 +329,7 @@ class CoursesController extends AbstractController
                     return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $course->getSlug()]);
                 }
             }else {
-                if (!$course->isIsFree() && (!$eleve->isIsPremium() || !$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $course, 'isExpired' => false]))) {
+                if (!$course->isIsFree() && (!$eleve->isIsPremium() && !$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $course, 'isExpired' => false]))) {
                     
                     return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $course->getSlug()]);
                 }
@@ -491,7 +491,7 @@ class CoursesController extends AbstractController
 
             $data = $request->request->getIterator();
             $noteQuiz = 0;
-            // dd($data['quizzes']);
+            // dd($chapitre->getId(), $data['quizzes']);
             $quizzes = $data['quizzes'];
             foreach ($quizzes as $quizze) {
                 $quizId = $quizze['id'];
