@@ -19,7 +19,7 @@ class EvaluationController extends AbstractController
     public function index(EvaluationRepository $evaluationRepository): Response
     {
         return $this->render('admin/evaluation/index.html.twig', [
-            'evaluations' => $evaluationRepository->findBy([], ['endAt' => 'DESC']),
+            'evaluations' => $evaluationRepository->findBy([], ['endAt' => 'DESC'], 30),
             'isCourses' => true,
             'evc' => true,
         ]);

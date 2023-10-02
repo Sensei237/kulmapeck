@@ -82,7 +82,7 @@
                         {% if lecture and lecture.lesson is not same as null %}
                             <div class="card-footer p-4">
                                 {# {% if not lecture.isFinished %} #}
-                                    <a href="{{ url("app_front_course_lecture_finished", {reference: lecture.reference}) }}" class="btn btn-success">J'ai fini cette leçon, je passe à la leçon suivante !</a>
+                                    <a href="{{ url('app_front_course_lecture_finished', {reference: lecture.reference}) }}" class="btn btn-success">J'ai fini cette leçon, je passe à la leçon suivante !</a>
                                 {# {% else %}
                                     #<a href="{{ url("app_front_course_start", {'slug': lecture.lesson.chapitre.cours.slug}) }}" class="btn btn-success">Poursuivre la lecture !</a>
                                 {% endif %} #}
@@ -152,7 +152,8 @@
                                                                         {% endfor %}
                                                                         <div class="d-flex justify-content-between align-items-center">
                                                                             <div class="position-relative d-flex align-items-center">
-                                                                                <a href="{{ lecture and not exist ? '#' : url("app_front_read_lesson", {slug: les.slug})  }}" class="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
+                                                                                <a href="{{ url('app_front_read_lesson', {slug: les.slug}) }}" class="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
+                                                                                {# <a href="{{ lecture and not exist ? '#' : url("app_front_read_lesson", {slug: les.slug})  }}" class="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"> #}
                                                                                     <i class="fas fa-play me-0"></i>
                                                                                 </a>
                                                                                 <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">{{ les.title }}</span>
@@ -170,7 +171,8 @@
 
                                                                     <div class="d-flex justify-content-between align-items-center">
                                                                         <div class="position-relative d-flex align-items-center">
-                                                                            <a href="{{ lecture and exist ? '#' : url("app_front_course_chapitre_quizzes", {slugChapitre: chapter.slug, slugCours: chapter.cours.slug})  }}" class="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
+                                                                            {# <a href="{{ lecture and exist ? '#' : url("app_front_course_chapitre_quizzes", {slugChapitre: chapter.slug, slugCours: chapter.cours.slug})  }}" class="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static"> #}
+                                                                            <a href="{{ url('app_front_course_chapitre_quizzes', {slugChapitre: chapter.slug, slugCours: chapter.cours.slug}) }}" class="btn btn-danger-soft btn-round btn-sm mb-0 stretched-link position-static">
                                                                                 <i class="fas fa-play me-0"></i>
                                                                             </a>
                                                                             <span class="d-inline-block text-truncate ms-2 mb-0 h6 fw-light w-200px">Quiz</span>

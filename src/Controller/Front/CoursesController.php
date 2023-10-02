@@ -363,6 +363,10 @@ class CoursesController extends AbstractController
                 throw $this->createAccessDeniedException();
             }
 
+            if (!$lesson->getChapitre()->getCours()->isIsValidated()) {
+                throw $this->createAccessDeniedException("Ce cours est en cours de redaction !");
+            }
+
             // On verifie si l'élève n'a pas déjà ce cours dans sa liste des cours
             // le cours soit souscrire a un compte premium
             if (!$eleve->getCours()->contains($lesson->getChapitre()->getCours())) {
@@ -470,21 +474,25 @@ class CoursesController extends AbstractController
             }
         }
 
-        if ($chapitre !== null) {
-            $lecture = $lectureRepository->findOneBy(['eleve' => $eleve, 'chapitre' => $chapitre]);
-            if ($lecture == null) {
-                $lecture = new Lecture();
-                $lecture->setChapitre($chapitre)->setEleve($eleve)->setIsFinished(false)->setReference(time()+$eleve->getId())->setStartAt(new \DateTimeImmutable());
-                $lectureRepository->save($lecture, true);
-            }
-            $quizLost = $quizLostRepository->findOneBy(['chapitre' => $chapitre, 'eleve' => $eleve]);
-        } else {
-            $lecture = $lectureRepository->findOneBy(['eleve' => $eleve, 'cours' => $cours]);
-            $lecture->setCours($cours)->setEleve($eleve)->setIsFinished(false)->setReference(time() + $eleve->getId())->setStartAt(new \DateTimeImmutable());
-            $lectureRepository->save($lecture, true);
-            $quizLost = $quizLostRepository->findOneBy(['cours' => $cours, 'eleve' => $eleve]);
-        }
+        $lecture = null;
 
+        if ($eleve !== null) {
+            if ($chapitre !== null) {
+                $lecture = $lectureRepository->findOneBy(['eleve' => $eleve, 'chapitre' => $chapitre]);
+                if ($lecture == null) {
+                    $lecture = new Lecture();
+                    $lecture->setChapitre($chapitre)->setEleve($eleve)->setIsFinished(false)->setReference(time()+$eleve->getId())->setStartAt(new \DateTimeImmutable());
+                    $lectureRepository->save($lecture, true);
+                }
+                $quizLost = $quizLostRepository->findOneBy(['chapitre' => $chapitre, 'eleve' => $eleve]);
+            } else {
+                $lecture = $lectureRepository->findOneBy(['eleve' => $eleve, 'cours' => $cours]);
+                $lecture->setCours($cours)->setEleve($eleve)->setIsFinished(false)->setReference(time() + $eleve->getId())->setStartAt(new \DateTimeImmutable());
+                $lectureRepository->save($lecture, true);
+                $quizLost = $quizLostRepository->findOneBy(['cours' => $cours, 'eleve' => $eleve]);
+            }
+        }
+        
         $quizzesResults = [];
 
         if ($request->request->get('submit') !== null && $this->isCsrfTokenValid('postquiz' . $cours->getId(), $request->request->get('_token'))) {
@@ -608,11 +616,14 @@ class CoursesController extends AbstractController
         $showCorrection = false;
         $currentDate = new \DateTimeImmutable();
         $nextQuizAt = null;
-        if (($lecture && $lecture->isIsFinished()) || $quizLost && $currentDate->getTimestamp() < $quizLost->getNextAt()->getTimestamp()) {
-            $showCorrection = true;
-            $quizzesResults = $quizResultRepository->findStudentQuizResultsByCourseOrChapter($eleve, $cours, $chapitre);
-            if ($quizLost && !$quizLost->isIsOk()) {
-                $nextQuizAt = $quizLost->getNextAt();
+
+        if ($eleve !== null) {
+            if (($lecture && $lecture->isIsFinished()) || $quizLost && $currentDate->getTimestamp() < $quizLost->getNextAt()->getTimestamp()) {
+                $showCorrection = true;
+                $quizzesResults = $quizResultRepository->findStudentQuizResultsByCourseOrChapter($eleve, $cours, $chapitre);
+                if ($quizLost && !$quizLost->isIsOk()) {
+                    $nextQuizAt = $quizLost->getNextAt();
+                }
             }
         }
         

@@ -27,7 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             controller: ListController::class,
             openapiContext: [
                 'security' => [['bearerAuth' => []]],
-                'description' => 'ID = Id de eleve'
+                'description' => 'ID = Id de eleve. Permet de recuperer la liste des evaluations disponibles pour l\'eleve dont l\'id est passée en paramètre.'
             ],
             normalizationContext: [
                 'groups' => ['read:evaluation:collection']
@@ -39,7 +39,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             controller: EvaluationsEleve::class,
             openapiContext: [
                 'security' => [['bearerAuth' => []]],
-                'description' => "Permet de recuperer la liste des évaluations d'un élève"
+                'description' => "Permet de recuperer la liste des évaluations d'un élève. id = eleve_id"
             ],
             normalizationContext: [
                 'groups' => ['read:evaluation:collection']
@@ -51,7 +51,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             controller: InscriptionController::class,
             openapiContext: [
                 'security' => [['bearerAuth' => []]],
-                'description' => 'id = evaluation_id'
+                'description' => 'id = evaluation_id. Permet à l\'eleve de souscrire a une evaluation.'
             ],
             write: false
         ),
@@ -60,7 +60,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             controller: QuestionnaireController::class,
             openapiContext: [
                 'security' => [['bearerAuth' => []]],
-                'description' => 'id = evaluation_id'
+                'description' => 'id = evaluation_id. Permet de recuperer la liste des questionnaires pour une evaluation'
             ],
             normalizationContext: [
                 'groups' => ['read:evaluation:question', 'read:evaluation:item']
@@ -72,7 +72,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             controller: PostCorrectionController::class,
             openapiContext: [
                 'security' => [['bearerAuth' => []]],
-                'description' => 'id = evaluation_id'
+                'description' => 'id = evaluation_id. Permet de soumettre le questionnaire d\'une evaluation'
             ],
             normalizationContext: [
                 'groups' => ['read:evaluation:question'],
