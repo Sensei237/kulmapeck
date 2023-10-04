@@ -89,7 +89,8 @@ class PostController extends AbstractController
             $quizLost = $quizLostRepository->findOneBy(['chapitre' => $chapitre, 'eleve' => $eleve]);
         } else {
             $lecture = $lectureRepository->findOneBy(['eleve' => $eleve, 'cours' => $cours]);
-            $lecture->setCours($cours)->setEleve($eleve)->setIsFinished(false)->setReference(time() + $eleve->getId())->setStartAt(new \DateTimeImmutable());
+            $lecture->setCours($cours)->setEleve($eleve)->setIsFinished(false)->setReference(time() 
+            + $eleve->getId())->setStartAt(new \DateTimeImmutable());
             $lectureRepository->save($lecture, true);
             $quizLost = $quizLostRepository->findOneBy(['cours' => $cours, 'eleve' => $eleve]);
         }
