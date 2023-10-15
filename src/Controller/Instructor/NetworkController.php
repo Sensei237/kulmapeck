@@ -44,7 +44,9 @@ class NetworkController extends AbstractController
     }
 
     #[Route('/instructor/retrait/new', name: 'app_instructor_network_retrait', methods: ['POST', 'GET'])]
-    public function retirer(Request $request, EnseignantRepository $enseignantRepository, RetraitRepository $retraitRepository, NetworkConfigRepository $networkConfigRepository, UserRepository $userRepository): Response
+    public function retirer(Request $request, EnseignantRepository $enseignantRepository
+    , RetraitRepository $retraitRepository, NetworkConfigRepository $networkConfigRepository,
+     UserRepository $userRepository): Response
     {
         $enseignant = $enseignantRepository->findOneBy(['utilisateur' => $this->getUser()]);
         if ($enseignant === null) {
@@ -62,7 +64,9 @@ class NetworkController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $reference = 'RT-' . (time() + rand(1000, 1000000000000));
-            $response = ManageNetwork::convertInMoney($enseignant->getUtilisateur(), $retrait->getMontant(), $retrait->getNumeroTelephone(), $networkConfig, $userRepository, $this->keys, $reference);
+            $response = ManageNetwork::convertInMoney($enseignant->getUtilisateur(), 
+            $retrait->getMontant(), $retrait->getNumeroTelephone(), $networkConfig, 
+            $userRepository, $this->keys, $reference);
             // dd($response);
             if (!$response['hasDone']) {
                 $this->addFlash('success', $response['message']);
@@ -113,5 +117,7 @@ class NetworkController extends AbstractController
             'montantTotal' => $montantTotal,
         ]);
     }
+
+  
 
 }

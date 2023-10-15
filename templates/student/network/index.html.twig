@@ -1,91 +1,176 @@
 {% extends "student/base.html.twig" %}
-
-
 {% block pageContent %}
-
-    <div class="card bg-transparent border rounded-3">
-		<!-- Card header START -->
-		<div class="card-header bg-transparent border-bottom">
-			<h3 class="mb-0">My Network</h3>
-			<tr>
-				<td colspan="4">
-					<b>Invitez les enseignants via le lien : <i class="text-primary">{{ student.utilisateur.personne.invitationLink.trainer }}</i></b> <br>
-					<b>Invitez les élèves via le lien : <i class="text-primary">{{ student.utilisateur.personne.invitationLink.student }}</i></b> <br>
-					<b>Ou partagez le code suivant : <i class="text-primary">{{ student.utilisateur.personne.invitationCode }}</i></b>
-				</td>
-			</tr>
-		</div>
-		<!-- Card header END -->
-
-		<!-- Card body START -->
-		<div class="card-body">
-
-			<!-- Course list table START -->
-			<div class="table-responsive border-0">
-				<table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
-					<!-- Table head -->
-					<thead>
-						<tr>
-							<th scope="col" class="border-0 rounded-start">Name</th>
-							<th scope="col" class="border-0">email</th>
-							<th scope="col" class="border-0">Mobile</th>
-							<th scope="col" class="border-0 rounded-end">Network</th>
-						</tr>
-					</thead>
-
-					<!-- Table body START -->
-					<tbody>
-						{% for personne in network %}
-							<tr>
-								<!-- Table data -->
-								<td>
-									<div class="d-flex align-items-center">
-										<!-- Image -->
-										<div class="w-50px">
-											<img src="{{asset(personne.avatarPath)}}" class="rounded" alt="">
-										</div>
-										<div class="mb-0 ms-2">
-											<!-- Title -->
-											<h6><a href="">{{ personne.nomComplet }}</a></h6>
-										</div>
-									</div>
-								</td>
-
-								<!-- Table data -->
-								<td>{{ personne.utilisateur.email }}</td>
-
-								<!-- Table data -->
-								<td>{{ personne.telephone }}</td>
-
-								<!-- Table data -->
-								<td>{{ personne.invites|length }}</td>
-							</tr>
-							
-						{% else %}
-							<tr>
-								<td colspan="4">
-                                    <h5>You haven't invited anyone. use the following code or links to invite teachers and students</h5>
-									<b>Invitez les enseignants via le lien : <i class="text-primary">{{ student.utilisateur.personne.invitationLink.trainer }}</i></b> <br>
-									<b>Invitez les enseignants via le lien : <i class="text-primary">{{ student.utilisateur.personne.invitationLink.trainer }}</i></b> <br>
-                                    <b>Invitez les élèves via le lien : <i class="text-primary">{{ student.utilisateur.personne.invitationLink.student }}</i></b> 
-                                </td>
-							</tr>
-						{% endfor %}
-					</tbody>
-					<!-- Table body END -->
-				</table>
-			</div>
-			<!-- Course list table END -->
-
-			<!-- Pagination START -->
-			<div class="d-sm-flex justify-content-sm-between pagination-container align-items-sm-center mt-4 mt-sm-3">
-				{{ knp_pagination_render(network) }}
-			</div>
-			<!-- Pagination END -->
-		</div>
-		<!-- Card body START -->
-	</div>
-
-{% endblock %}
-
-
+    <div class="row g-4 mb-5">
+        <!-- Counter item -->
+        <div class="col-sm-6 col-lg-4">
+            <div class="d-flex justify-content-center align-items-center p-4 bg-warning bg-opacity-15 rounded-3">
+                <span class="display-6 text-warning mb-0">
+                    <i class="fas fa-tv fa-fw"></i>
+                </span>
+                <div class="ms-4">
+                    <div class="d-flex">
+                        <h5 class="purecounter mb-0 fw-bold" data-purecounter-start="0" data-purecounter-end="{{ student.utilisateur.points }}" data-purecounter-delay="200">
+                            0
+                        </h5>
+                    </div>
+                    <span class="mb-0 h6 fw-light">
+                        Total Des points
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- Counter item -->
+        <div class="col-sm-6 col-lg-4">
+            <div class="d-flex justify-content-center align-items-center p-4 bg-purple bg-opacity-10 rounded-3">
+                <span class="display-6 text-purple mb-0">
+                    <i class="fas fa-dollar-sign fa-fw"></i>
+                </span>
+                <div class="ms-4">
+                    <div class="d-flex">
+                        <h5 class="purecounter mb-0 fw-bold" data-purecounter-start="0" data-purecounter-end="{{ student.utilisateur.especes }}" data-purecounter-delay="200">
+                            0
+                        </h5>
+                    {# <span class="mb-0 h5">K+</span> #}
+                    </div>
+                    <span class="mb-0 h6 fw-light">
+                        Montant en espèce
+                    </span>
+                    <br>
+                        <a href="{{ url("app_student_network_retrait") }}">
+                            Faire le retrait
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card bg-transparent border rounded-3">
+            <!-- Card header START -->
+            <div class="card-header bg-transparent border-bottom">
+                <h3 class="mb-0">
+                    My Network
+                </h3>
+                <tr>
+                    <td colspan="4">
+                        <b>
+                            Invitez les enseignants via le lien : 
+                            <i class="text-primary">
+                                {{ student.utilisateur.personne.invitationLink.trainer }}
+                            </i>
+                        </b>
+                        <br>
+                            <b>
+                                Invitez les élèves via le lien : 
+                                <i class="text-primary">
+                                    {{ student.utilisateur.personne.invitationLink.student }}
+                                </i>
+                            </b>
+                            <br>
+                                <b>
+                                    Ou partagez le code suivant : 
+                                    <i class="text-primary">
+                                        {{ student.utilisateur.personne.invitationCode }}
+                                    </i>
+                                </b>
+                            </td>
+                        </tr>
+                    </div>
+                    <!-- Card header END -->
+                    <!-- Card body START -->
+                    <div class="card-body">
+                        <!-- Course list table START -->
+                        <div class="table-responsive border-0">
+                            <table class="table table-dark-gray align-middle p-4 mb-0 table-hover">
+                                <!-- Table head -->
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="border-0 rounded-start">
+                                            Name
+                                        </th>
+                                        <th scope="col" class="border-0">
+                                            email
+                                        </th>
+                                        <th scope="col" class="border-0">
+                                            Mobile
+                                        </th>
+                                        <th scope="col" class="border-0 rounded-end">
+                                            Network
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <!-- Table body START -->
+                                <tbody>
+                                    {% for personne in network %}
+                                        <tr>
+                                            <!-- Table data -->
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <!-- Image -->
+                                                    <div class="w-50px">
+                                                        <img src="{{ asset(personne.avatarPath) }}" class="rounded" alt=""></div>
+                                                        <div class="mb-0 ms-2">
+                                                            <!-- Title -->
+                                                            <h6>
+                                                                <a href="">
+                                                                    {{ personne.nomComplet }}
+                                                                </a>
+                                                            </h6>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <!-- Table data -->
+                                                <td>
+                                                    {{ personne.utilisateur.email }}
+                                                </td>
+                                                <!-- Table data -->
+                                                <td>
+                                                    {{ personne.telephone }}
+                                                </td>
+                                                <!-- Table data -->
+                                                <td>
+                                                    {{ personne.invites|length }}
+                                                </td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="4">
+                                                    <h5>
+                                                        You haven't invited anyone. use the following code or links to invite teachers and students
+                                                    </h5>
+                                                    <b>
+                                                        Invitez les enseignants via le lien : 
+                                                        <i class="text-primary">
+                                                            {{ student.utilisateur.personne.invitationLink.trainer }}
+                                                        </i>
+                                                    </b>
+                                                    <br>
+                                                        <b>
+                                                            Invitez les enseignants via le lien : 
+                                                            <i class="text-primary">
+                                                                {{ student.utilisateur.personne.invitationLink.trainer }}
+                                                            </i>
+                                                        </b>
+                                                        <br>
+                                                            <b>
+                                                                Invitez les élèves via le lien : 
+                                                                <i class="text-primary">
+                                                                    {{ student.utilisateur.personne.invitationLink.student }}
+                                                                </i>
+                                                            </b>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        <!-- Table body END -->
+                                        </table>
+                                    </div>
+                                    <!-- Course list table END -->
+                                    <!-- Pagination START -->
+                                    <div class="d-sm-flex justify-content-sm-between pagination-container align-items-sm-center mt-4 mt-sm-3">
+                                        {{ knp_pagination_render(network) }}
+                                    </div>
+                                <!-- Pagination END -->
+                                </div>
+                            <!-- Card body START -->
+                            </div>
+                        {% endblock %}
+                        

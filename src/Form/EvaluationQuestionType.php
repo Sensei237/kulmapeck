@@ -22,7 +22,7 @@ class EvaluationQuestionType extends AbstractType
                 'label' => 'Proposition 1',
                 'label_attr' => ['class' => 'form-label']
             ])
-            ->add('propoition2', CKEditorType::class, [
+            ->add('proposition2', CKEditorType::class, [
                 'label' => 'Proposition 2',
                 'label_attr' => ['class' => 'form-label']
             ])

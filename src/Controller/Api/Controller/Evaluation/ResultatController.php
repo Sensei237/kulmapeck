@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller\Api\Controller\Evaluation;
 
-use App\Entity\Eleve;
 use App\Entity\Evaluation;
 use App\Repository\EleveRepository;
 use App\Repository\EvaluationQuestionRepository;

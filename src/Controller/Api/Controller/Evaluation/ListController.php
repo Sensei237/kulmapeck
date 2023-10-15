@@ -1,19 +1,22 @@
 <?php
 namespace App\Controller\Api\Controller\Evaluation;
 
-use App\Entity\Classe;
 use App\Entity\Eleve;
 use App\Repository\EvaluationRepository;
 use App\Utils\Dto\EvaluationDto;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 #[AsController]
 class ListController extends AbstractController
 {
     public function __construct(
-        private EvaluationRepository $evaluationRepository
+        private EvaluationRepository $evaluationRepository,
+        private SerializerInterface $serializer
+
     )
     {
         
@@ -22,7 +25,7 @@ class ListController extends AbstractController
     public function __invoke(Eleve $eleve): array
     {
         $classe = $eleve->getClasse();
-        $evaluations = $this->evaluationRepository->findSudentEvaluationsAnnonces($classe);
+        $evaluations = $this->evaluationRepository->findStudentEvaluationsAnnouncements($classe);
         $annonces = [];
         foreach ($evaluations as $evaluation) {
             // die("ici");
@@ -34,7 +37,7 @@ class ListController extends AbstractController
             $y = $diff->y;
             $nbHeures = $h + $d*24 + $m*30*24 + 8760*$y;
             // dump($nbHeures, 24*6, $evaluation->getStartAt()->diff($currentDateTime));die;
-            if (!$eleve->getEvaluations()->contains($evaluation) && $nbHeures <= 7*24 && $nbHeures > 0) {
+            if (!$eleve->getEvaluations()->contains($evaluation) ) {
             //    die;
                 $annonce = [
                     'evaluation' => EvaluationDto::from($evaluation),
@@ -53,7 +56,14 @@ class ListController extends AbstractController
                 $annonces[] = $annonce;
             }
         }
+        $normalizedData = $this->serializer->normalize($annonces, null, [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId();
+            },
+            AbstractNormalizer::IGNORED_ATTRIBUTES => ['evaluationQuestions', 'Eleves', 'results'],
+            AbstractNormalizer::GROUPS => ['read:evaluation:collection'],
+        ]);
 
-        return $annonces;
+        return $normalizedData;
     }
 }

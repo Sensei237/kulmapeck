@@ -59,18 +59,21 @@ class EvaluationRepository extends ServiceEntityRepository
     /**
     * @return Evaluation[] Returns an array of Evaluation objects
     */
-    public function findSudentEvaluationsAnnonces(Classe $classe): array
-    {
-        return $this->createQueryBuilder('e')
-            ->join('e.classes', 'cl')
-            ->andWhere('cl.id = :idClasse')
-            ->setParameter('idClasse', $classe->getId())
-            ->andWhere('e.isPassed = :isPassed')
-            ->setParameter('isPassed', false)
-            ->orderBy('e.endAt', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
+ public function findStudentEvaluationsAnnouncements(Classe $classe): array
+{
+    return $this->createQueryBuilder('e')
+        ->join('e.classes', 'c')
+        ->andWhere('c.id = :idClasse')
+        ->andWhere('e.isPassed = :isPassed')
+        ->andWhere('e.isPublished = :isPublished')
+        ->setParameter('idClasse', $classe->getId())
+        ->setParameter('isPassed', false)
+        ->setParameter('isPublished', true)
+        ->orderBy('e.endAt', 'ASC')
+        ->getQuery()
+        ->getResult();
+}
+
 
 
 //    /**

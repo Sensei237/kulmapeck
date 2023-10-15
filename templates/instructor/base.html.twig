@@ -149,6 +149,7 @@
                                         <a class="list-group-item {{ isNetwork is defined ? 'active' : '' }}" href="{{ url("app_instructor_network") }}"><i class="bi bi-people fa-fw me-2"></i>My Network</a>
                                         <a class="list-group-item {{ isOrders is defined ? 'active' : '' }}" href="{{ url("app_instructor_orders_index") }}"><i class="bi bi-folder-check fa-fw me-2"></i>Orders</a>
                                         <a class="list-group-item {{ isExam is defined ? 'active' : '' }}" href="{{ url("app_instructor_exam_index") }}"><i class="bi bi-pencil-square fa-fw me-2"></i>Exam</a>
+                                        <a class="list-group-item {{ evc is defined ? 'active' : '' }}" href="{{ url("app_admin_evaluation_index") }}">Evaluations</a>
                                         <a class="list-group-item {{ isReview is defined ? 'active' : '' }}" href="{{ url("app_instructor_reviews") }}"><i class="bi bi-star fa-fw me-2"></i>Reviews</a>
                                         <a class="list-group-item {{ isProfile is defined ? 'active' : '' }}" href="{{ url("app_instructor_profile") }}"><i class="far fa-user fa-fw me-2"></i>Profile</a>
                                         <a class="list-group-item text-danger bg-danger-soft-hover" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Sign Out</a>

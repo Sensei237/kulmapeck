@@ -139,6 +139,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?float $especes = null;
 
+    #[ORM\OneToMany(mappedBy: 'deviceToken', targetEntity: Device::class)]
+    private Collection $devices;
+
     public function __construct()
     {
         $this->notifications = new ArrayCollection();
@@ -152,6 +155,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isBlocked = false;
         $this->isVerified = false;
         $this->isAdmin = false;
+        $this->devices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -507,6 +511,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEspeces(float $especes): static
     {
         $this->especes = $especes;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Device>
+     */
+    public function getDevices(): Collection
+    {
+        return $this->devices;
+    }
+
+    public function addDevice(Device $device): static
+    {
+        if (!$this->devices->contains($device)) {
+            $this->devices->add($device);
+            $device->setDeviceToken($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDevice(Device $device): static
+    {
+        if ($this->devices->removeElement($device)) {
+            // set the owning side to null (unless already changed)
+            if ($device->getDeviceToken() === $this) {
+                $device->setDeviceToken(null);
+            }
+        }
 
         return $this;
     }

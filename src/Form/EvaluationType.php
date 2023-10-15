@@ -14,11 +14,33 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class EvaluationType extends AbstractType
 {
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            $builder
+                ->add('startAt', DateTimeType::class, [
+                    'widget' => 'single_text',
+                    'label_attr' => [
+                        'class' => 'form-label'
+                    ],
+                ])
+                ->add('endAt', DateTimeType::class, [
+                    'widget' => 'single_text',
+                    'label_attr' => [
+                        'class' => 'form-label'
+                    ],
+                ]);
+        }
         $builder
             ->add('titre', TextType::class, [
                 'label_attr' => [
@@ -26,18 +48,6 @@ class EvaluationType extends AbstractType
                 ],
             ])
             ->add('description', TextareaType::class, [
-                'label_attr' => [
-                    'class' => 'form-label'
-                ],
-            ])
-            ->add('startAt', DateTimeType::class, [
-                'widget' => 'single_text',
-                'label_attr' => [
-                    'class' => 'form-label'
-                ],
-            ])
-            ->add('endAt', DateTimeType::class, [
-                'widget' => 'single_text',
                 'label_attr' => [
                     'class' => 'form-label'
                 ],

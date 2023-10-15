@@ -329,7 +329,7 @@ class CoursesController extends AbstractController
                     return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $course->getSlug()]);
                 }
             }else {
-                if (!$course->isIsFree() && (!$eleve->isIsPremium() && !$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $course, 'isExpired' => false]))) {
+                if (!$course->isIsFree() && (!$eleve->isIsPremium() && (null!==$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $course, 'isExpired' => false])))) {
                     
                     return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $course->getSlug()]);
                 }
@@ -438,7 +438,7 @@ class CoursesController extends AbstractController
         if ($lesson === null) {
             return $this->redirectToRoute('app_front_course_chapitre_quizzes', ['slugCours' => $lecture->getLesson()->getChapitre()->getCours()->getSlug(), 'slugChapitre' => $lecture->getLesson()->getChapitre()->getSlug()]);
         }
-
+        
         return $this->redirectToRoute('app_front_read_lesson', ['slug' => $lesson->getSlug()]);
     }
 
@@ -464,7 +464,7 @@ class CoursesController extends AbstractController
                 return $this->redirectToRoute('app_front_course_start', ['slug' => $cours->getSlug()]);
             } 
             else {
-                if (!$cours->isIsFree() && (!$eleve->isIsPremium() || !$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $cours, 'isExpired' => false]))) {
+                if (!$cours->isIsFree() && (!$eleve->isIsPremium() && ($paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $cours, 'isExpired' => false])!==null))) {
                     return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $cours->getSlug()]);
                 }
             }

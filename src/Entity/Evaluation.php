@@ -88,7 +88,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 'description' => "Cette route permet de récupérer la correction d'une évaluation. id = evaluation_id"
             ],
             normalizationContext: [
-                'groups' => ['read:evaluation:question']
+                'groups' => ['read:evaluation:item']
             ],
             read: false
         )
@@ -119,11 +119,11 @@ class Evaluation
     #[Groups(['read:evaluation:collection'])]
     private Collection $classes;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable:true)]
     #[Groups(['read:evaluation:collection'])]
     private ?\DateTime $startAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable:true)]
     #[Groups(['read:evaluation:collection'])]
     private ?\DateTime $endAt = null;
 
@@ -152,6 +152,12 @@ class Evaluation
 
     #[ORM\OneToMany(mappedBy: 'evaluation', targetEntity: EvaluationResultat::class, orphanRemoval: true)]
     private Collection $results;
+
+    #[ORM\ManyToOne(inversedBy: 'evaluations')]
+    private ?Enseignant $enseignant = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isPublished = null;
 
     public function __construct()
     {
@@ -378,6 +384,33 @@ class Evaluation
                 $result->setEvaluation(null);
             }
         }
+
+        return $this;
+    }
+   /**
+     * @return ?Enseignant
+     * @Groups({"read:evaluation:collection", "read:evaluation:item"})
+     */
+    public function getEnseignant(): ?Enseignant
+    {
+        return $this->enseignant;
+    }
+
+    public function setEnseignant(?Enseignant $enseignant): static
+    {
+        $this->enseignant = $enseignant;
+
+        return $this;
+    }
+
+    public function isIsPublished(): ?bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setIsPublished(?bool $isPublished): static
+    {
+        $this->isPublished = $isPublished;
 
         return $this;
     }
