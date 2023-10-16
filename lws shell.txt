@@ -1,0 +1,3 @@
+- ls /var/www/clients/client0/web1/web/bin/console
+- php /var/www/clients/client0/web1/web/bin/console make:migration
+- /your/symfony/project/bin/console doctrine:schema:update --complete

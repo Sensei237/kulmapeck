@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Device;
-use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,29 +24,41 @@ class FirebaseController extends AbstractController {
     }
     #[ Route( '/token', methods: [ 'POST' ] ) ]
 
-    public function saveNewToken( Request $request ) {
+    public function saveNewToken(Request $request)
+    {
         $content = $request->getContent();
-
+    
         // Decode the JSON content
-        $data = json_decode( $content, true );
-
-        
-        $token = $data[ 'token' ];
+        $data = json_decode($content, true);
+    
+        $token = $data['token'];
         $user = $this->security->getUser();
+    
+        // Check if the device with the given token already exists for the user
+        $existingDevice = $this->entityManager->getRepository(Device::class)->findOneBy([
+            'device_token' => $user,
+            'token' => $token,
+        ]);
+    
+        if ($existingDevice) {
+            // Device with the given token already exists, you can handle this case as needed
+            return new Response('Device with the given token already exists for the user');
+        }
+    
         // Create a new Device instance
         $device = new Device();
-
+    
         // Set the device token
-        $device->setDeviceToken( $user );
-        $device->setToken( $token );
-
+        $device->setDeviceToken($user);
+        $device->setToken($token);
+    
         // Persist the entity
-        $this->entityManager->persist( $device );
-
+        $this->entityManager->persist($device);
+    
         // Flush changes to the database
         $this->entityManager->flush();
-
-        return new Response('Token not found in the request');
-
+    
+        return new Response('Token saved successfully');
     }
+    
 }

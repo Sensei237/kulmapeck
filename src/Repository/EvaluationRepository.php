@@ -59,7 +59,7 @@ class EvaluationRepository extends ServiceEntityRepository
     /**
     * @return Evaluation[] Returns an array of Evaluation objects
     */
- public function findStudentEvaluationsAnnouncements(Classe $classe): array
+ public function findByClass(Classe $classe): array
 {
     return $this->createQueryBuilder('e')
         ->join('e.classes', 'c')

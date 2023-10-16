@@ -25,7 +25,7 @@ class ListController extends AbstractController
     public function __invoke(Eleve $eleve): array
     {
         $classe = $eleve->getClasse();
-        $evaluations = $this->evaluationRepository->findStudentEvaluationsAnnouncements($classe);
+        $evaluations = $this->evaluationRepository->findByClass($classe);
         $annonces = [];
         foreach ($evaluations as $evaluation) {
             // die("ici");

@@ -7,6 +7,7 @@ use App\Form\EvaluationType;
 use App\Repository\EvaluationRepository;
 use App\Repository\EvaluationResultatRepository;
 use App\Repository\PersonneRepository;
+use App\Service\PushNotificationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,7 +46,9 @@ class EvaluationController extends AbstractController
 
     #[ Route( '/new', name: 'app_admin_evaluation_new', methods: [ 'GET', 'POST' ] ) ]
 
-    function new ( PersonneRepository $personneRepository, Request $request, EvaluationRepository $evaluationRepository, SluggerInterface $sluggerInterface ): Response
+    function new ( PersonneRepository $personneRepository, Request $request, 
+    EvaluationRepository $evaluationRepository,
+     SluggerInterface $sluggerInterface,PushNotificationService $pushNotificationService ): Response
  {
         $evaluation = new Evaluation();
         $form = $this->createForm( EvaluationType::class, $evaluation );
@@ -67,6 +70,11 @@ class EvaluationController extends AbstractController
             }else{
                 // ici le super admin confirm l'evaluation programmed
                 $evaluation->setIsPublished(true);
+                $date = $form->get('startAt')->getData();
+                $title = $form->get('titre')->getData()." Programmée le ".$date;
+                $body = $form->get('description')->getData();
+    
+                $pushNotificationService->PushNotificationData($body,$title);
             }
             $evaluationRepository->save( $evaluation, true );
 

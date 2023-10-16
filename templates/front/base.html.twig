@@ -92,7 +92,21 @@
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/plyr/plyr.css') }}" />
 
     {% block stylesheet %}{% endblock %}
-
+ <style>
+        #quizNotification {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px;
+            background-color: orange;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+        }
+    </style>
 	<!-- Theme CSS -->
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
 
@@ -106,6 +120,7 @@
 		gtag('config', 'G-7N7LGGGWT1');
 	</script>
     {% block headJS %}{% endblock %}
+
 
 </head>
 
@@ -636,6 +651,26 @@
                 $("#bottom-notification").addClass('d-none');
             }, 10000)
         </script>
+
+<div id="quizNotification">Quiz is available!</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        function showQuizNotification() {
+            var notification = document.getElementById("quizNotification");
+            notification.style.display = "block";
+            setTimeout(function () {
+                notification.style.display = "none";
+            }, 5000); // 5000 milliseconds = 5 seconds
+        }
+
+        // Call the function to show the notification after page load
+        showQuizNotification();
+
+        // Optionally, you can set up the notification to show every 5 seconds
+        setInterval(showQuizNotification, 5000);
+    });
+</script>
 
         <script>
             const likeForumMessage = (e) => {
