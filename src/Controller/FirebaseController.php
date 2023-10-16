@@ -36,7 +36,7 @@ class FirebaseController extends AbstractController {
     
         // Check if the device with the given token already exists for the user
         $existingDevice = $this->entityManager->getRepository(Device::class)->findOneBy([
-            'device_token' => $user,
+            'deviceToken' => $user,
             'token' => $token,
         ]);
     
