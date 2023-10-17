@@ -51,7 +51,7 @@ class EleveRepository extends ServiceEntityRepository
             ->orWhere('p.firstName LIKE :val')
             ->orWhere('p.telephone LIKE :val')
             ->setParameter('val', '%' . $value . '%')
-            ->orderBy('p.lastName', 'ASC')
+            ->orderBy('p.id', 'DESC')
             ->getQuery()
             ->getResult()
         ;
