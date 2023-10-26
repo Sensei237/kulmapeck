@@ -36,6 +36,7 @@
                             <div>
                                 <h4 class="text-success mb-0 plan-price" data-monthly-price="{{ plan.montant }} XAF" data-annual-price="{{ plan.montant }} XAF">{{ plan.montant }} XAF</h4>
                             </div>
+                        
                         </div>
                     </div>
 
@@ -56,6 +57,9 @@
                                 {% endif %}
                             {% endfor %}
                         </ul>
+                        <div>
+                        <h4 >Invitation: <span style="color: orange;">{{ (plan.NbrePoint != null) ? plan.NbrePoint : '  / ' }} pt(s)</span></h4>
+                    </div>
                     </div>
                     <!-- Card Footer -->
                     <div class="card-footer text-center d-grid pb-0">

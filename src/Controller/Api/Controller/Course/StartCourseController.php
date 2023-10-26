@@ -83,7 +83,7 @@ class StartCourseController extends AbstractController
             } else {
                 // On lui demande de soit ajouter payer le cours soit devenir premium
                 return new ArrayObject(
-                    ['notAuthorized' => true, 'message' => 'Vous devez payer le cours pour continuer']
+                    ['notAuthorized' => true, 'message' => ' Vous devez payer ce cours pour continuer, ou souscrire à un abonnement pour accéder à tous les cours librement.']
                 );
             }
         }
@@ -128,7 +128,7 @@ class StartCourseController extends AbstractController
         }
         else {
             return new ArrayObject(
-                ['notAuthorized' => true, 'message' => 'Vous devez payer le cours pour continuer']
+                ['notAuthorized' => true, 'message' => ' Vous devez payer ce cours pour continuer, ou souscrire à un abonnement pour accéder à tous les cours librement.']
             );
         }
     }

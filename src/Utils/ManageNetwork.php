@@ -2,25 +2,25 @@
 
 namespace App\Utils;
 
+use App\Entity\Abonnement;
 use App\Entity\NetworkConfig;
 use App\Entity\User;
 use App\Repository\UserRepository;
-use ArrayObject;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ManageNetwork
 {
     /**
      * Cette methode permet de distribuer les points
-     * Elle est appelee lorsque l'utilisateur valide son compte (pour l'enseignant) et 
+     * Elle est appelee lorsque l'utilisateur valide son compte (pour l'enseignant) et
      * lorsque l'etudiant paie un abonnement
      */
-    public static function manage(User $user, NetworkConfig $networkConfig, UserRepository $userRepository, EntityManagerInterface $em): array
-    {
+    public static function manage(User $user, NetworkConfig $networkConfig,
+        UserRepository $userRepository, EntityManagerInterface $em, Abonnement $abonnement): array {
         if (!$user->isVerified()) {
             return [
                 'hasDone' => false,
-                'message' => "Impossible d'effectuer cette opération car votre compte n'est pas activé."
+                'message' => "Impossible d'effectuer cette opération car votre compte n'est pas activé.",
             ];
         }
 
@@ -30,7 +30,7 @@ class ManageNetwork
         if ($eleve === null) {
             return [
                 'hasDone' => false,
-                'message' => "Vous n'êtes ni élève ni enseignant."
+                'message' => "Vous n'êtes ni élève ni enseignant.",
             ];
         }
 
@@ -42,7 +42,8 @@ class ManageNetwork
         // }
 
         $cmp = 1;
-        $nombreDePoint = $networkConfig->getNombreDePointsParInvitaton();
+        $nombreDePoint = ($abonnement->getNbrePoint() != null && $abonnement->getNbrePoint() > 0) ?
+        $abonnement->getNbrePoint() : $networkConfig->getNombreDePointsParInvitaton();
         $pourcentage = 100;
         // dd($personne);
         while ($personne->getParent() !== null && $cmp <= 5) {
@@ -50,10 +51,10 @@ class ManageNetwork
             // dump("Parent");dd($parent);
             if ($parent->getUtilisateur()->getEleve() && $cmp > 1) {
                 $pourcentage = $networkConfig->getPourcentageDistributionEleve();
-            }elseif ($parent->getUtilisateur()->getEnseignant() && $cmp > 1) {
+            } elseif ($parent->getUtilisateur()->getEnseignant() && $cmp > 1) {
                 $pourcentage = $networkConfig->getPourcentageDistributionEnseignant();
             }
-            
+
             $nombreDePoint = ($nombreDePoint * $pourcentage) / 100;
 
             $newNombreDePoint = $parent->getUtilisateur()->getPoints() + $nombreDePoint;
@@ -73,7 +74,7 @@ class ManageNetwork
 
         return [
             'hasDone' => true,
-            'message' => "Les points ont été distribués sans problèmes à tout le réseau"
+            'message' => "Les points ont été distribués sans problèmes à tout le réseau",
         ];
     }
 
@@ -88,18 +89,18 @@ class ManageNetwork
         if ($money < $networkConfig->getMinimumRetirable()) {
             return [
                 'hasDone' => false,
-                'message' => "Action impossible. Vous n'avez pas le minimum retirable."
+                'message' => "Action impossible. Vous n'avez pas le minimum retirable.",
             ];
         }
 
         if ($money < $montantARetirer) {
             return [
                 'hasDone' => false,
-                'message' => "Vous ne pouvez pas retirer ce montant."
+                'message' => "Vous ne pouvez pas retirer ce montant.",
             ];
         }
 
-        $newPoints = $points - $montantARetirer/$networkConfig->getTauxDeChange();
+        $newPoints = $points - $montantARetirer / $networkConfig->getTauxDeChange();
         $user->setPoints($newPoints);
         $user->setEspeces($money - $montantARetirer);
 
@@ -115,23 +116,23 @@ class ManageNetwork
         $requestData['transaction_receiver'] = $numeroTelephone; //client
 
         $response = MobileApiService::sendPayout(
-            $requestData, 
-            $keys->getApiUrl(), 
-            $keys->getPrivateKey(), 
+            $requestData,
+            $keys->getApiUrl(),
+            $keys->getPrivateKey(),
             $keys->getCacert()
         );
 
         if (!$response['error']) {
             $userRepository->save($user, true);
-        }else {
+        } else {
             return [
                 'hasDone' => false,
                 'message' => "Une erreur est survenue. Impossible de poursuivre l'opération. Reessayz plus tard SVP !",
                 'response' => $response,
-                'responseData' =>  null,
+                'responseData' => null,
             ];
         }
-        
+
         return [
             'hasDone' => true,
             'message' => "Votre retrait a été approuvé et confirmé.",

@@ -67,6 +67,9 @@ class Abonnement
     #[Groups(['read:payment:collection'])]
     private Collection $paymentMethods;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $NbrePoint = null;
+
     public function __construct()
     {
         $this->payments = new ArrayCollection();
@@ -213,6 +216,18 @@ class Abonnement
     public function removePaymentMethod(PaymentMethod $paymentMethod): self
     {
         $this->paymentMethods->removeElement($paymentMethod);
+
+        return $this;
+    }
+
+    public function getNbrePoint(): ?int
+    {
+        return $this->NbrePoint;
+    }
+
+    public function setNbrePoint(?int $NbrePoint): static
+    {
+        $this->NbrePoint = $NbrePoint;
 
         return $this;
     }

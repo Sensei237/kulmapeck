@@ -10,6 +10,7 @@ use App\Repository\NotificationRepository;
 use App\Repository\PaymentRepository;
 use App\Repository\RetraitRepository;
 use App\Repository\UserRepository;
+use App\Service\SendAllUsersEmailService;
 use App\Utils\Keys;
 use App\Utils\ManageNetwork;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,10 +31,12 @@ class PaymentControllers extends AbstractController
     private $cacert;
 
     private $apiUrl;
+    private $sendAllUsersEmailService;
 
 
-    public function __construct(Keys $apiKeys)
+    public function __construct(Keys $apiKeys,SendAllUsersEmailService $sendAllUsersEmailService)
     {
+        $this->sendAllUsersEmailService = $sendAllUsersEmailService;
         $this->privateKey = $apiKeys->getPrivateKey();
         $this->cacert = $apiKeys->getCacert();
         //$this->apiUrl = $_ENV['API_PAY_URL'];
@@ -95,7 +98,8 @@ class PaymentControllers extends AbstractController
                 if (count($payments) < 2) {
                     $networkConfig = $networkConfigRepository->findOneBy([]);
                     if ($networkConfig !== null) {
-                        ManageNetwork::manage($eleve->getUtilisateur(), $networkConfig, $userRepository, $em);
+                        ManageNetwork::manage($eleve->getUtilisateur(), $networkConfig,
+                         $userRepository, $em,$payment->getAbonnement());
                     }
                 }
             }
@@ -117,9 +121,12 @@ class PaymentControllers extends AbstractController
         // Return a response if needed
         return new Response('Callback received successfully');
     }
-    #[Route('/email', name: 'balance', methods: ['POST'])]
-    public function emailSender(MailerInterface $mailer)
+    #[Route('/email', name: 'balance', methods: ['GET'])]
+    public function emailSender(MailerInterface $mailer )
     {
+        $user=$this->getUser();
+        $this->sendAllUsersEmailService->send( 'Email Title', 'Email Body', $user);
+
         $email = (new Email())
             ->from('no-reply@kulmapeck.com')
             ->to("ondouabenoit392@gmail.com")

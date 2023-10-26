@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 'groups' => ['read:category:collection']
             ],
             paginationClientItemsPerPage: true,
-            paginationItemsPerPage: 10,
+            paginationItemsPerPage: 30,
             paginationMaximumItemsPerPage: 25,
         ),
     ],

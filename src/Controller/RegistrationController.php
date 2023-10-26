@@ -75,7 +75,7 @@ class RegistrationController extends AbstractController
                 $user->getEnseignant()->setReference( ( time() + $user->getId() + $user->getEnseignant()->getId() ) . '' );
             } elseif ( $accountType == 0 ) {
                 $path = 'images/eleves';
-                $user->getEleve()->setReference( ( time() + $user->getId() + $user->getEleve()->getId() ) . '' );
+                $user->getEleve()->setReference(( time() + $user->getId() + $user->getEleve()->getId() ) . '' );
             } else {
                 $path = 'images/admin';
             }
@@ -187,7 +187,7 @@ class RegistrationController extends AbstractController
         $code = '';
         while ( $exist ) {
             $code = '';
-            for ( $i = 0; $i < 5; $i++ ) {
+            for ( $i = 0; $i < 8; $i++ ) {
                 $code .= $tab[ rand( 0, count( $tab ) - 1 ) ];
             }
             $p = $pr->findOneBy( [ 'invitationCode' => $code ] );
