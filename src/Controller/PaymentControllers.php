@@ -48,7 +48,9 @@ class PaymentControllers extends AbstractController
      * elle est exécutée automatiquement par le serveur distant à intervalle regulier de 5 min
      */
     #[Route('/callback', name: 'app_payment_callback', methods: 'GET')]
-    public function handleCallback(Request $request, NotificationRepository $notificationRepository, UserRepository $userRepository, NetworkConfigRepository $networkConfigRepository, EleveRepository $eleveRepository, PaymentRepository $paymentRepository, RetraitRepository $retraitRepository, EntityManagerInterface $em)
+    public function handleCallback(Request $request, NotificationRepository $notificationRepository,
+     UserRepository $userRepository, NetworkConfigRepository $networkConfigRepository,
+      EleveRepository $eleveRepository, PaymentRepository $paymentRepository, RetraitRepository $retraitRepository, EntityManagerInterface $em)
     {
         // Check if Kulmapeck  sender's IP address
         $senderIp = $request->getClientIp();
@@ -69,8 +71,9 @@ class PaymentControllers extends AbstractController
             $payment->setStatus($status)
                 ->setIsExpired(false);
             if ($payment->getAbonnement() !== null) {
-                $payment->getEleve()->setIsPremium(true);
-                $eleveRepository->save($payment->getEleve(), true);
+                $eleve->setIsPremium(true);
+                //$payment->getEleve()->setIsPremium(true);
+                $eleveRepository->save($eleve, true);
             }elseif ($payment->getCours() !== null) {
                 $eleve->addCour($payment->getCours());
             }

@@ -3,21 +3,17 @@
 namespace App\Controller\Api\Controller\Payment;
 
 use App\Entity\Abonnement;
-use App\Entity\Eleve;
 use App\Entity\Payment;
-use Doctrine\Common\Collections\Collection;
 use App\Repository\EleveRepository;
 use App\Repository\NetworkConfigRepository;
 use App\Repository\PaymentMethodRepository;
 use App\Repository\PaymentRepository;
 use App\Repository\UserRepository;
 use App\Utils\Keys;
-use App\Utils\ManageNetwork;
 use App\Utils\PaymentUtil;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;

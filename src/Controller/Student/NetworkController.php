@@ -43,13 +43,13 @@ class NetworkController extends AbstractController
 
     #[ Route( '/student/retrait/new', name: 'app_student_network_retrait', methods: [ 'POST', 'GET' ] ) ]
 
-    public function retirerEleve( Request $request, EleveRepository $studentRepository,
+    public function retirerEleve( Request $request, EleveRepository $eleveRepository,
     RetraitRepository $retraitRepository, NetworkConfigRepository $networkConfigRepository,
     UserRepository $userRepository ): Response
  {
-        $enseignant = $studentRepository->findOneBy( [ 'utilisateur' => $this->getUser() ] );
-        if ( $enseignant === null ) {
-            throw $this->createAccessDeniedException();
+        $enseignant = $eleveRepository->findOneBy( [ 'utilisateur' => $this->getUser() ] );
+        if ( !$enseignant ) {
+            throw $this->createAccessDeniedException('NOT CONNECTED');
         }
 
         $retrait = new Retrait();
@@ -84,9 +84,38 @@ class NetworkController extends AbstractController
 
         return $this->render( 'student/network/retrait.html.twig', [
             'isNetwork' => true,
+            'student' => $enseignant,
             'enseignant' => $enseignant,
             'form' => $form->createView(),
             'networkConfig' => $networkConfig,
         ] );
     }
+
+    #[Route('/student/retraits', name: 'app_student_network_retraits', methods: ['GET'])]
+    public function retraits(EleveRepository $eleveRepository, NetworkConfigRepository $networkConfigRepository): Response
+    {
+        $enseignant = $eleveRepository->findOneBy(['utilisateur' => $this->getUser()]);
+        if ($enseignant === null) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $networkConfig = $networkConfigRepository->findOneBy([]);
+        
+        $retraits = $enseignant->getUtilisateur()->getRetraits();
+        $montantTotal = 0;
+        foreach ($retraits as $retrait) {
+            $montantTotal += $retrait->getMontant();
+        }
+
+        return $this->render('student/network/retrait.html.twig', [
+            'isNetwork' => true,
+            'enseignant' => $enseignant,
+            'networkConfig' => $networkConfig,
+            'retraits' => $retraits,
+            'student' => $enseignant,
+            'showHistorique' => true,
+            'montantTotal' => $montantTotal,
+        ]);
+    }
+
 }

@@ -19,9 +19,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-#[AsController]
+#[ AsController ]
+
 class StartCourseController extends AbstractController
-{
+ {
     public function __construct(
         private EleveRepository $eleveRepository,
         private Security $security,
@@ -33,13 +34,13 @@ class StartCourseController extends AbstractController
     ) {
     }
 
-    public function __invoke(Cours $course, Request $request): ArrayObject
-    {
+    public function __invoke( Cours $course, Request $request ): ArrayObject
+ {
         $user = $this->security->getUser();
-        $eleveConnected = $this->eleveRepository->findOneBy(['utilisateur' => $user]);
+        $eleveConnected = $this->eleveRepository->findOneBy( [ 'utilisateur' => $user ] );
 
-        if ($eleveConnected === null) {
-            throw $this->createAccessDeniedException('Vous devez être connecté !');
+        if ( $eleveConnected === null ) {
+            throw $this->createAccessDeniedException( 'Vous devez être connecté !' );
         }
 
         return $this->startCourse(
@@ -54,64 +55,71 @@ class StartCourseController extends AbstractController
         );
     }
 
-    private function startCourse(Cours $course, Request $request, PaymentRepository $paymentRepository, MembreRepository $membreRepository, ForumRepository $forumRepository, EleveRepository $eleveRepository, LectureRepository $lectureRepository, EntityManagerInterface $entityManagerInterface)
-    {
-        $eleve = $eleveRepository->findOneBy(['utilisateur' => $this->getUser()]);
-        if ($eleve === null) {
-            throw new BadRequestHttpException("Vous devez être connecté en tant qu'élève");
+    private function startCourse( Cours $course, Request $request, PaymentRepository $paymentRepository, MembreRepository $membreRepository, ForumRepository $forumRepository, EleveRepository $eleveRepository, LectureRepository $lectureRepository, EntityManagerInterface $entityManagerInterface )
+ {
+        $eleve = $eleveRepository->findOneBy( [ 'utilisateur' => $this->getUser() ] );
+        if ( $eleve === null ) {
+            throw new BadRequestHttpException( "Vous devez être connecté en tant qu'élève" );
         }
 
         // On verifie si l'élève n'a pas déjà ce cours dans sa liste des cours
         // le cours soit souscrire a un compte premium
-        if (!$eleve->getCours()->contains($course)) {
-            if ($course->isIsFree() || $eleve->isIsPremium()) {
-                $membre = $membreRepository->findOneBy(['utilisateur' => $this->getUser()]);
-                if ($membre === null) {
+        if ( !$course->isIsFree() && ( !$eleve->isIsPremium() && ( !$paymentRepository->findOneBy( [ 'eleve' => $eleve, 'cours' => $course, 'isExpired' => false ] ) ) ) ) {
+
+            return new ArrayObject(
+                [ 'notAuthorized' => true, 'message' => ' Vous devez payer ce cours pour continuer, ou souscrire à un abonnement pour accéder à tous les cours librement.' ]
+            );
+        }
+
+        if ( !$eleve->getCours()->contains( $course ) ) {
+            if ( $course->isIsFree() || $eleve->isIsPremium() ) {
+                $membre = $membreRepository->findOneBy( [ 'utilisateur' => $this->getUser() ] );
+                if ( $membre === null ) {
                     $membre = new Membre();
-                    $membre->setUtilisateur($this->getUser());
+                    $membre->setUtilisateur( $this->getUser() );
                 }
-                if (!$course->getForum()) {
+                if ( !$course->getForum() ) {
                     $forum = new Forum();
-                    $forum->setCours($course);
-                    $forumRepository->save($forum, true);
-                    $course->setForum($forum);
+                    $forum->setCours( $course );
+                    $forumRepository->save( $forum, true );
+                    $course->setForum( $forum );
                 }
-                $course->getForum()->addMembre($membre);
+                $course->getForum()->addMembre( $membre );
                 // On ajoute le cours dans sa liste
-                $eleve->addCour($course);
-                $membreRepository->save($membre, true);
+                $eleve->addCour( $course );
+                $membreRepository->save( $membre, true );
             } else {
                 // On lui demande de soit ajouter payer le cours soit devenir premium
                 return new ArrayObject(
-                    ['notAuthorized' => true, 'message' => ' Vous devez payer ce cours pour continuer, ou souscrire à un abonnement pour accéder à tous les cours librement.']
+                    [ 'notAuthorized' => true, 'message' => ' Vous devez payer ce cours pour continuer, ou souscrire à un abonnement pour accéder à tous les cours librement.' ]
                 );
             }
         }
         // else {
-        //     if (!$eleve->isIsPremium() || !$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $course, 'isExpired' => false])) {
+        //     if ( !$eleve->isIsPremium() || !$paymentRepository->findOneBy( [ 'eleve' => $eleve, 'cours' => $course, 'isExpired' => false ] ) ) {
         //         return new ArrayObject(
-        //             ['notAuthorized' => true, 'message' => 'Vous devez payer le cours pour continuer']
-        //         );
+        //             [ 'notAuthorized' => true, 'message' => 'Vous devez payer le cours pour continuer' ]
+        // );
         //     }
         // }
-        
-        if ($course->isIsFree() || $eleve->isIsPremium() || $eleve->getCours()->contains($course)) {
 
-            $chapitre = $course->getChapitres()[0];
+        if ( $course->isIsFree() || $eleve->isIsPremium() || $eleve->getCours()->contains( $course ) ) {
+
+            $chapitre = $course->getChapitres()[ 0 ];
             $lesson = null;
             $lecture = null;
-            if ($eleve !== null) {
-                $lecture = $lectureRepository->findStudentLastLecture($eleve, $course);
-                if ($lecture) {
+            if ( $eleve !== null ) {
+                $lecture = $lectureRepository->findStudentLastLecture( $eleve, $course );
+                if ( $lecture ) {
                     $lesson = $lecture->getLesson();
                 }
             }
-            if ($lesson ===  null) {
-                $lesson = $chapitre->getLessons()[0];
-                if ($eleve !== null) {
+            if ( $lesson ===  null ) {
+                $lesson = $chapitre->getLessons()[ 0 ];
+                if ( $eleve !== null ) {
                     $lecture = new Lecture();
-                    $lecture->setReference($lesson->getId() + time())->setEleve($eleve)->setLesson($lesson)->setIsFinished(false)->setStartAt(new \DateTimeImmutable());
-                    $lectureRepository->save($lecture, true);
+                    $lecture->setReference( $lesson->getId() + time() )->setEleve( $eleve )->setLesson( $lesson )->setIsFinished( false )->setStartAt( new \DateTimeImmutable() );
+                    $lectureRepository->save( $lecture, true );
                 }
             }
 
@@ -125,10 +133,9 @@ class StartCourseController extends AbstractController
                     'message' => ''
                 ]
             );
-        }
-        else {
+        } else {
             return new ArrayObject(
-                ['notAuthorized' => true, 'message' => ' Vous devez payer ce cours pour continuer, ou souscrire à un abonnement pour accéder à tous les cours librement.']
+                [ 'notAuthorized' => true, 'message' => ' Vous devez payer ce cours pour continuer, ou souscrire à un abonnement pour accéder à tous les cours librement.' ]
             );
         }
     }

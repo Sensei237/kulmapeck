@@ -128,7 +128,7 @@ class PaymentController extends AbstractController
                         ->setAbonnement($abonnement)
                         ->setIsExpired(true)
                         ->setPaymentMethod($paymentMethod)
-                        ->setReference(time() + $eleve->getId())
+                        ->setReference($reference)
                         ->setAmount($abonnement->getMontant())
                         ->setTransactionReference($apiResponse['responseData']['transaction_ref'])
                         ->setStatus('En cours')

@@ -2,28 +2,46 @@
 
 namespace App\Controller\Student;
 
-use App\Entity\Cours;
-use App\Entity\Eleve;
-use App\Repository\CoursRepository;
 use App\Repository\EleveRepository;
-use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\PaymentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
-{
-    #[Route('/student/home', name: 'app_student_home')]
-    public function index(EleveRepository $eleveRepository): Response
-    {
-        $eleve = $eleveRepository->findOneBy(['utilisateur' => $this->getUser()]);
+ {
+    #[ Route( '/student/home', name: 'app_student_home' ) ]
 
-        return $this->render('student/home/index.html.twig', [
+    public function index( EleveRepository $eleveRepository,
+    PaymentRepository $paymentRepository ): Response
+ {
+        $eleve = $eleveRepository->findOneBy( [ 'utilisateur' => $this->getUser() ] );
+
+        $payments = $paymentRepository->findBy( [ 'eleve'=>$eleve, 'status'=>'SUCCESS', 'isExpired'=>false ] );
+        $today = new \DateTimeImmutable();
+
+        $hasNoValidAbonnment = true;
+        if ( count( $payments )>0 ) {
+            foreach ( $payments as $payment ) {
+                if ( $payment->getExpiredAt()>$today ) {
+                    $hasNoValidAbonnment = false;
+                } else {
+                    $payment->setIsExpired( true );
+                    $paymentRepository->save($payment,true);
+                }
+            }
+
+        }
+        if($hasNoValidAbonnment){
+            $eleve->setIsPremium(false);
+            $eleveRepository->save($eleve,true);
+        }
+
+        return $this->render( 'student/home/index.html.twig', [
             'controller_name' => 'HomeController',
             'studentHome' => true,
             'student' => $eleve,
-        ]);
+        ] );
     }
-    
+
 }

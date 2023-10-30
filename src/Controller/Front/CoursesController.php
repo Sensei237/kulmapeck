@@ -306,7 +306,13 @@ class CoursesController extends AbstractController
 
             // On verifie si l'élève n'a pas déjà ce cours dans sa liste des cours
             // le cours soit souscrire a un compte premium
+
+            if (!$course->isIsFree() && (!$eleve->isIsPremium() && (!$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $course, 'isExpired' => false])))) {
+                    
+                return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $course->getSlug()]);
+            }
             if (!$eleve->getCours()->contains($course)) {
+                
                 if ($course->isIsFree() || $eleve->isIsPremium()) {
                     $membre = $membreRepository->findOneBy(['utilisateur' => $this->getUser()]);
                     if ($membre === null) {
@@ -329,7 +335,7 @@ class CoursesController extends AbstractController
                     return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $course->getSlug()]);
                 }
             }else {
-                if (!$course->isIsFree() && (!$eleve->isIsPremium() && (null!==$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $course, 'isExpired' => false])))) {
+                if (!$course->isIsFree() && (!$eleve->isIsPremium() && (!$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $course, 'isExpired' => false])))) {
                     
                     return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $course->getSlug()]);
                 }
