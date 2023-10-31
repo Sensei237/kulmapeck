@@ -128,16 +128,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $filieres;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['read:user:item'])]
+
     private ?float $points = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Retrait::class, orphanRemoval: true)]
+    #[Groups(['read:user:item', 'read:retraits:collection'])]
+
     private Collection $retraits;
 
     #[ORM\Column]
+    #[Groups(['read:user:item'])]
+
     private ?float $especes = null;
 
     #[ORM\OneToMany(mappedBy: 'deviceToken', targetEntity: Device::class)]
     private Collection $devices;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Contact::class)]
+    private Collection $contacts;
 
     public function __construct()
     {
@@ -153,6 +162,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isVerified = false;
         $this->isAdmin = false;
         $this->devices = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -536,6 +546,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($device->getDeviceToken() === $this) {
                 $device->setDeviceToken(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Contact>
+     */
+    public function getContacts(): Collection
+    {
+        return $this->contacts;
+    }
+
+    public function addContact(Contact $contact): static
+    {
+        if (!$this->contacts->contains($contact)) {
+            $this->contacts->add($contact);
+            $contact->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContact(Contact $contact): static
+    {
+        if ($this->contacts->removeElement($contact)) {
+            // set the owning side to null (unless already changed)
+            if ($contact->getUser() === $this) {
+                $contact->setUser(null);
             }
         }
 

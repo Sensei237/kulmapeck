@@ -4,7 +4,6 @@ namespace App\Controller\Instructor;
 
 use App\Entity\Cours;
 use App\Form\CoursType;
-use App\Repository\CoursRepository;
 use App\Repository\EnseignantRepository;
 use App\Service\FileUploader;
 use App\Utils\CoursUtils;

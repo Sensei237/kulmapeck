@@ -18,12 +18,16 @@ class Retrait
     private ?User $user = null;
 
     #[ORM\Column]
+    #[Groups(['read:retraits:item'])]
+
     private ?float $montant = null;
 
     #[ORM\Column]
     private ?bool $isDone = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['read:retraits:item'])]
+
     private ?string $numeroTelephone = null;
 
     #[ORM\ManyToOne(inversedBy: 'retraits')]
@@ -34,9 +38,13 @@ class Retrait
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['read:user:item'])]
+
     private ?string $status = null;
 
     #[ORM\Column(length: 150, nullable: true)]
+    #[Groups(['read:user:item'])]
+
     private ?string $transactionReference = null;
 
     public function __construct()

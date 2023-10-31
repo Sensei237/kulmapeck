@@ -130,7 +130,11 @@ class StartCourseController extends AbstractController
                     'notAuthorized' => false,
                     'lesson' => $lesson,
                     'lecture' => $lecture ? $lecture->getId() : null,
-                    'message' => ''
+                    'message' => '',
+                    'chapitreNum'=>$chapitre->getNumero(),
+                    //'chapitrename'=>$chapitre->getIntitule(),
+                    'lessonNum'=>$lesson->getNumero(),
+
                 ]
             );
         } else {
