@@ -1,3 +1,4 @@
+ ssh -p 5804 -v -t defaultcd@vps96969.serveur-vps.net
 - ls /var/www/clients/client0/web1/web/bin/console
 - php /var/www/clients/client0/web1/web/bin/console make:migration
 - /your/symfony/project/bin/console doctrine:schema:update --complete
