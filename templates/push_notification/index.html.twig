@@ -24,7 +24,7 @@
             <tr>
                 <td>{{ push_notification.id }}</td>
                 <td>{{ push_notification.title }}</td>
-                <td>{{ push_notification.body }}</td>
+                <td>{{ push_notification.body|raw }}</td>
                 <td>{{ push_notification.createAt ? push_notification.createAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('app_push_notification_show', {'id': push_notification.id}) }}">show</a>

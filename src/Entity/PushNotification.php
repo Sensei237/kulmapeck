@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use App\Repository\PushNotificationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,7 +17,7 @@ class PushNotification
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $body = null;
 
     #[ORM\Column(nullable: true)]

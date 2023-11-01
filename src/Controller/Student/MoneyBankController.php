@@ -11,13 +11,11 @@ use App\Repository\UserRepository;
 use App\Utils\Keys;
 use App\Utils\ManageNetwork;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -49,8 +47,6 @@ class MoneyBankController extends AbstractController
         if ( !$user ) {
             throw $this->createAccessDeniedException();
         }
-
-        // Explicitly join the related Retrait entities
 
         $networkConfig = $networkConfigRepository->findOneBy( [] );
 

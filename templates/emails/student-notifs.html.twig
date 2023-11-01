@@ -33,9 +33,9 @@
                 {{ user.Personne.LastName}}
                 ,
             </h3>
-            <p>
-                {{ content }}
-            </p>
+            {{ content|raw }}
+            <br>
+            <p>Best regards,<br>{{ user.Personne.LastName }}</p>
         </div>
     </body>
 </html>

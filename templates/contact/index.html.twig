@@ -1,0 +1,41 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Messages reçus{% endblock %}
+
+
+    
+{% block mainContent %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Object</th>
+                <th>Content</th>
+                <th>CreateAt</th>
+                <th>Sender name</th>
+                <th>Sender email</th>
+                <th>actions</th>
+                </tr>
+        </thead>
+        <tbody>
+        {% for contact in contacts %}
+            <tr>
+                <td>{{ contact.id }}</td>
+                <td>{{ contact.object }}</td>
+                <td>{{ contact.content }}</td>
+                <td>{{ contact.createAt ? contact.createAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ contact.user }}</td>
+                <td>{{ contact.user.email }}</td>
+                    <td>
+                <a href="{{ path('app_contact_edit', {'id': contact.id}) }}">repondre</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
