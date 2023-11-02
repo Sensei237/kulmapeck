@@ -35,7 +35,7 @@ class Enseignant
     #[Groups(['read:course:collection'])]
     private ?string $reference = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,nullable:true)]
     private ?string $diplome = null;
 
     #[ORM\Column(length: 255)]
@@ -47,7 +47,7 @@ class Enseignant
     #[ORM\Column(length: 255)]
     private ?string $selfieCNI = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,nullable:true)]
     private ?string $emploiDuTemps = null;
 
     /**
@@ -186,7 +186,7 @@ class Enseignant
         return $this->diplome;
     }
 
-    public function setDiplome(string $diplome): self
+    public function setDiplome(?string $diplome): self
     {
         $this->diplome = $diplome;
 
@@ -234,7 +234,7 @@ class Enseignant
         return $this->emploiDuTemps;
     }
 
-    public function setEmploiDuTemps(string $emploiDuTemps): self
+    public function setEmploiDuTemps(?string $emploiDuTemps): self
     {
         $this->emploiDuTemps = $emploiDuTemps;
 

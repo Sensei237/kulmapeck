@@ -8,6 +8,7 @@ use App\Repository\EvaluationRepository;
 use App\Repository\EvaluationResultatRepository;
 use App\Repository\PersonneRepository;
 use App\Service\PushNotificationService;
+use App\Service\SendAllUsersEmailService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,9 +18,16 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[ Route( '/evaluation' ) ]
 
 class EvaluationController extends AbstractController
- {
-    #[ Route( '/', name: 'app_admin_evaluation_index', methods: [ 'GET' ] ) ]
 
+ {
+    private $sendAllUsersEmailService;
+
+    public function __construct( SendAllUsersEmailService $sendAllUsersEmailService ) {
+        $this->sendAllUsersEmailService = $sendAllUsersEmailService;
+
+    }
+
+    #[ Route( '/', name: 'app_admin_evaluation_index', methods: [ 'GET' ] ) ]
     public function index( PersonneRepository $personneRepository, EvaluationRepository $evaluationRepository ): Response
  {
         if ( $this->isGranted( 'ROLE_ADMIN' ) ) {
@@ -71,10 +79,12 @@ class EvaluationController extends AbstractController
                 // ici le super admin confirm l'evaluation programmed
                 $evaluation->setIsPublished(true);
                 $date = $form->get('startAt')->getData();
-                $title = $form->get('titre')->getData()." Programmée le ".$date;
+                $title = $form->get('titre')->getData()."Evaluation Programmée le ".$date;
                 $body = $form->get('description')->getData();
     
                 $pushNotificationService->PushNotificationData($body,$title);
+                $this->sendAllUsersEmailService->send( $title, $body, null );
+
             }
             $evaluationRepository->save( $evaluation, true );
 

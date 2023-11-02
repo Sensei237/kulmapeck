@@ -33,16 +33,16 @@ class EnseignantType extends AbstractType
                     'class' => 'border-0 js-choice bg-light rounded-end ps-1',
                 ]
             ])
-            ->add('diplomeFile', FileType::class, [
-                'mapped' => true,
-                'attr' => [
-                    'accept' => '.png, .jpg, .PNG, .JPG, .jpeg, .JPEG',
-                    'class' => 'border-0 bg-light rounded-end ps-1', 
-                ],
-                'required' => true,
-                'label' => 'Copie du dernier diplôme <sup class="text-danger">*</sup>',
-                'label_html' => true,
-            ])
+            // ->add('diplomeFile', FileType::class, [
+            //     'mapped' => true,
+            //     'attr' => [
+            //         'accept' => '.png, .jpg, .PNG, .JPG, .jpeg, .JPEG',
+            //         'class' => 'border-0 bg-light rounded-end ps-1', 
+            //     ],
+            //     'required' => true,
+            //     'label' => 'Copie du dernier diplôme <sup class="text-danger">*</sup>',
+            //     'label_html' => true,
+            // ])
             ->add('rectoCNIFile', FileType::class, [
                 'mapped' => true,
                 'attr' => [
@@ -73,16 +73,16 @@ class EnseignantType extends AbstractType
                 'label' => 'Selfie de vous tenant votre CNI <sup class="text-danger">*</sup>',
                 'label_html' => true,
             ])
-            ->add('emploiDuTempsFile', FileType::class, [
-                'mapped' => true,
-                'attr' => [
-                    'accept' => '.png, .jpg, .PNG, .JPG, .jpeg, .JPEG',
-                    'class' => 'border-0 bg-light rounded-end ps-1', 
-                ],
-                'required' => true,
-                'label' => "Copie de l'emploi du temps de l'année précédente <sup class='text-danger'>*</sup>",
-                'label_html' => true,
-            ])
+            // ->add('emploiDuTempsFile', FileType::class, [
+            //     'mapped' => true,
+            //     'attr' => [
+            //         'accept' => '.png, .jpg, .PNG, .JPG, .jpeg, .JPEG',
+            //         'class' => 'border-0 bg-light rounded-end ps-1', 
+            //     ],
+            //     'required' => true,
+            //     'label' => "Copie de l'emploi du temps de l'année précédente <sup class='text-danger'>*</sup>",
+            //     'label_html' => true,
+            // ])
         ;
     }
 

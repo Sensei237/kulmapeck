@@ -50,7 +50,8 @@ class PushNotificationService
             "notification" => [
                 "body" => $body,
                 "title" => $title,
-                "image" => "https://kulmapeck.com/uploads/images/enseignants/kyc/LOGO-KULMAPECK-1-64aed96a8e5f3.png"
+                "icon" => "https://kulmapeck.com/uploads/images/enseignants/kyc/LOGO-KULMAPECK-1-64aed96a8e5f3.png",
+                //"image" => "https://kulmapeck.com/uploads/images/enseignants/kyc/LOGO-KULMAPECK-1-64aed96a8e5f3.png"
             ],
             "priority" => "high",
             "data" => [
@@ -60,6 +61,7 @@ class PushNotificationService
             ],
             "to" => $to
         ];
+        
 
         $response = $this->sendPushNotification($jsonData);
         
