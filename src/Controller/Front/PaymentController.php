@@ -122,7 +122,7 @@ class PaymentController extends AbstractController
                 if ($apiResponse['isPaied'] && isset($apiResponse['responseData']['payment_url']) && isset($apiResponse['responseData']['transaction_ref']) && isset($apiResponse['responseData']['status'])) {
 
                     $payment = new Payment();
-                    $today = date_format(new \DateTimeImmutable(), 'Y-m-d');
+                    $today = date_format(new \DateTimeImmutable(), 'Y-m-d H:i:s');
                     $expiredAt = strtotime($today . ' +' . $abonnement->getDuree() . ' day');
                     $payment->setEleve($eleve)
                         ->setAbonnement($abonnement)

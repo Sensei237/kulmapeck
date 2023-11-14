@@ -8,10 +8,13 @@ use App\Repository\PushNotificationRepository;
 use App\Service\PushNotificationService;
 use App\Service\SendAllUsersEmailService;
 use Doctrine\ORM\EntityManagerInterface;
+use HTMLPurifier;
+use HTMLPurifier_Config;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\DomCrawler\Crawler;
 
 #[ Route( '/admin/push/notification' ) ]
 
@@ -49,10 +52,11 @@ class PushNotificationController extends AbstractController {
 
             $entityManager->persist( $pushNotification );
             $entityManager->flush();
+            $parsedContent = $this->parseHtmlBodyContent( $body );
+           
+          $response =  $pushNotificationService->PushNotificationData( $parsedContent, $title );
 
-            $response =  $pushNotificationService->PushNotificationData( $body, $title );
-
-            $this->sendAllUsersEmailService->send( $title, $body, null );
+           $this->sendAllUsersEmailService->send( $title, $body, null );
 
             return $this->redirectToRoute( 'app_push_notification_index', [ 'resp'=>$response ], Response::HTTP_SEE_OTHER );
         }
@@ -84,9 +88,11 @@ class PushNotificationController extends AbstractController {
             $body = $form->get( 'body' )->getData();
             $entityManager->flush();
 
-            $pushNotificationService->PushNotificationData( $body, $title );
+            $parsedContent = $this->parseHtmlBodyContent( $body );
 
-            $this->sendAllUsersEmailService->send( $title, $body, null );
+            $pushNotificationService->PushNotificationData( $parsedContent, $title );
+
+           $this->sendAllUsersEmailService->send( $title, $body, null );
 
             return $this->redirectToRoute( 'app_push_notification_index', [], Response::HTTP_SEE_OTHER );
         }
@@ -106,5 +112,20 @@ class PushNotificationController extends AbstractController {
         }
 
         return $this->redirectToRoute( 'app_push_notification_index', [], Response::HTTP_SEE_OTHER );
+    }
+
+    function parseHtmlBodyContent( $html ) {
+        $crawler = new Crawler($html);
+        $textContent = $crawler->text();
+        $strippedText = strip_tags($textContent);
+
+        $config = HTMLPurifier_Config::createDefault();
+        $purifier = new HTMLPurifier($config);
+
+        // Purify the HTML content to remove any malicious or unwanted tags
+        $cleanHtmlContent = $purifier->purify($strippedText);
+
+       
+        return  $cleanHtmlContent;
     }
 }

@@ -19,7 +19,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
             normalizationContext: ['groups' => ['read:abonnement:collection', 'read:abonnement:item']]
         ),
         new GetCollection(
-            normalizationContext: ['groups' => ['read:abonnement:collection']]
+            normalizationContext: ['groups' => ['read:abonnement:collection']],
+            order: ['montant' => 'ASC']
         )
     ],
     paginationItemsPerPage: 50,

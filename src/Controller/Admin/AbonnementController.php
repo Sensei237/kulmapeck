@@ -23,7 +23,7 @@ class AbonnementController extends AbstractController
     public function index(AbonnementRepository $abonnementRepository, AbonnementItemRepository $abonnementItemRepository): Response
     {
         return $this->render('admin/abonnement/index.html.twig', [
-            'plans' => $abonnementRepository->findAll(),
+            'plans' => $abonnementRepository->findBy([], ['montant' => 'ASC']),
             'isAbonnementController' => true,
             'abonnementItems' => $abonnementItemRepository->findAll(),
         ]);

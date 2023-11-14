@@ -13,6 +13,7 @@
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.14",
+        "ezyang/htmlpurifier": "^4.16",
         "friendsofsymfony/ckeditor-bundle": "^2.4",
         "friendsofsymfony/jsrouting-bundle": "*",
         "gesdinet/jwt-refresh-token-bundle": "^1.1",
