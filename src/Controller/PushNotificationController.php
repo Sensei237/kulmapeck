@@ -106,7 +106,7 @@ class PushNotificationController extends AbstractController {
     #[ Route( '/{id}', name: 'app_push_notification_delete', methods: [ 'POST' ] ) ]
 
     public function delete( Request $request, PushNotification $pushNotification, EntityManagerInterface $entityManager ): Response {
-        if ( $this->isCsrfTokenValid( 'delete'.$pushNotification->getId(), $request->request->get( '_token' ) ) ) {
+        if ( $this->isCsrfTokenValid( 'delete '.$pushNotification->getId(), $request->request->get( '_token' ) ) ) {
             $entityManager->remove( $pushNotification );
             $entityManager->flush();
         }

@@ -59,7 +59,9 @@ class PostController extends AbstractController
         return $this->correction($this->paymentRepository, $this->chapitreRepository, $this->quizLostRepository, $request, $this->entityManager, $this->lectureRepository, $this->quizResultRepository, $this->eleveRepository, $this->quizRepository);
     }
 
-    public function correction(PaymentRepository $paymentRepository, ChapitreRepository $chapitreRepository, QuizLostRepository $quizLostRepository, Request $request, EntityManagerInterface $entityManager, LectureRepository $lectureRepository, QuizResultRepository $quizResultRepository, EleveRepository $eleveRepository, QuizRepository $quizRepository): \ArrayObject
+    public function correction(PaymentRepository $paymentRepository,
+     ChapitreRepository $chapitreRepository, QuizLostRepository $quizLostRepository, 
+     Request $request, EntityManagerInterface $entityManager, LectureRepository $lectureRepository, QuizResultRepository $quizResultRepository, EleveRepository $eleveRepository, QuizRepository $quizRepository): \ArrayObject
     {
         $user = $this->security->getUser();
 
@@ -96,35 +98,42 @@ class PostController extends AbstractController
         }
             
         $noteQuiz = 0;
-        // dd($data['quizzes']);
         $quizzes = $data['quizzes'];
         foreach ($quizzes as $quizze) {
             $quizId = $quizze['id'];
             $results = $quizze['reponses'];
             $quiz = $quizRepository->find($quizId);
-
+        
             if ($quiz === null) {
-                throw new BadRequestException("Données corrompu");
+                throw new BadRequestException("Données corrompues");
             }
-
+        
             $isCorrect = false;
             $note = 0;
-            // dump($quiz->getPropositionJuste());
-            
-            if($results == $quiz->getPropositionJuste()) {
+        
+            if ($results == $quiz->getPropositionJuste()) {
                 $isCorrect = true;
-                $note = 20/count($chapitre->getQuizzes());
+                $note = 20 / count($chapitre->getQuizzes());
                 $noteQuiz += $note;
-                // dd($results);
             }
-
-            $quizResult = $quizResultRepository->findOneBy(['quiz' => $quiz, 'eleve' => $eleve, ]);
+        
+            $quizResult = $quizResultRepository->findOneBy(['quiz' => $quiz, 'eleve' => $eleve]);
+            
+        
             if ($quizResult === null) {
+               
                 $quizResult = new QuizResult();
+                $quizResult->setEleve($eleve)->setQuiz($quiz);
             }
-            $quizResult->setEleve($eleve)->setQuiz($quiz)->setIsCorrect($isCorrect)->setResult($results)->setNote($note)->setUpdatedAt(new \DateTimeImmutable());
-            $quizResultRepository->save($quizResult);
+           
+            $quizResult->setIsCorrect($isCorrect)
+                ->setResult($results)
+                ->setNote($note)
+                ->setUpdatedAt(new \DateTimeImmutable());
+        
+            $quizResultRepository->save($quizResult,true);
         }
+        
         
         if ($eleve !== null) {
             if ($lecture === null) {
@@ -137,7 +146,7 @@ class PostController extends AbstractController
                 $lecture->setEleve($eleve)->setReference(time() + $quiz->getId())->setEndAt(new \DateTimeImmutable());
             }
             $isFinished = false;
-            if (($noteQuiz * 100) / 20 > 70) {
+            if (($noteQuiz * 100) / 20 > 60) {
                 $isFinished = true;
             }
             $lecture->setIsFinished($isFinished)->setNote($noteQuiz);
@@ -164,6 +173,7 @@ class PostController extends AbstractController
             }
 
             $lectureRepository->save($lecture);
+            
             if (!$isFinished) {
                 if ($quizLost === null) {
                     $quizLost = new QuizLost();
@@ -186,17 +196,15 @@ class PostController extends AbstractController
                     $quizLostRepository->save($quizLost);
                 }
             }
+           
         }
-        
-        $entityManager->flush();
 
         return new \ArrayObject([
             'hasDone' => true,
             'note' => $noteQuiz,
-            'quizzesResults' => $quizResultRepository->findStudentQuizResultsByCourseOrChapter($eleve, $cours, $chapitre),
+            'quizzesResults' => [],
         ]);
         
 
-        throw $this->createAccessDeniedException("Vous devez poster le quiz");
     }
 }

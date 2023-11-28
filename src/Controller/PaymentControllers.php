@@ -27,9 +27,7 @@ class PaymentControllers extends AbstractController
 {
 
     private $privateKey;
-
     private $cacert;
-
     private $apiUrl;
     private $sendAllUsersEmailService;
 
@@ -98,13 +96,13 @@ class PaymentControllers extends AbstractController
                 // On cherche tous les payments effectués par l'eleve et qui ont abouti
                 $payments = $paymentRepository->findBy(['eleve' => $eleve, 'status' => $status]);
                 // S'il a moins de deux payments abouti alors on cherche à partager les points
-                if (count($payments) < 2) {
+                //if (count($payments) < 2) {
                     $networkConfig = $networkConfigRepository->findOneBy([]);
                     if ($networkConfig !== null) {
                         ManageNetwork::manage($eleve->getUtilisateur(), $networkConfig,
                          $userRepository, $em,$payment->getAbonnement());
                     }
-                }
+               // }
             }
             
         }
