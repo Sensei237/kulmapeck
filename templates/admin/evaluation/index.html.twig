@@ -25,10 +25,6 @@
                                             
                     </th>
                     <th>
-                        Description
-                                            
-                    </th>
-                    <th>
                         Début
                                             
                     </th>
@@ -70,9 +66,7 @@
                                                             
                             </td>
                         {% endif %}
-                        <td>
-                            {{ evaluation.description|u.truncate(50, '...') }}
-                        </td>
+                        
                         <td>
                             {{ evaluation.startAt ? evaluation.startAt|date('Y-m-d H:i:s') : '' }}
                         </td>
