@@ -29,12 +29,12 @@ class PostController extends AbstractController
     public function __construct(
         private EleveRepository $eleveRepository,
         private Security $security,
-        private PaymentRepository $paymentRepository, 
-        private ChapitreRepository $chapitreRepository, 
-        private QuizLostRepository $quizLostRepository, 
+        private PaymentRepository $paymentRepository,
+        private ChapitreRepository $chapitreRepository,
+        private QuizLostRepository $quizLostRepository,
         private EntityManagerInterface $entityManager,
-        private LectureRepository $lectureRepository, 
-        private QuizResultRepository $quizResultRepository, 
+        private LectureRepository $lectureRepository,
+        private QuizResultRepository $quizResultRepository,
         private QuizRepository $quizRepository,
         private CoursRepository $coursRepository
     ) {
@@ -59,10 +59,17 @@ class PostController extends AbstractController
         return $this->correction($this->paymentRepository, $this->chapitreRepository, $this->quizLostRepository, $request, $this->entityManager, $this->lectureRepository, $this->quizResultRepository, $this->eleveRepository, $this->quizRepository);
     }
 
-    public function correction(PaymentRepository $paymentRepository,
-     ChapitreRepository $chapitreRepository, QuizLostRepository $quizLostRepository, 
-     Request $request, EntityManagerInterface $entityManager, LectureRepository $lectureRepository, QuizResultRepository $quizResultRepository, EleveRepository $eleveRepository, QuizRepository $quizRepository): \ArrayObject
-    {
+    public function correction(
+        PaymentRepository $paymentRepository,
+        ChapitreRepository $chapitreRepository,
+        QuizLostRepository $quizLostRepository,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        LectureRepository $lectureRepository,
+        QuizResultRepository $quizResultRepository,
+        EleveRepository $eleveRepository,
+        QuizRepository $quizRepository
+    ): \ArrayObject {
         $user = $this->security->getUser();
 
         $eleve = $eleveRepository->findOneBy(['utilisateur' => $user]);
@@ -85,56 +92,56 @@ class PostController extends AbstractController
             $lecture = $lectureRepository->findOneBy(['eleve' => $eleve, 'chapitre' => $chapitre]);
             if ($lecture == null) {
                 $lecture = new Lecture();
-                $lecture->setChapitre($chapitre)->setEleve($eleve)->setIsFinished(false)->setReference(time()+$eleve->getId())->setStartAt(new \DateTimeImmutable());
+                $lecture->setChapitre($chapitre)->setEleve($eleve)->setIsFinished(false)->setReference(time() + $eleve->getId())->setStartAt(new \DateTimeImmutable());
                 $lectureRepository->save($lecture, true);
             }
             $quizLost = $quizLostRepository->findOneBy(['chapitre' => $chapitre, 'eleve' => $eleve]);
         } else {
             $lecture = $lectureRepository->findOneBy(['eleve' => $eleve, 'cours' => $cours]);
-            $lecture->setCours($cours)->setEleve($eleve)->setIsFinished(false)->setReference(time() 
-            + $eleve->getId())->setStartAt(new \DateTimeImmutable());
+            $lecture->setCours($cours)->setEleve($eleve)->setIsFinished(false)->setReference(time()
+                + $eleve->getId())->setStartAt(new \DateTimeImmutable());
             $lectureRepository->save($lecture, true);
             $quizLost = $quizLostRepository->findOneBy(['cours' => $cours, 'eleve' => $eleve]);
         }
-            
+
         $noteQuiz = 0;
         $quizzes = $data['quizzes'];
         foreach ($quizzes as $quizze) {
             $quizId = $quizze['id'];
             $results = $quizze['reponses'];
             $quiz = $quizRepository->find($quizId);
-        
+
             if ($quiz === null) {
                 throw new BadRequestException("Données corrompues");
             }
-        
+
             $isCorrect = false;
             $note = 0;
-        
+
             if ($results == $quiz->getPropositionJuste()) {
                 $isCorrect = true;
                 $note = 20 / count($chapitre->getQuizzes());
                 $noteQuiz += $note;
             }
-        
+
             $quizResult = $quizResultRepository->findOneBy(['quiz' => $quiz, 'eleve' => $eleve]);
-            
-        
+
+
             if ($quizResult === null) {
-               
+
                 $quizResult = new QuizResult();
                 $quizResult->setEleve($eleve)->setQuiz($quiz);
             }
-           
+
             $quizResult->setIsCorrect($isCorrect)
                 ->setResult($results)
                 ->setNote($note)
                 ->setUpdatedAt(new \DateTimeImmutable());
-        
-            $quizResultRepository->save($quizResult,true);
+
+            $quizResultRepository->save($quizResult, true);
         }
-        
-        
+
+
         if ($eleve !== null) {
             if ($lecture === null) {
                 $lecture = new Lecture();
@@ -146,7 +153,7 @@ class PostController extends AbstractController
                 $lecture->setEleve($eleve)->setReference(time() + $quiz->getId())->setEndAt(new \DateTimeImmutable());
             }
             $isFinished = false;
-            if (($noteQuiz * 100) / 20 > 60) {
+            if (($noteQuiz * 100) / 20 >= 50) {
                 $isFinished = true;
             }
             $lecture->setIsFinished($isFinished)->setNote($noteQuiz);
@@ -158,22 +165,22 @@ class PostController extends AbstractController
                     if ($nextChapter && count($nextChapter->getLessons()) > 0) {
                         $newLecture = new Lecture();
                         $newLecture->setLesson($nextChapter->getLessons()[0])
-                            ->setEleve($eleve)->setStartAt(new \DateTimeImmutable())->setReference(time()+$nextChapter->getId())
+                            ->setEleve($eleve)->setStartAt(new \DateTimeImmutable())->setReference(time() + $nextChapter->getId())
                             ->setIsFinished(false);
                         $lectureRepository->save($newLecture);
                     }
-                }else {
+                } else {
                     // il n'y a plus de chapitres donc on passe au quiz de fin de chapitre
                     $newLecture = new Lecture();
-                        $newLecture->setCours($cours)
-                            ->setEleve($eleve)->setStartAt(new \DateTimeImmutable())->setReference(time()+$cours->getId())
-                            ->setIsFinished(false);
-                        $lectureRepository->save($newLecture);
+                    $newLecture->setCours($cours)
+                        ->setEleve($eleve)->setStartAt(new \DateTimeImmutable())->setReference(time() + $cours->getId())
+                        ->setIsFinished(false);
+                    $lectureRepository->save($newLecture);
                 }
             }
 
             $lectureRepository->save($lecture);
-            
+
             if (!$isFinished) {
                 if ($quizLost === null) {
                     $quizLost = new QuizLost();
@@ -186,7 +193,7 @@ class PostController extends AbstractController
                 }
                 $quizLost->setAttempt($quizLost->getAttempt() + 1)
                     ->setLastAt(new \DateTimeImmutable())
-                    ->setNextAt(new \DateTimeImmutable(date('Y-m-d H:i:s', strtotime('+2 hour'))))
+                    ->setNextAt(new \DateTimeImmutable(date('Y-m-d H:i:s', strtotime('+10 second'))))
                     ->setIsOk(false);
                 $quizLostRepository->save($quizLost);
             } else {
@@ -196,7 +203,6 @@ class PostController extends AbstractController
                     $quizLostRepository->save($quizLost);
                 }
             }
-           
         }
 
         return new \ArrayObject([
@@ -204,7 +210,5 @@ class PostController extends AbstractController
             'note' => $noteQuiz,
             'quizzesResults' => [],
         ]);
-        
-
     }
 }

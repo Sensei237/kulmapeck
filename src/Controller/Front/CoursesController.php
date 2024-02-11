@@ -66,11 +66,9 @@ class CoursesController extends AbstractController
         $searchClasse = $classeRepository->findOneBy(['slug' => $request->query->get('classe')]);
         if ($search != null || $searchCategory != null || $searchPrice !== null || $searchLevel !== null || $searchLanguage !== null || $searchFiliere !== null || $searchSpecialite !== null || $searchClasse !== null) {
             $courses = $coursRepository->frontSearch($category, $search, $isFree, $searchLevel, $searchLanguage, $searchFiliere, $searchSpecialite, $searchClasse);
-        }
-        elseif ($categorie != null) {
+        } elseif ($categorie != null) {
             $courses = $coursRepository->findByCategory($categorie);
-        }
-        else {
+        } else {
             $courses = $coursRepository->findBy(['isValidated' => true]);
         }
 
@@ -94,7 +92,7 @@ class CoursesController extends AbstractController
     }
 
     #[Route('/course/{slug}/review', name: 'app_front_course_add_review', methods: ['POST'])]
-    public function newCourseReview(Cours $cours, Request $request, EleveRepository $eleveRepository, ReviewRepository $reviewRepository) 
+    public function newCourseReview(Cours $cours, Request $request, EleveRepository $eleveRepository, ReviewRepository $reviewRepository)
     {
         $eleve = $eleveRepository->findOneBy(['utilisateur' => $this->getUser()]);
         if ($eleve === null) {
@@ -106,15 +104,13 @@ class CoursesController extends AbstractController
         $formReview->handleRequest($request);
 
         if ($formReview->isSubmitted() && $formReview->isValid()) {
-            $cours->setReview($cours->getReview()+$review->getRating());
+            $cours->setReview($cours->getReview() + $review->getRating());
             $review->setEleve($eleve);
             $review->setCours($cours);
             $reviewRepository->save($review, true);
-
         }
 
         return $this->redirectToRoute('app_front_course_details', ['slug' => $cours->getSlug()]);
-
     }
 
     #[Route('/courses/{slug}/details', name: 'app_front_course_details', methods: ['GET'])]
@@ -125,7 +121,7 @@ class CoursesController extends AbstractController
         $lecture = null;
         $eleve = $eleveRepository->findOneBy(['utilisateur' => $this->getUser()]);
         if ($eleve !== null && count($readLessons) > 0) {
-            $lastReadLesson = $readLessons[count($readLessons)-1];
+            $lastReadLesson = $readLessons[count($readLessons) - 1];
             $lecture = $lectureRepository->findOneBy(['lesson' => $lastReadLesson, 'eleve' => $eleve]);
         }
 
@@ -189,8 +185,8 @@ class CoursesController extends AbstractController
         if ($sujetForm->isSubmitted() && $sujetForm->isValid()) {
             $sujet->setForum($cours->getForum());
             $sujet->setMembre($membre)
-            ->setReference((time()+$membre->getId())*2);
-            
+                ->setReference((time() + $membre->getId()) * 2);
+
             $sujetRepository->save($sujet, true);
         }
 
@@ -236,13 +232,13 @@ class CoursesController extends AbstractController
         }
 
         if ($likeMessageForumRepository->findOneBy(['membre' => $membre, 'forumMessage' => $forumMessage]) === null) {
-            $forumMessageRepository->save($forumMessage->setLikes($forumMessage->getLikes()+1));
+            $forumMessageRepository->save($forumMessage->setLikes($forumMessage->getLikes() + 1));
             $lmf = new LikeMessageForum();
             $lmf->setMembre($membre)->setForumMessage($forumMessage);
             $likeMessageForumRepository->save($lmf);
             $em->flush();
         }
-        
+
         if (!$request->isXmlHttpRequest()) {
             return $this->redirectToRoute('app_front_course_forum_subject_message', ['slug' => $forumMessage->getSujet()->getForum()->getCours()->getSlug(), 'reference' => $forumMessage->getSujet()->getReference()]);
         }
@@ -273,12 +269,13 @@ class CoursesController extends AbstractController
         if (!$request->isXmlHttpRequest()) {
             return $this->redirectToRoute('app_front_course_forum_subject_message', ['slug' => $replyForumMessage->getSujet()->getForum()->getCours()->getSlug(), 'reference' => $replyForumMessage->getSujet()->getReference()]);
         }
-        
+
         return new JsonResponse(['hasDone' => true, 'likes' => $replyForumMessage->getLikes()]);
     }
 
     #[Route('/course/{id}/mark-solve', name: 'app_course_solve_forum_message', methods: ['GET'])]
-    public function sujetResolu(ForumMessage $forumMessage, ForumMessageRepository $forumMessageRepository) {
+    public function sujetResolu(ForumMessage $forumMessage, ForumMessageRepository $forumMessageRepository)
+    {
         $forumMessage->setIsResponse(true);
         $forumMessage->getSujet()->setIsSolved(true);
         $forumMessageRepository->save($forumMessage, true);
@@ -289,7 +286,7 @@ class CoursesController extends AbstractController
     /**
      * Dans cette fonction nous allons étudier les différentes contraintes pour commencer un cours
      */
-    #[Route('/course/{slug}/start', name:'app_front_course_start', methods: ['GET'])]
+    #[Route('/course/{slug}/start', name: 'app_front_course_start', methods: ['GET'])]
     public function startCourse(Cours $course, Request $request, PaymentRepository $paymentRepository, MembreRepository $membreRepository, ForumRepository $forumRepository, EleveRepository $eleveRepository, LectureRepository $lectureRepository, EntityManagerInterface $entityManagerInterface)
     {
         // La fonction nécessite que l'on soit connecté
@@ -299,7 +296,7 @@ class CoursesController extends AbstractController
         if ($this->isGranted('ROLE_STUDENT')) {
             // Si le cours est gratuit on l'ajoute dans la liste des cours de l'élève dans le cas contraire on verifie s'il a 
             // un compte premium si c'est le cas on ajoute le cours dans sa liste de cours dans le cas contraire il doit soit payer 
-            
+
             if ($eleve === null) {
                 throw $this->createAccessDeniedException();
             }
@@ -308,11 +305,11 @@ class CoursesController extends AbstractController
             // le cours soit souscrire a un compte premium
 
             if (!$course->isIsFree() && (!$eleve->isIsPremium() && (!$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $course, 'isExpired' => false])))) {
-                    
+
                 return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $course->getSlug()]);
             }
             if (!$eleve->getCours()->contains($course)) {
-                
+
                 if ($course->isIsFree() || $eleve->isIsPremium()) {
                     $membre = $membreRepository->findOneBy(['utilisateur' => $this->getUser()]);
                     if ($membre === null) {
@@ -329,14 +326,13 @@ class CoursesController extends AbstractController
                     // On ajoute le cours dans sa liste
                     $eleve->addCour($course);
                     $membreRepository->save($membre, true);
-                    
-                }else {
+                } else {
                     // On lui demande de soit ajouter payer le cours soit devenir premium
                     return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $course->getSlug()]);
                 }
-            }else {
+            } else {
                 if (!$course->isIsFree() && (!$eleve->isIsPremium() && (!$paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $course, 'isExpired' => false])))) {
-                    
+
                     return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $course->getSlug()]);
                 }
             }
@@ -348,7 +344,8 @@ class CoursesController extends AbstractController
             if ($lecture) {
                 $lesson = $lecture->getLesson();
             }
-        } if ($lesson ===  null) {
+        }
+        if ($lesson ===  null) {
             $lesson = $chapitre->getLessons()[0];
         }
 
@@ -379,7 +376,7 @@ class CoursesController extends AbstractController
             //         return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $lesson->getChapitre()->getCours()->getSlug()]);
             //     }
             // }
-        }else {
+        } else {
             $enseignant = $enseignantRepository->findOneBy(['utilisateur' => $this->getUser()]);
             if (!$this->isGranted('ROLE_COURSE_MANAGER') && ($enseignant !== null && !$enseignant->getCours()->contains($lesson->getChapitre()->getCours()))) {
                 throw $this->createAccessDeniedException();
@@ -403,13 +400,13 @@ class CoursesController extends AbstractController
         ]);
 
         // La fonction nécessite que l'on soit connecté
-        
+
         $lecture = null;
         if ($eleve !== null) {
             $lecture = $lectureRepository->findOneBy(['lesson' => $lesson, 'eleve' => $eleve]);
             if ($lecture === null) {
                 $lecture = new Lecture();
-                $lecture->setReference($lesson->getId()+time())->setEleve($eleve)->setLesson($lesson)->setIsFinished(false)->setStartAt(new \DateTimeImmutable());
+                $lecture->setReference($lesson->getId() + time())->setEleve($eleve)->setLesson($lesson)->setIsFinished(false)->setStartAt(new \DateTimeImmutable());
                 $lectureRepository->save($lecture, true);
             }
         }
@@ -439,12 +436,12 @@ class CoursesController extends AbstractController
     {
         $lecture->setIsFinished(true)->setEndAt(new \DateTimeImmutable());
         $lectureRepository->save($lecture, true);
-        
-        $lesson = $lessonRepository->findOneBy(['chapitre' => $lecture->getLesson()->getChapitre(), 'numero' => $lecture->getLesson()->getNumero()+1]);
+
+        $lesson = $lessonRepository->findOneBy(['chapitre' => $lecture->getLesson()->getChapitre(), 'numero' => $lecture->getLesson()->getNumero() + 1]);
         if ($lesson === null) {
             return $this->redirectToRoute('app_front_course_chapitre_quizzes', ['slugCours' => $lecture->getLesson()->getChapitre()->getCours()->getSlug(), 'slugChapitre' => $lecture->getLesson()->getChapitre()->getSlug()]);
         }
-        
+
         return $this->redirectToRoute('app_front_read_lesson', ['slug' => $lesson->getSlug()]);
     }
 
@@ -452,7 +449,7 @@ class CoursesController extends AbstractController
     #[Route('/course/{slugCours}/quizzes', name: 'app_front_course_course_quizzes', methods: ['GET', 'POST'])]
     #[ParamConverter('cours', options: ['mapping' => ['slugCours' => 'slug']])]
     #[ParamConverter('chapitre', options: ['mapping' => ['slugChapitre' => 'slug']])]
-    public function showQuizzes(Cours $cours, Chapitre $chapitre=null, PaymentRepository $paymentRepository, ChapitreRepository $chapitreRepository, QuizLostRepository $quizLostRepository, Request $request, EntityManagerInterface $entityManager, LectureRepository $lectureRepository, QuizResultRepository $quizResultRepository, EleveRepository $eleveRepository, QuizRepository $quizRepository)
+    public function showQuizzes(Cours $cours, Chapitre $chapitre = null, PaymentRepository $paymentRepository, ChapitreRepository $chapitreRepository, QuizLostRepository $quizLostRepository, Request $request, EntityManagerInterface $entityManager, LectureRepository $lectureRepository, QuizResultRepository $quizResultRepository, EleveRepository $eleveRepository, QuizRepository $quizRepository)
     {
         $eleve = $eleveRepository->findOneBy(['utilisateur' => $this->getUser()]);
 
@@ -468,9 +465,8 @@ class CoursesController extends AbstractController
             // le cours soit souscrire a un compte premium
             if (!$eleve->getCours()->contains($cours)) {
                 return $this->redirectToRoute('app_front_course_start', ['slug' => $cours->getSlug()]);
-            } 
-            else {
-                if (!$cours->isIsFree() && (!$eleve->isIsPremium() && ($paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $cours, 'isExpired' => false])!==null))) {
+            } else {
+                if (!$cours->isIsFree() && (!$eleve->isIsPremium() && ($paymentRepository->findOneBy(['eleve' => $eleve, 'cours' => $cours, 'isExpired' => false]) !== null))) {
                     return $this->redirectToRoute('app_front_payment_buy_course', ['slug' => $cours->getSlug()]);
                 }
             }
@@ -480,7 +476,7 @@ class CoursesController extends AbstractController
             $lecture = $lectureRepository->findOneBy(['eleve' => $eleve, 'chapitre' => $chapitre]);
             if ($lecture == null) {
                 $lecture = new Lecture();
-                $lecture->setChapitre($chapitre)->setEleve($eleve)->setIsFinished(false)->setReference(time()+$eleve->getId())->setStartAt(new \DateTimeImmutable());
+                $lecture->setChapitre($chapitre)->setEleve($eleve)->setIsFinished(false)->setReference(time() + $eleve->getId())->setStartAt(new \DateTimeImmutable());
                 $lectureRepository->save($lecture, true);
             }
             $quizLost = $quizLostRepository->findOneBy(['chapitre' => $chapitre, 'eleve' => $eleve]);
@@ -510,23 +506,22 @@ class CoursesController extends AbstractController
                 $isCorrect = false;
                 $note = 0;
                 // dump($quiz->getPropositionJuste());
-                
-                if($results == $quiz->getPropositionJuste()) {
+
+                if ($results == $quiz->getPropositionJuste()) {
                     $isCorrect = true;
-                    $note = 20/count($chapitre->getQuizzes());
+                    $note = 20 / count($chapitre->getQuizzes());
                     $noteQuiz += $note;
                     // dd($results);
                 }
 
                 if ($eleve !== null) {
-                    $quizResult = $quizResultRepository->findOneBy(['quiz' => $quiz, 'eleve' => $eleve, ]);
+                    $quizResult = $quizResultRepository->findOneBy(['quiz' => $quiz, 'eleve' => $eleve,]);
                     if ($quizResult === null) {
                         $quizResult = new QuizResult();
                     }
                     $quizResult->setEleve($eleve)->setQuiz($quiz)->setIsCorrect($isCorrect)->setResult($results)->setNote($note)->setUpdatedAt(new \DateTimeImmutable());
                     $quizResultRepository->save($quizResult);
-                }
-                else {
+                } else {
                     $quizResult = new QuizResult();
                     $quizResult->setQuiz($quiz)->setIsCorrect($isCorrect)->setResult($results)->setNote($note)->setUpdatedAt(new \DateTimeImmutable());
                     $quizzesResults[] = $quizResult;
@@ -534,7 +529,7 @@ class CoursesController extends AbstractController
 
                 // dump($quiz);dump($quizResult);dump($note);
             }
-            
+
             if ($eleve !== null) {
                 if ($lecture === null) {
                     $lecture = new Lecture();
@@ -544,11 +539,9 @@ class CoursesController extends AbstractController
                         $lecture->setCours($cours);
                     }
                     $lecture->setEleve($eleve)->setReference(time() + $quiz->getId())->setEndAt(new \DateTimeImmutable());
-                    
-                    
                 }
                 $isFinished = false;
-                if (($noteQuiz * 100) / 20 > 70) {
+                if (($noteQuiz * 100) / 20 >= 50) {
                     $isFinished = true;
                 }
                 $lecture->setIsFinished($isFinished)->setNote($noteQuiz);
@@ -560,17 +553,17 @@ class CoursesController extends AbstractController
                         if ($nextChapter && count($nextChapter->getLessons()) > 0) {
                             $newLecture = new Lecture();
                             $newLecture->setLesson($nextChapter->getLessons()[0])
-                                ->setEleve($eleve)->setStartAt(new \DateTimeImmutable())->setReference(time()+$nextChapter->getId())
+                                ->setEleve($eleve)->setStartAt(new \DateTimeImmutable())->setReference(time() + $nextChapter->getId())
                                 ->setIsFinished(false);
                             $lectureRepository->save($newLecture);
                         }
-                    }else {
+                    } else {
                         // il n'y a plus de chapitres donc on passe au quiz de fin de chapitre
                         $newLecture = new Lecture();
-                            $newLecture->setCours($cours)
-                                ->setEleve($eleve)->setStartAt(new \DateTimeImmutable())->setReference(time()+$cours->getId())
-                                ->setIsFinished(false);
-                            $lectureRepository->save($newLecture);
+                        $newLecture->setCours($cours)
+                            ->setEleve($eleve)->setStartAt(new \DateTimeImmutable())->setReference(time() + $cours->getId())
+                            ->setIsFinished(false);
+                        $lectureRepository->save($newLecture);
                     }
                 }
 
@@ -587,7 +580,7 @@ class CoursesController extends AbstractController
                     }
                     $quizLost->setAttempt($quizLost->getAttempt() + 1)
                         ->setLastAt(new \DateTimeImmutable())
-                        ->setNextAt(new DateTimeImmutable(date('Y-m-d H:i:s', strtotime('+2 hour'))))
+                        ->setNextAt(new DateTimeImmutable(date('Y-m-d H:i:s', strtotime('+10 second'))))
                         ->setIsOk(false);
                     $quizLostRepository->save($quizLost);
                 } else {
@@ -600,7 +593,7 @@ class CoursesController extends AbstractController
             }
 
             // dump("Note: ".$noteQuiz);dd($data['quizzes']);
-            
+
             $entityManager->flush();
 
             if ($eleve) {
@@ -621,10 +614,10 @@ class CoursesController extends AbstractController
                 $nextQuizAt = $quizLost->getNextAt();
             }
         }
-        
+
         return $this->render('front/courses/quiz.html.twig', [
             'chapitre' => $chapitre,
-            'quizzes' => $chapitre !== null ? $chapitre->getQuizzes() : $quizRepository->findBy(['cours'=>$cours, 'chapitre'=>null]),
+            'quizzes' => $chapitre !== null ? $chapitre->getQuizzes() : $quizRepository->findBy(['cours' => $cours, 'chapitre' => null]),
             'cours' => $cours,
             'submitUri' => $chapitre === null ? $this->generateUrl('app_front_course_course_quizzes', ['slugCours' => $cours->getSlug()]) : $this->generateUrl('app_front_course_chapitre_quizzes', ['slugCours' => $cours->getSlug(), 'slugChapitre' => $chapitre->getSlug()]),
             'isCorrectionMode' => $showCorrection,
@@ -633,5 +626,4 @@ class CoursesController extends AbstractController
             'nextQuizAt' => $nextQuizAt,
         ]);
     }
-
 }
