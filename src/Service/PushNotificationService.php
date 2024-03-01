@@ -44,8 +44,9 @@ class PushNotificationService
     }
 
 
-    public function PushNotificationData($body,$title,$to='/topics/all')
+    public function PushNotificationData($body,$title,$receiver)
     {
+        $to=$receiver==null?'/topics/all':$receiver;
         $jsonData = [
             "notification" => [
                 "body" => $body,

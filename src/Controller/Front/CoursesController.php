@@ -38,6 +38,8 @@ use App\Repository\ReviewRepository;
 use App\Repository\SpecialiteRepository;
 use App\Repository\SujetRepository;
 use DateTimeImmutable;
+use App\Service\PushNotificationService;
+use App\Service\SendAllUsersEmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -49,6 +51,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CoursesController extends AbstractController
 {
+     private $sendAllUsersEmailService;
+
+    public function __construct( SendAllUsersEmailService $sendAllUsersEmailService ) {
+        $this->sendAllUsersEmailService = $sendAllUsersEmailService;
+
+    }
+
     #[Route('/courses', name: 'app_front_courses')]
     #[Route('/courses/{slug}', name: 'app_front_category_courses', methods: ['GET'])]
     public function index(Categorie $categorie = null, Request $request, FiliereRepository $filiereRepository, SpecialiteRepository $specialiteRepository, ClasseRepository $classeRepository, CategorieRepository $categorieRepository, CoursRepository $coursRepository, PaginatorInterface $paginatorInterface): Response
@@ -177,17 +186,29 @@ class CoursesController extends AbstractController
     #[Route('/course/{id}/{slug}/forum', name: 'app_front_course_new_forum', methods: ['POST'])]
     #[ParamConverter('cours', options: ['mapping' => ['slug' => 'slug']])]
     #[ParamConverter('membre', options: ['mapping' => ['id' => 'id']])]
-    public function newForumSubjet(Membre $membre, Cours $cours, Request $request, SujetRepository $sujetRepository): Response
+    public function newForumSubjet(Membre $membre, Cours $cours,
+     Request $request, SujetRepository $sujetRepository): Response
     {
         $sujet = new Sujet();
         $sujetForm = $this->createForm(SujetType::class, $sujet);
         $sujetForm->handleRequest($request);
         if ($sujetForm->isSubmitted() && $sujetForm->isValid()) {
+            $formData = $sujetForm->getData();
+            $content = $formData['content'];
+
             $sujet->setForum($cours->getForum());
             $sujet->setMembre($membre)
                 ->setReference((time() + $membre->getId()) * 2);
 
-            $sujetRepository->save($sujet, true);
+              $sujetRepository->save($sujet, true);
+
+            $title='Nouveu  sujet << '.$content.' >>';
+            $body='Chere enseignant, le sujet : [ <strong>'.$content.'</strong> ] pour le cour de ' .$cours->getIntitule().' dont vous etes le guide vient de voir le jour  
+            . Merci de bien consulter le soucis de cet apprenant ';
+            
+              $user= $cours->getEnseignant()->getUtilisateur();
+              $this->sendAllUsersEmailService->sendManyRecipients( $title, $body,$user);
+
         }
 
         return $this->redirectToRoute('app_front_course_forum_index', ['slug' => $cours->getSlug()]);
@@ -196,20 +217,106 @@ class CoursesController extends AbstractController
     #[Route('/course/{membreId}/{referenceSujet}/post-forum-message', name: 'app_front_course_new_forum_message', methods: ['POST'])]
     #[ParamConverter('sujet', options: ['mapping' => ['referenceSujet' => 'reference']])]
     #[ParamConverter('membre', options: ['mapping' => ['membreId' => 'id']])]
-    public function addNewforumMessage(Membre $membre, Sujet $sujet, Request $request, ForumMessageRepository $forumMessageRepository)
+    public function addNewforumMessage(Membre $membre, Sujet $sujet,
+     Request $request, ForumMessageRepository $forumMessageRepository,
+        PushNotificationService $pushNotificationService,
+    )
     {
-        if (!$membre->getForums()->contains($sujet->getForum())) {
-            throw $this->createAccessDeniedException("You cannot post in this forum");
-        }
-
+        $user=$this->getUser();
+        if ( in_array( 'ROLE_STUDENT', $user->getRoles() ) ) {
+            if (!$membre->getForums()->contains($sujet->getForum())) {
+              throw $this->createAccessDeniedException("You cannot post in this forum");
+            }
+       }
         $message = $request->request->get('message');
         if ($message === null) {
             throw $this->createNotFoundException("Comment connot be empty !");
+        }
+        
+        if ($membre === 'adminer') {
+                $membre = new Membre();
+                $membre->setUtilisateur($this->getUser());
         }
 
         $forumMessage = new ForumMessage();
         $forumMessage->setContent($message)->setMembre($membre)->setSujet($sujet);
         $forumMessageRepository->save($forumMessage, true);
+
+        $MessageMembers= $forumMessageRepository->findBy(['sujet'=>$sujet]);
+
+        if($MessageMembers!==null){
+           $isEleve=$membre->getUtilisateur()?->getEleve();
+           $message=$isEleve==null ?' camarade ':' Enseignant Certifie Kulmapeck ';
+           $sender=' du collaborateur  '.$message.' '.$membre->getUtilisateur()->getPersonne()->getPseudo();
+            $title='Reponse au sujet '.$sujet->getContent();
+            $body=' Un nouveau message a ete ajoute pour le sujet : '.$sujet->getContent().' priere de verifier si cela resoud votre preoccupation ';
+            $bodyEmail='Pour le sujet : '.$sujet->getContent().'<br>, la  reponse   '.$sender.' est: <strong>'.$message.'</strong> . <br> 
+            priere de verifier si cela resoud votre preoccupation et veuilez marquer resolut si vous etes satisfait . <br> Cordialement';
+
+            foreach($MessageMembers as $member){
+              $user= $member->getMembre()->getUtilisateur();
+              $userDeviceToken = $member->getMembre()->getUtilisateur()?->getDevices()[0]->getToken();
+              $pushNotificationService->PushNotificationData($body, $title,$userDeviceToken);
+              $this->sendAllUsersEmailService->send( $title, $bodyEmail, $user );
+
+            }
+        }
+
+
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse(['hasDone' => true]);
+        }
+
+        return $this->redirectToRoute('app_front_course_forum_subject_message', ['slug' => $sujet->getForum()->getCours()->getSlug(), 'reference' => $sujet->getReference()]);
+    }
+
+     #[Route('/course/{referenceSujet}/post-forum-message', name: 'app_front_course_new_forum_message_adminer', methods: ['POST'])]
+    #[ParamConverter('sujet', options: ['mapping' => ['referenceSujet' => 'reference']])]
+    public function addNewforumMessageAdminer(Membre $membre=null, Sujet $sujet,
+     Request $request, ForumMessageRepository $forumMessageRepository,
+        PushNotificationService $pushNotificationService,
+    )
+    {
+        $user=$this->getUser();
+        if ( in_array( 'ROLE_STUDENT', $user->getRoles() ) ) {
+            if (!$membre->getForums()->contains($sujet->getForum())) {
+              throw $this->createAccessDeniedException("You cannot post in this forum");
+            }
+       }
+        $message = $request->request->get('message');
+        if ($message === null) {
+            throw $this->createNotFoundException("Comment connot be empty !");
+        }
+        
+        if ($membre ===null) {
+                $membre = new Membre();
+                $membre->setUtilisateur($this->getUser());
+        }
+
+        $forumMessage = new ForumMessage();
+        $forumMessage->setContent($message)->setMembre($membre)->setSujet($sujet);
+        $forumMessageRepository->save($forumMessage, true);
+
+        $MessageMembers= $forumMessageRepository->findBy(['sujet'=>$sujet]);
+
+        if($MessageMembers!==null){
+           $isEleve=$membre->getUtilisateur()?->getEleve();
+           $message=$isEleve==null ?' camarade ':' Enseignant Certifie Kulmapeck ';
+           $sender=' du collaborateur  '.$message.' '.$membre->getUtilisateur()->getPersonne()->getPseudo();
+            $title='Reponse au sujet '.$sujet->getContent();
+            $body=' Un nouveau message a ete ajoute pour le sujet : '.$sujet->getContent().' priere de verifier si cela resoud votre preoccupation ';
+            $bodyEmail='Pour le sujet : '.$sujet->getContent().'<br>, la  reponse   '.$sender.' est: <strong>'.$message.'</strong> . <br> 
+            priere de verifier si cela resoud votre preoccupation et veuilez marquer resolut si vous etes satisfait . <br> Cordialement';
+
+            foreach($MessageMembers as $member){
+              $user= $member->getMembre()->getUtilisateur();
+              $userDeviceToken = $member->getMembre()->getUtilisateur()?->getDevices()[0]->getToken();
+              $pushNotificationService->PushNotificationData($body, $title,$userDeviceToken);
+              $this->sendAllUsersEmailService->send( $title, $bodyEmail, $user );
+
+            }
+        }
+
 
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse(['hasDone' => true]);
@@ -266,6 +373,8 @@ class CoursesController extends AbstractController
         $replyForumMessage->setContent($replyMessage)->setMembre($membre)->setSujet($forumMessage->getSujet())->setIsAnswer(true)->setForumMessage($forumMessage);
         $forumMessageRepository->save($replyForumMessage, true);
 
+        
+
         if (!$request->isXmlHttpRequest()) {
             return $this->redirectToRoute('app_front_course_forum_subject_message', ['slug' => $replyForumMessage->getSujet()->getForum()->getCours()->getSlug(), 'reference' => $replyForumMessage->getSujet()->getReference()]);
         }
@@ -274,11 +383,30 @@ class CoursesController extends AbstractController
     }
 
     #[Route('/course/{id}/mark-solve', name: 'app_course_solve_forum_message', methods: ['GET'])]
-    public function sujetResolu(ForumMessage $forumMessage, ForumMessageRepository $forumMessageRepository)
+    public function sujetResolu(ForumMessage $forumMessage,
+        PushNotificationService $pushNotificationService, ForumMessageRepository $forumMessageRepository)
     {
         $forumMessage->setIsResponse(true);
         $forumMessage->getSujet()->setIsSolved(true);
+
         $forumMessageRepository->save($forumMessage, true);
+
+         $MessageMembers= $forumMessageRepository->findBy(['sujet'=>$forumMessage->getSujet()]);
+
+        if($MessageMembers!==null){
+
+            $title='Resolution du sujet << '.$forumMessage->getSujet()->getContent().' >>';
+            $body='Le sujet : [ '.$forumMessage->getSujet()->getContent().' ] a ete resolu avec succes . Merci de nous faire confiance ';
+            
+            foreach($MessageMembers as $member){
+              $user= $member->getMembre()->getUtilisateur();
+              $userDeviceToken = $member->getMembre()->getUtilisateur()?->getDevices()[0]->getToken();
+        
+              $pushNotificationService->PushNotificationData($body, $title,$userDeviceToken);
+              $this->sendAllUsersEmailService->send( $title, $body, $user );
+
+            }
+        }
 
         return $this->redirectToRoute('app_front_course_forum_index', ['slug' => $forumMessage->getSujet()->getForum()->getCours()->getSlug()]);
     }
