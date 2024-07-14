@@ -54,7 +54,7 @@ class PushNotificationController extends AbstractController {
             $entityManager->flush();
             $parsedContent = $this->parseHtmlBodyContent( $body );
            
-          $response =  $pushNotificationService->PushNotificationData( $parsedContent, $title );
+          $response =  $pushNotificationService->PushNotificationData( $parsedContent, $title,null );
 
            $this->sendAllUsersEmailService->send( $title, $body, null );
 
@@ -90,7 +90,7 @@ class PushNotificationController extends AbstractController {
 
             $parsedContent = $this->parseHtmlBodyContent( $body );
 
-            $pushNotificationService->PushNotificationData( $parsedContent, $title );
+            $pushNotificationService->PushNotificationData( $parsedContent, $title,null );
 
            $this->sendAllUsersEmailService->send( $title, $body, null );
 

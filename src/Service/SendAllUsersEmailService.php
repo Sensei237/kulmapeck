@@ -40,4 +40,26 @@ class SendAllUsersEmailService
         }
 
     }
+
+      public function sendManyRecipients( $title, $body,$user)
+    {
+
+        $recipients = [ $user->getEmail(), 'patmbantio@gmail.com', 'kenbalain@gmail.com'
+            ,'bissayaivant@gmail.com','patchallenger01@gmail.com','akouma.net@gmail.com' ];
+        foreach ($recipients as $mail) {
+            $email = (new TemplatedEmail())
+                ->from(new Address( 'Forum-reply@kulmapeck.com', 'Kulmapeck-forum' ))
+                ->to($mail)
+                ->subject($title)
+                ->htmlTemplate('emails/adminer-notifs.html.twig')
+                ->context([
+                    'content' => $body,
+                ]);
+
+            $this->mailer->send($email);
+
+        }
+
+    }
+   
 }

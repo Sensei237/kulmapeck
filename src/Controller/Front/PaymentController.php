@@ -52,7 +52,7 @@ class PaymentController extends AbstractController
             if ($this->isCsrfTokenValid('payment' . $course->getId(), $request->request->get('_token'))) {
                 // En fonction de la methode de payment choisie on fait appel à l'API indiquée
                 $paymentMethod = $paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
-                $reference = 'CO-' . (time() + rand(10000, 100000000000));
+                $reference = 'AK-' . (time() + rand(10000, 100000000000));
                 $phoneNumber = $request->request->get('phone');
                 $apiResponse = PaymentUtil::initierPayment($eleve->getUtilisateur(), $course, $paymentMethod, $this->keys, $reference, $phoneNumber);
                 // dd($apiResponse);
@@ -116,7 +116,7 @@ class PaymentController extends AbstractController
             if ($this->isCsrfTokenValid('payment' . $abonnement->getId(), $request->request->get('_token'))) {
                 // En fonction de la methode de payment choisie on fait appel à l'API indiquée
                 $paymentMethod = $paymentMethodRepository->findOneBy(['code' => $request->request->get('payment_method')]);
-                $reference = 'AB-' . (time() + rand(10000, 100000000000));
+                $reference = 'KU-' . (time() + rand(10000, 100000000000));
                 $phoneNumber = $request->request->get('phone');
                 $apiResponse = PaymentUtil::initierPaymentPlan($eleve->getUtilisateur(), $abonnement, $paymentMethod, $this->keys, $reference, $phoneNumber);
                 if ($apiResponse['isPaied'] && isset($apiResponse['responseData']['payment_url']) && isset($apiResponse['responseData']['transaction_ref']) && isset($apiResponse['responseData']['status'])) {
