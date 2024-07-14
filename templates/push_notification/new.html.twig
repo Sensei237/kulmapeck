@@ -1,0 +1,14 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Create new Push Notification{% endblock %}
+
+{% block actionBtn %}
+    <a href="{{ path('app_push_notification_index') }}"  class="btn btn-sm btn-secondary mb-0">back to list</a>
+{% endblock %}
+
+    
+{% block mainContent %}
+
+    {{ include('push_notification/_form.html.twig') }}
+
+{% endblock %}

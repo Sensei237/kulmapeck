@@ -30,7 +30,7 @@ class InscriptionController extends AbstractController
         }
 
         if (!$eleve->isIsPremium()) {
-            throw $this->createAccessDeniedException("Vous devez être premium vous inscrire à une évaluation");
+            throw $this->createAccessDeniedException("Vous devez avoir un abonement en cours ou etre premium pour  vous inscrire à une évaluation");
         }
 
         if ($eleve->getEvaluations()->contains($evaluation)) {

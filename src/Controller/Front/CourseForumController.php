@@ -66,7 +66,8 @@ class CourseForumController extends AbstractController
     {
         $heIsMembre = false;
         $membre = $membreRepository->findOneBy(['utilisateur' => $this->getUser()]);
-        if ($membre !== null && $membre->getForums()->contains($cours->getForum())) {
+        if ($membre !== null) {
+           // if ($membre !== null && $membre->getForums()->contains($cours->getForum())) {
             $heIsMembre = true;
         }
 

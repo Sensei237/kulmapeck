@@ -36,10 +36,11 @@ class PersonneType extends AbstractType
                 ]
             ])
             ->add('pseudo', TextType::class, [
+                'label' => "Nom d'utilisateurs (Il faut 5 caractères minimum et 8 maximum)",
                 'attr' => [
                     'class' => 'border-0 bg-light rounded-end ps-1', 
                     'id' => 'pseudo',
-                    'label' => "Nom d'utilisateurs"
+                    'label' => "Nom d'utilisateurs (Il faut 5 caractères minimum et 8 maximum)"
                 ]
             ])
             ->add('bornAt', BirthdayType::class, [

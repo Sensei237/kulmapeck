@@ -106,7 +106,8 @@ class FrontController extends AbstractController
     }
 
     #[Route('/subscriptions-plans', name: 'app_plan')]
-    public function plan(Request $request, AbonnementItemRepository $abonnementItemRepository, EleveRepository $eleveRepository, AbonnementRepository $abonnementRepository) {
+    public function plan(Request $request, AbonnementItemRepository $abonnementItemRepository
+    , EleveRepository $eleveRepository, AbonnementRepository $abonnementRepository) {
 
         $eleve = $eleveRepository->findOneBy(['utilisateur' => $this->getUser()]);
 
@@ -116,7 +117,7 @@ class FrontController extends AbstractController
         }
 
         return $this->render('front/plan/index.html.twig', [
-            'plans' => $abonnementRepository->findAll(),
+            'plans' => $abonnementRepository->findBy([], ['montant' => 'ASC']),
             'abonnementItems' => $abonnementItemRepository->findAll(),
         ]);
     }

@@ -1,0 +1,15 @@
+{% extends "instructor/base.html.twig" %}
+
+{% block subTitle %}
+	- Courses
+{% endblock %}
+
+{% block btnAction %}
+    <a href="{{ path('app_instructor_lesson_index', {'slug': chapitre.slug}) }}" class="">back to list</a>
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ include('instructor/lesson/_form.html.twig') }}
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'instructor/base.html.twig' %}
+
+{% block pageTitle %}Evaluations{% endblock %}
+
+{% block script %}
+    
+{% endblock %}
+
+{% block pageContent %}
+{% block actionBtn %}
+	<a href="{{ url('app_admin_evaluation_question_new', {'slug': evaluation.slug}) }}" class="btn btn-primary-soft">Ajouter une question</a>
+{% endblock %}
+
+    {{ include("instructor/evaluation_question/_questions.html.twig") }}
+{% endblock %}

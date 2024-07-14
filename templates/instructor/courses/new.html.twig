@@ -774,5 +774,64 @@
     </div>
     </div>
     <!-- Popup modal for add faq END -->
+   <script>
+    ( function() {
+    var mathElements = [
+        'math',
+        'maction',
+        'maligngroup',
+        'malignmark',
+        'menclose',
+        'merror',
+        'mfenced',
+        'mfrac',
+        'mglyph',
+        'mi',
+        'mlabeledtr',
+        'mlongdiv',
+        'mmultiscripts',
+        'mn',
+        'mo',
+        'mover',
+        'mpadded',
+        'mphantom',
+        'mroot',
+        'mrow',
+        'ms',
+        'mscarries',
+        'mscarry',
+        'msgroup',
+        'msline',
+        'mspace',
+        'msqrt',
+        'msrow',
+        'mstack',
+        'mstyle',
+        'msub',
+        'msup',
+        'msubsup',
+        'mtable',
+        'mtd',
+        'mtext',
+        'mtr',
+        'munder',
+        'munderover',
+        'semantics',
+        'annotation',
+        'annotation-xml',
+        'mprescripts',
+        'none'
+    ];
 
+    CKEDITOR.replace( 'lesson_content', {
+        extraPlugins: 'ckeditor_wiris',
+        // For now, MathType is incompatible with CKEditor 4 file upload plugins.
+        removePlugins: 'filetools,uploadimage,uploadwidget,uploadfile,filebrowser,easyimage',
+        height: 320,
+        // Update the ACF configuration with MathML syntax.
+        extraAllowedContent: mathElements.join( ' ' ) + '(*)[*]{*};img[data-mathml,data-custom-editor,role](Wirisformula)'
+    } );
+}() );
+
+   </script>
 {% endblock %}

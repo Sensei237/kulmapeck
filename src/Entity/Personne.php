@@ -122,9 +122,11 @@ class Personne
     private ?User $utilisateur = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups(['read:personne:item'])]
     private ?string $invitationCode = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['read:personne:item'])]
     private ?string $invitationLink = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'invites')]

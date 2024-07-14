@@ -1,0 +1,51 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Network Config{% endblock %}
+
+{% block actionBtn %}
+    {% if network_configs is empty %}
+        <a href="{{ path('app_admin_network_config_new') }}" class="btn btn-primary">Add config <i class="fas fa-plus"></i></a>
+    {% endif %}
+{% endblock %}
+
+{% block script %}
+    
+{% endblock %}
+
+{% block mainContent %}
+    <div class="card bg-transparent border">
+        <!-- Card body START -->
+        <div class="card-body">
+            <!-- Course table START -->
+            <div class="table-responsive border-0 rounded-3">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nombre de points par invitation</th>
+                            <th>Pourcentage Distribution Enseignant</th>
+                            <th>Pourcentage Distribution Eleve</th>
+                            <th>actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for network_config in network_configs %}
+                        <tr>
+                            <td>{{ network_config.nombreDePointsParInvitaton }}</td>
+                            <td>{{ network_config.pourcentageDistributionEnseignant }}</td>
+                            <td>{{ network_config.pourcentageDistributionEleve }}</td>
+                            <td>
+                                {# <a href="{{ path('app_admin_network_config_show', {'id': network_config.id}) }}">show</a> #}
+                                <a class="btn btn-xs btn-warning-soft" href="{{ path('app_admin_network_config_edit', {'id': network_config.id}) }}">edit</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">no records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

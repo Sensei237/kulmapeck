@@ -1,0 +1,17 @@
+{{ form_start(form) }}
+    <div class="row g-4">
+        <div class="col-12">
+            {{ form_row(form.title) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.numero) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.description) }}
+        </div>
+        <div >
+            <button class="btn btn-primary-soft">{{ button_label|default('Créer le chapitre') }}</button>
+        </div>
+    </div>
+    
+{{ form_end(form) }}

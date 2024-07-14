@@ -163,6 +163,27 @@ class CoursController extends AbstractController
 
     }
 
+    #[Route('/{slug}/send-for-update', name: 'app_admin_cours_send_to_update')]
+    public function sendForUpdate(Cours $course, CoursRepository $coursRepository, NotificationRepository $notificationRepository) 
+    {
+        $course->setIsValidated(false)
+            ->setIsPublished(false);
+        $coursRepository->save($course, true);
+
+        $notification = new Notification();
+        $notification->setDestinataire($course->getEnseignant()->getUtilisateur());
+        $notification->setTitle($course->getIntitule());
+        $content = 'Le cours intitulé : ' . $course->getIntitule() . ', a été retourné pour correction';
+        $notification->setContent($content);
+        $notification->setType(3);
+
+        $notificationRepository->save($notification, true);
+
+        $this->addFlash('info', "Opération effectuée ! Le cours a été retiré du site pour une mise à jour.");
+
+        return $this->redirectToRoute('app_admin_cours_show', ['slug' => $course->getSlug()]);
+    }
+
     #[Route('/{id}/remove-review', name: 'app_admin_cours_remove_review', methods: ['POST'])]
     public function deleteReview(Request $request, Review $review, ReviewRepository $reviewRepository): Response
     {

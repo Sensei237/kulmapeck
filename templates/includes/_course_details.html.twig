@@ -6,7 +6,7 @@
         <div class="col-12 d-sm-flex justify-content-between align-items-center">
             <h1 class="h3 mb-2 mb-sm-0">{{ course.intitule }}</h1>
             {% if isTeacher is defined and not course.isPublished %}
-                <a href="{{ url("app_instructor_courses_edit", {slug: course.slug}) }}" class="btn btn-primary mb-0">Edit Course</a>
+                <a href="{{ url("app_instructor_cours_edit", {slug: course.slug}) }}" class="btn btn-primary mb-0">Edit Course</a>
             {% endif %}
             <a href="{{ url("app_instructor_course_forum_index", {slug: course.slug}) }}" class="btn btn btn-secondary mb-0">Course Forum</a>
         </div>

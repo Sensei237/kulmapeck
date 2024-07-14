@@ -20,10 +20,11 @@ class ExamFormType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, [
-                'label' => "Title", 
+                'label' => "Title ( Ex: Examen de chimie session 2023 serie C et D)", 
                 'label_attr' => [
                     'class' => 'form-label'
-                ]
+                ],
+            'attr' => ['placeholder' => 'example: Examen de chimie session 2023 serie C et D']
 
             ])
             ->add('duration', TextType::class, [

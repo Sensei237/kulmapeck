@@ -19,7 +19,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
             normalizationContext: ['groups' => ['read:abonnement:collection', 'read:abonnement:item']]
         ),
         new GetCollection(
-            normalizationContext: ['groups' => ['read:abonnement:collection']]
+            normalizationContext: ['groups' => ['read:abonnement:collection']],
+            order: ['montant' => 'ASC']
         )
     ],
     paginationItemsPerPage: 50,
@@ -66,6 +67,9 @@ class Abonnement
     #[ORM\ManyToMany(targetEntity: PaymentMethod::class, inversedBy: 'abonnements')]
     #[Groups(['read:payment:collection'])]
     private Collection $paymentMethods;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $NbrePoint = null;
 
     public function __construct()
     {
@@ -213,6 +217,18 @@ class Abonnement
     public function removePaymentMethod(PaymentMethod $paymentMethod): self
     {
         $this->paymentMethods->removeElement($paymentMethod);
+
+        return $this;
+    }
+
+    public function getNbrePoint(): ?int
+    {
+        return $this->NbrePoint;
+    }
+
+    public function setNbrePoint(?int $NbrePoint): static
+    {
+        $this->NbrePoint = $NbrePoint;
 
         return $this;
     }

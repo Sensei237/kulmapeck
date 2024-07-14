@@ -78,7 +78,7 @@ class KernelSubscriber implements EventSubscriberInterface
                     $annonces = null;
                     if ((!$sessionContainsAnnonces && $showAnnonces)) {
                         // die("cici");
-                        $evaluations = $this->evaluationRepository->findSudentEvaluationsAnnonces($classe);
+                        $evaluations = $this->evaluationRepository->findByClass($classe);
                         foreach ($evaluations as $evaluation) {
                             // die("ici");
                             $currentDateTime = new DateTime();

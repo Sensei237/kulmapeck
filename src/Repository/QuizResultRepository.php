@@ -45,27 +45,37 @@ class QuizResultRepository extends ServiceEntityRepository
     /**
         * @return QuizResult[] Returns an array of QuizResult objects
         */
-    public function findStudentQuizResultsByCourseOrChapter(Eleve $eleve, ?Cours $cours, ?Chapitre $chapitre): array
-    {
-        $query = $this->createQueryBuilder('q')
-            ->join('q.quiz', 'qz');
-        if ($chapitre !== null) {
-            $query->join('qz.chapitre', 'chap')
-                ->andWhere('qz.chapitre = :chapitre')
-                ->setParameter('chapitre', $chapitre);
-        }elseif ($cours !== null) {
-            $query->join('qz.cours', 'co')
-                ->andWhere('qz.cours = :cours')
-                ->setParameter('cours', $cours);
-        }
-
-        $query->andWhere('q.eleve = :eleve')
-            ->setParameter('eleve', $eleve);
-
-        return $query->getQuery()
-            ->getResult()
-        ;
+   public function findStudentQuizResultsByCourseOrChapter(Eleve $eleve, ?Cours $cours, ?Chapitre $chapitre): array
+{
+    $query = $this->createQueryBuilder('q')
+        ->join('q.quiz', 'qz');
+    
+    if ($chapitre !== null) {
+        $query->join('qz.chapitre', 'chap')
+            ->andWhere('qz.chapitre = :chapitre')
+            ->setParameter('chapitre', $chapitre);
+    } elseif ($cours !== null) {
+        $query->join('qz.cours', 'co')
+            ->andWhere('qz.cours = :cours')
+            ->setParameter('cours', $cours);
     }
+
+    $query->andWhere('q.eleve = :eleve')
+        ->setParameter('eleve', $eleve);
+
+    $results = $query->getQuery()
+        ->getResult();
+
+    // Use a set to ensure uniqueness based on quiz entities
+    $uniqueQuizzes = [];
+    foreach ($results as $result) {
+        $quiz = $result->getQuiz();
+        $uniqueQuizzes[$quiz->getId()] = $result;
+    }
+
+    return array_values($uniqueQuizzes);
+}
+
 
 //    public function findOneBySomeField($value): ?QuizResult
 //    {

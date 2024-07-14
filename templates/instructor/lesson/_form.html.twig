@@ -1,0 +1,29 @@
+{{ form_start(form) }}
+    <div class="row g-4">
+        <div class="col-md-9">
+            {{ form_row(form.title) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_row(form.numero) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.content) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.videoLink) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.videoFile) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.posterFile) }}
+        </div>
+        <div class="col-12">
+            {{ form_row(form.isPremium) }}
+        </div>
+        <div>
+            <button class="btn btn-primary-soft">{{ button_label|default('Enregistrer') }}</button>
+        </div>
+    </div>
+{{ form_end(form) }}
+

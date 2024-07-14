@@ -13,7 +13,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -94,14 +93,14 @@ class CoursType extends AbstractType
                 ],
             ])
             ->add('content', CKEditorType::class, [
-                'label' => 'Course content',
+                'label' => 'Longue description',
                 'required' => false,
                 'label_attr' => [
                     'class' => 'form-label'
                 ],
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'Short description',
+                'label' => 'Courte description',
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => "Enter keywords",
@@ -134,7 +133,7 @@ class CoursType extends AbstractType
             ])
             ->add('numberOfLessons', IntegerType::class, [
                 'required' => false,
-                'label' => 'Course lessons',
+                'label' => 'Nombre de leçons',
                 'label_attr' => [
                     'class' => 'form-label'
                 ],
@@ -144,14 +143,6 @@ class CoursType extends AbstractType
                 ],
             ])
             ->add('media', MediaType::class)
-            ->add('chapitres', CollectionType::class, [
-                'entry_type' => ChapitreType::class,
-                'entry_options' => ['label'=>false],
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'label' => false
-            ])
             ->add('fAQs', CollectionType::class, [
                 'entry_type' => FAQType::class,
                 'entry_options' => ['label'=>false],

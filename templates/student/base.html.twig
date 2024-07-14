@@ -125,6 +125,9 @@
                                 <div class="bg-dark border rounded-3 pb-0 p-3 w-100">
                                     <!-- Dashboard menu -->
                                     <div class="list-group list-group-dark list-group-borderless">
+                                        {% if not app.user or (app.user.eleve and not app.user.eleve.isPremium) %}
+                                            <a class="list-group-item bg-success" href="{{ path('app_plan') }}"><i class="fas fa-id-card me-2"></i>S'ABONNER</a>
+                                        {% endif %}
                                         <a class="list-group-item {{ studentHome is defined ? 'active' : '' }}" href="{{ path('app_student_home') }}"><i class="bi bi-ui-checks-grid fa-fw me-2"></i>Dashboard</a>
                                         <a class="list-group-item {{ isSubscriptions is defined ? 'active' : '' }}" href="{{ path('app_student_subscriptions') }}"><i class="bi bi-basket fa-fw me-2"></i>My Subscriptions</a>
                                         <a class="list-group-item {{ studentCourses is defined ? 'active' : '' }}" href="{{ path('app_student_courses') }}"><i class="bi bi-basket fa-fw me-2"></i>My Courses</a>

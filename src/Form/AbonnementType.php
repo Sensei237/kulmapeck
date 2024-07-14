@@ -18,6 +18,7 @@ class AbonnementType extends AbstractType
         $builder
             ->add('label')
             ->add('montant')
+            ->add('NbrePoint')
             ->add('duree')
             ->add('isRecommended')
             ->add('items', EntityType::class, [

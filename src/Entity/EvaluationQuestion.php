@@ -26,7 +26,7 @@ class EvaluationQuestion
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['read:evaluation:item'])]
-    private ?string $propoition2 = null;
+    private ?string $proposition2 = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['read:evaluation:item'])]
@@ -42,7 +42,8 @@ class EvaluationQuestion
 
     #[ORM\ManyToOne(inversedBy: 'evaluationQuestions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Evaluation $evaluation = null;
+    #[Groups(['read:evaluation:question'])]
+        private ?Evaluation $evaluation = null;
 
     public function getId(): ?int
     {
@@ -73,29 +74,20 @@ class EvaluationQuestion
         return $this;
     }
 
-    public function getPropoition2(): ?string
-    {
-        return $this->propoition2;
-    }
+   
 
     public function getProposition2(): ?string
     {
-        return $this->propoition2;
+        return $this->proposition2;
     }
 
-    public function setPropoition2(string $propoition2): self
+    public function setProposition2(string $proposition2): self
     {
-        $this->propoition2 = $propoition2;
+        $this->proposition2 = $proposition2;
 
         return $this;
     }
 
-    public function setProposition2(string $propoition2): self
-    {
-        $this->propoition2 = $propoition2;
-
-        return $this;
-    }
 
     public function getProposition3(): ?string
     {
@@ -132,7 +124,11 @@ class EvaluationQuestion
 
         return $this;
     }
-
+    
+   /**
+     * @return ?Evaluation
+     * @Groups({"read:evaluation:question"})
+     */
     public function getEvaluation(): ?Evaluation
     {
         return $this->evaluation;

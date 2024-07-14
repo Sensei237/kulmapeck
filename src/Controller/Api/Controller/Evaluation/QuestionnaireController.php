@@ -12,8 +12,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 #[AsController]
 class QuestionnaireController extends AbstractController
 {
@@ -22,7 +22,9 @@ class QuestionnaireController extends AbstractController
         private Security $security,
         private EvaluationResultatRepository $evaluationResultatRepository,
         private EntityManagerInterface $entityManager,
-        private QuizRepository $quizRepository
+        private QuizRepository $quizRepository,
+        private SerializerInterface $serializer
+
     )
     {
         
@@ -53,11 +55,13 @@ class QuestionnaireController extends AbstractController
             throw $this->createAccessDeniedException("Vous avez déjà passé ce test. Vous ne pouvez plus le refaire ! Consulter votre tableau de bord pour voir la correction");
         }
 
-        $currentDate = new DateTime();
-        if ($evaluation->getStartAt() > $currentDate) {
-            throw $this->createAccessDeniedException("L'évaluation n'est pas encore disponible !");
+        $currentDate = new \DateTimeImmutable();
+        $formattedStartDate = $evaluation->getStartAt()->format('Y-m-d');
+        
+        if ($formattedStartDate > $currentDate->format('Y-m-d')) {
+            throw $this->createAccessDeniedException("L'évaluation n'est pas encore disponible ! La date de début est {$formattedStartDate} et actuel {$currentDate->format('Y-m-d')}");
         }
-
+        
         $epreuve = [];
         if (!$evaluation->isIsGeneratedRandomQuestions()) {
             $epreuve = $evaluation->getEvaluationQuestions();
@@ -65,12 +69,16 @@ class QuestionnaireController extends AbstractController
             $epreuve = $this->quizRepository->findRandomQuizzes($evaluation);
         }
 
-        return new ArrayObject(
+        $normalizedData = $this->serializer->normalize(
             [
                 'evaluation' => EvaluationDto::from($evaluation),
-                'epreuve' => $epreuve
-            ]
+                'epreuve' => $epreuve,
+            ],
+            null,
+            [AbstractNormalizer::GROUPS => ['read:evaluation:collection','read:evaluation:item']]
         );
+
+        return new ArrayObject($normalizedData);
 
     }
 }

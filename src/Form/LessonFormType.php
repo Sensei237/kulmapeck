@@ -24,6 +24,7 @@ class LessonFormType extends AbstractType
                     'placeholder' => 'Enter lesson title'
                 ]
             ])
+            
             ->add('numero', NumberType::class, [
                 'label' => 'Lesson number', 
                 'label_attr' => ['class' => 'form-label'],

@@ -172,6 +172,8 @@
 											<button data-bs-toggle="tooltip" data-uri="{{ url("app_admin_cours_rejected", {slug: course.slug}) }}" class="btn btn-sm btn-danger-soft btn-round reject-course-btn" title="Rejected"><i class="fas fa-times"></i></button>
 										
 										{% endif %}
+									{% else %}
+										<a href="{{ url("app_admin_cours_send_to_update", {slug: course.slug}) }}" onclick="return confirm('Etes-vous sure de vouloir renvoyer ce cours ?')" title="Retirer du site pour une mise à jour" class="btn btn-sm btn-round btn-warning-soft"><i class="fas fa-edit"></i></a>
 									{% endif %}
 								</td>
 							</tr>

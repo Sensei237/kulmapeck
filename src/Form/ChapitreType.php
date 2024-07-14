@@ -3,10 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Chapitre;
-use App\Entity\Lesson;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -24,22 +21,15 @@ class ChapitreType extends AbstractType
             ])
             ->add('numero', NumberType::class)
             ->add('description', TextareaType::class, [
-                'label' => "Short Description"
+                'label' => "Courte description"
             ])
-            ->add('lessons', CollectionType::class, [
-                'entry_type' => LessonType::class,
-                'entry_options' => ['label' => false],
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-            ]);
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Chapitre::class,
-            'label' => false,
         ]);
     }
 }

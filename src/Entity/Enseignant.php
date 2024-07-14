@@ -35,7 +35,7 @@ class Enseignant
     #[Groups(['read:course:collection'])]
     private ?string $reference = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,nullable:true)]
     private ?string $diplome = null;
 
     #[ORM\Column(length: 255)]
@@ -47,7 +47,7 @@ class Enseignant
     #[ORM\Column(length: 255)]
     private ?string $selfieCNI = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,nullable:true)]
     private ?string $emploiDuTemps = null;
 
     /**
@@ -99,11 +99,15 @@ class Enseignant
     #[ORM\Column(nullable: true)]
     private ?bool $isCertified = null;
 
+    #[ORM\OneToMany(mappedBy: 'relation', targetEntity: Evaluation::class)]
+    private Collection $evaluations;
+
 
     public function __construct()
     {
         $this->cours = new ArrayCollection();
         $this->isValidated = false;
+        $this->evaluations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -182,7 +186,7 @@ class Enseignant
         return $this->diplome;
     }
 
-    public function setDiplome(string $diplome): self
+    public function setDiplome(?string $diplome): self
     {
         $this->diplome = $diplome;
 
@@ -230,7 +234,7 @@ class Enseignant
         return $this->emploiDuTemps;
     }
 
-    public function setEmploiDuTemps(string $emploiDuTemps): self
+    public function setEmploiDuTemps(?string $emploiDuTemps): self
     {
         $this->emploiDuTemps = $emploiDuTemps;
 
@@ -335,6 +339,36 @@ class Enseignant
     public function setIsCertified(?bool $isCertified): self
     {
         $this->isCertified = $isCertified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Evaluation>
+     */
+    public function getEvaluations(): Collection
+    {
+        return $this->evaluations;
+    }
+
+    public function addEvaluation(Evaluation $evaluation): static
+    {
+        if (!$this->evaluations->contains($evaluation)) {
+            $this->evaluations->add($evaluation);
+            $evaluation->setRelation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvaluation(Evaluation $evaluation): static
+    {
+        if ($this->evaluations->removeElement($evaluation)) {
+            // set the owning side to null (unless already changed)
+            if ($evaluation->getRelation() === $this) {
+                $evaluation->setRelation(null);
+            }
+        }
 
         return $this;
     }

@@ -1,0 +1,39 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block pageTitle %}Push Notification{% endblock %}
+
+{% block actionBtn %}
+    <a href="{{ path('app_push_notification_index') }}"  class="btn btn-sm btn-secondary mb-0">back to list</a>
+{% endblock %}
+
+    
+{% block mainContent %}
+
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ push_notification.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ push_notification.title }}</td>
+            </tr>
+            <tr>
+                <th>Body</th>
+                <td>{{ push_notification.body }}</td>
+            </tr>
+            <tr>
+                <th>CreateAt</th>
+                <td>{{ push_notification.createAt ? push_notification.createAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_push_notification_index') }}">back to list</a>
+
+    <a href="{{ path('app_push_notification_edit', {'id': push_notification.id}) }}">edit</a>
+
+    {{ include('push_notification/_delete_form.html.twig') }}
+{% endblock %}

@@ -3,16 +3,17 @@
 namespace App\Controller\Api\Controller\Payment;
 
 use App\Entity\Abonnement;
-use App\Entity\Eleve;
 use App\Entity\Payment;
-use Doctrine\Common\Collections\Collection;
 use App\Repository\EleveRepository;
+use App\Repository\NetworkConfigRepository;
 use App\Repository\PaymentMethodRepository;
 use App\Repository\PaymentRepository;
-use PaymentUtil;
-use Symfony\Bundle\SecurityBundle\Security;
+use App\Repository\UserRepository;
+use App\Utils\Keys;
+use App\Utils\PaymentUtil;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -24,7 +25,11 @@ class PayerAbonnementController extends AbstractController
         private EleveRepository $eleveRepository,
         private Security $security,
         private PaymentMethodRepository $paymentMethodRepository,
-        private PaymentRepository $paymentRepository
+        private PaymentRepository $paymentRepository,
+        private NetworkConfigRepository $networkConfigRepository,
+        private EntityManagerInterface $em,
+        private UserRepository $userRepository,
+        private Keys $keys
     ) {
     }
 
@@ -37,13 +42,13 @@ class PayerAbonnementController extends AbstractController
             throw $this->createAccessDeniedException('Vous devez être connecté !');
         }
 
-        if ($this->paymentRepository->findOneBy(['isExpired'=>false, 'eleve'=>$eleve]) !== null) {
-            throw $this->createAccessDeniedException('Vous avez un abonnement actif ! Vous ne pouvez plus souscrire à un nouvel abonnement');
-        }
+        // if ($this->paymentRepository->findOneBy(['isExpired'=>false, 'eleve'=>$eleve]) !== null) {
+        //     throw $this->createAccessDeniedException('Vous avez un abonnement actif ! Vous ne pouvez plus souscrire à un nouvel abonnement');
+        // }
 
         $data = $request->toArray();
 
-        if (empty($data['payment_method'])) {
+        if (empty($data['payment_method']) || empty($data['phone'])) {
             throw new BadRequestHttpException("Vous devez préciser la méthode de paiement !");
         }
 
@@ -56,25 +61,30 @@ class PayerAbonnementController extends AbstractController
         if ($paymentMethod == null) {
             throw new BadRequestHttpException("La méthode de paiement envoyée n'existe pas !");
         }
-
-        if (PaymentUtil::initierPaymentPlan($abonnement, $paymentMethod)) {
-
+        $reference = 'AB-' . (time() + rand(10000, 100000000000));
+        $phoneNumber = $data['phone'];
+        $apiResponse = PaymentUtil::initierPaymentPlan($eleve->getUtilisateur(), $abonnement, $paymentMethod, $this->keys, $reference, $phoneNumber);
+        if ($apiResponse['isPaied'] && isset($apiResponse['responseData']['payment_url']) && isset($apiResponse['responseData']['transaction_ref']) && isset($apiResponse['responseData']['status'])) {
+                    
             $payment = new Payment();
-            $today = date_format(new \DateTimeImmutable(), 'Y-m-d');
+            $today = date_format(new \DateTimeImmutable(), 'Y-m-d H:i:s');
             $expiredAt = strtotime($today . ' +' . $abonnement->getDuree() . ' day');
             $payment->setEleve($eleve)
                 ->setAbonnement($abonnement)
                 ->setIsExpired(false)
                 ->setPaymentMethod($paymentMethod)
-                ->setReference(time()+$eleve->getId())
+                ->setReference($reference)
+                ->setTransactionReference($apiResponse['responseData']['transaction_ref'])
+                ->setStatus('en cours')
                 ->setAmount($abonnement->getMontant())
                 ->setExpiredAt(new \DateTimeImmutable(date('Y-m-d H:i:s', $expiredAt)));
             
-            $this->paymentRepository->save($payment);
+            $this->paymentRepository->save($payment, true);
 
-            $eleve->setIsPremium(true);
+            $eleve->setIsPremium(false);
             
             $this->eleveRepository->save($eleve, true);
+
         }else {
             throw new BadRequestHttpException("Impossible d'initier le payment");
         }
@@ -83,6 +93,7 @@ class PayerAbonnementController extends AbstractController
             'isPaied' => true,
             'message' => 'Votre paiement a été aprouvé ! Vous êtes désormais premium. Pensez à renouveler votre abonnement avant le ' . date_format($payment->getExpiredAt(), 'dd/mm/yyyy'),
             'paiements' => $eleve->getPayments(),
+            'apiUrl' => $apiResponse['responseData']['payment_url']
         ]);
     }
 }

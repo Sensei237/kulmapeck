@@ -6,7 +6,6 @@ use App\Entity\Chapitre;
 use App\Entity\Cours;
 use App\Entity\Lesson;
 use App\Entity\Media;
-use App\Entity\PaymentMethod;
 use App\Entity\Quiz;
 use App\Repository\CategorieRepository;
 use App\Repository\CoursRepository;
@@ -16,10 +15,8 @@ use App\Repository\PaymentMethodRepository;
 use App\Repository\QuizRepository;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -50,7 +47,7 @@ class HomeController extends AbstractController
         $categories = $categorieRepository->findAll();
         $paymentsMethods = $paymentMethodRepository->findAll();
 
-        for ($i = 0; $i < 200; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $cours = new Cours();
             $intitule = $faker->sentence(6);
             $media = new Media();

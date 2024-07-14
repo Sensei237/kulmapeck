@@ -109,6 +109,9 @@ class ForumMessage
     #[Groups(['read:sujet:item', 'read:forum:messsage:collection'])]
     private ?bool $isResponse = null;
 
+    #[ORM\OneToMany(mappedBy: 'forumMessage', targetEntity: LikeMessageForum::class, orphanRemoval: true)]
+    private Collection $likeMessageForums;
+
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
@@ -116,6 +119,7 @@ class ForumMessage
         $this->createdAt = new \DateTimeImmutable();
         $this->isAnswer = false;
         $this->likes = 0;
+        $this->likeMessageForums = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -245,6 +249,36 @@ class ForumMessage
     public function setIsResponse(?bool $isResponse): self
     {
         $this->isResponse = $isResponse;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LikeMessageForum>
+     */
+    public function getLikeMessageForums(): Collection
+    {
+        return $this->likeMessageForums;
+    }
+
+    public function addLikeMessageForum(LikeMessageForum $likeMessageForum): static
+    {
+        if (!$this->likeMessageForums->contains($likeMessageForum)) {
+            $this->likeMessageForums->add($likeMessageForum);
+            $likeMessageForum->setForumMessage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLikeMessageForum(LikeMessageForum $likeMessageForum): static
+    {
+        if ($this->likeMessageForums->removeElement($likeMessageForum)) {
+            // set the owning side to null (unless already changed)
+            if ($likeMessageForum->getForumMessage() === $this) {
+                $likeMessageForum->setForumMessage(null);
+            }
+        }
 
         return $this;
     }
